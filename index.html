@@ -25,6 +25,9 @@ img{max-width:100%}
 .ddc-team div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--line)}
 .ddc-team div:last-child{border-bottom:0}
 .ddc-team small{color:var(--muted)}
+.ddc-net{font-size:12px;font-weight:600;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.ddc-net.off{background:color-mix(in srgb,var(--warn) 16%,var(--surface));color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 45%,var(--line))}
+.ddc-net.sync{background:var(--accent-soft);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line))}
 .modal input[type=password]{background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r);padding:6px 9px}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -542,10 +545,10 @@ function welcomeHTML(){
       <div><b>2 · Analyser</b>L'IA propose les éléments de chaque scène, surlignés dans le texte avec le code couleur du dépouillement.</div>
       <div><b>3 · Vérifier</b>Sélectionne un mot pour l'ajouter, corrige les catégories, commente, puis marque la scène vérifiée.</div>
     </div>
-    ${S.canWrite?`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="w-import">Importer un scénario</button><button class="btn" id="w-example">Essayer avec un exemple</button></div>`:`<p>Aucun projet pour l'instant. Une personne avec le rôle Contributeur doit en créer un.</p>`}
+    ${S.canWrite?`<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="w-import">Importer un scénario</button><button class="btn" id="w-example">Essayer avec un exemple</button><button class="btn ghost" id="w-restore">Restaurer une sauvegarde</button></div>`:`<p>Aucun projet pour l'instant. Une personne avec le rôle Contributeur doit en créer un.</p>`}
   </div></div>`;
 }
-function bindWelcome(){const a=$("#w-import"),b=$("#w-example");if(a)a.onclick=openImport;if(b)b.onclick=()=>openImport(EXAMPLE,"Le Collier (exemple)");}
+function bindWelcome(){const a=$("#w-import"),b=$("#w-example"),c=$("#w-restore");if(a)a.onclick=openImport;if(b)b.onclick=()=>openImport(EXAMPLE,"Le Collier (exemple)");if(c)c.onclick=openRestore;}
 
 function renderList(){
   const list=$("#list");if(!list)return;
@@ -743,6 +746,8 @@ function projectMenu(anchor){
   const p=P();if(!p)return;
   openPop(anchor.getBoundingClientRect(),p.name,[
     {label:"Renommer le projet",run:()=>renameProject()},
+    {label:"Sauvegarder le projet (fichier)",run:backupProject},
+    {label:"Restaurer une sauvegarde…",run:openRestore},
     {label:"Retirer un texte de toutes les scènes",run:()=>cleanupText()},
     {label:"Supprimer le projet",danger:true,run:()=>confirmDelete()}]);
 }
@@ -800,7 +805,7 @@ function openImport(prefill,prefName){
    <div class="row"><span class="label">… ou colle le texte du scénario</span><textarea id="im-text" placeholder="1 INT. CUISINE - JOUR&#10;&#10;Marie pose une tasse sur la table…"></textarea></div>
    <div class="row"><span class="label">Textes à ignorer (signature, en-tête, pied de page) · un par ligne</span><textarea id="im-ignore" style="min-height:52px" placeholder="Ex. FACE 2 FACE de Tefihaja Rabekoto"></textarea><span class="empty" id="im-ignore-note"></span></div>
    <div id="im-prev"></div>
-   <div class="mfoot"><button class="btn" id="im-c">Annuler</button><button class="btn primary" id="im-go" disabled>Créer le projet</button></div>`);
+   <div class="mfoot"><button class="btn ghost" id="im-restore" style="margin-right:auto">Restaurer une sauvegarde</button><button class="btn" id="im-c">Annuler</button><button class="btn primary" id="im-go" disabled>Créer le projet</button></div>`);
   const ta=m.querySelector("#im-text"),prev=m.querySelector("#im-prev"),go=m.querySelector("#im-go"),nm=m.querySelector("#im-name"),drop=m.querySelector("#im-drop"),fi=m.querySelector("#im-file");
   let parsed=null;
   const refresh=(scenes,note)=>{parsed=scenes;go.disabled=!scenes||!scenes.length;
@@ -828,6 +833,7 @@ function openImport(prefill,prefName){
   drop.ondragleave=()=>drop.classList.remove("over");
   drop.ondrop=e=>{e.preventDefault();drop.classList.remove("over");handleFile(e.dataTransfer.files[0]);};
   m.querySelector("#im-c").onclick=()=>m.remove();
+  m.querySelector("#im-restore").onclick=()=>{m.remove();openRestore();};
   go.onclick=async()=>{if(!parsed)return;go.disabled=true;go.textContent="Création…";
     try{await createProject(nm.value.trim()||"Sans titre",parsed);m.remove();}
     catch(e){go.disabled=false;go.textContent="Créer le projet";writeErr(e);}};
@@ -990,6 +996,7 @@ async function analyzeScene(sid,opts={}){
     if(code==="cancelled")return"cancelled";
     if(code==="no_key"||code==="bad_key"){window.DDC_openKey&&window.DDC_openKey(code==="bad_key");return"stop";}
     if(code==="no_credit"){toast("Crédit API Anthropic épuisé. Recharge ton compte sur console.anthropic.com.",6000);return"stop";}
+    if(code==="offline"){toast("L'analyse IA a besoin d'internet. Le reste fonctionne hors ligne.",5000);return"stop";}
     if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code)){S.aiOff=true;toast("L'analyse IA n'est pas disponible pour ton compte sur cette page. Tu peux dépouiller à la main.",5000);return"off";}
     if(code==="rate_limited"){toast("Limite d'utilisation de l'IA atteinte. Réessaie dans quelques minutes.",5000);return"stop";}
     if(code==="session_expired"){toast("Ta session a expiré. Reconnecte-toi à claude.ai.",5000);return"stop";}
@@ -1064,6 +1071,44 @@ async function save(filename,data){
   try{await S.dl.save({filename,data});}catch(e){if(e?.code!=="cancelled"&&e?.code!=="declined")toast("Export impossible ("+(e?.code||"erreur")+").");}
 }
 const slug=s=>norm(s).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"projet";
+/* ---------- sauvegarde / restauration ---------- */
+const BACKUP_FORMAT="ddc-breakdown-backup";
+function backupProject(){
+  const p=P();if(!p)return;
+  const data={format:BACKUP_FORMAT,version:1,exportedAt:new Date().toISOString(),
+    project:{...p},scenes:S.scenes,elements:S.elements,comments:S.comments,days:S.days,locations:S.locations};
+  save(slug(p.name)+"-sauvegarde-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify(data));
+}
+function openRestore(){
+  const m=modal(`<h3>Restaurer une sauvegarde</h3>
+    <p class="empty">Choisis un fichier de sauvegarde DDC Breakdown (.json). Il est restauré dans un <b>nouveau projet</b> : aucun projet existant n'est modifié.</p>
+    <input type="file" id="rs-file" accept=".json,application/json" aria-label="Fichier de sauvegarde">
+    <div id="rs-info" class="empty"></div>
+    <div class="mfoot"><button class="btn" id="rs-c">Annuler</button><button class="btn primary" id="rs-go" disabled>Restaurer</button></div>`);
+  let data=null;const info=m.querySelector("#rs-info"),go=m.querySelector("#rs-go");
+  m.querySelector("#rs-c").onclick=()=>m.remove();
+  m.querySelector("#rs-file").onchange=async e=>{const f=e.target.files[0];data=null;go.disabled=true;if(!f)return;
+    try{const d=JSON.parse(await f.text());if(d.format!==BACKUP_FORMAT||!d.project||!Array.isArray(d.scenes))throw 0;data=d;
+      const n=k=>Array.isArray(d[k])?d[k].length:0;
+      info.innerHTML=`<b>${esc(d.project.name||"Sans titre")}</b> · sauvegardé le ${esc(new Date(d.exportedAt).toLocaleString("fr-FR"))}<br>${n("scenes")} scènes · ${n("elements")} éléments · ${n("comments")} commentaires · ${n("days")} journées · ${n("locations")} lieux`;
+      go.disabled=false;}
+    catch{info.innerHTML=`<span style="color:var(--danger)">Ce fichier n'est pas une sauvegarde DDC Breakdown.</span>`;}};
+  go.onclick=async()=>{if(!data)return;go.disabled=true;
+    try{await restoreBackup(data,(d,t)=>{go.textContent="Restauration "+Math.round(d/Math.max(1,t)*100)+" %";});m.remove();toast("Projet restauré.");}
+    catch(e){go.disabled=false;go.textContent="Restaurer";writeErr(e);}};
+}
+async function restoreBackup(d,onp){
+  const ref=S.db.collection("projects").doc();const bs="projects/"+ref.id;
+  const{id,...proj}=d.project||{};
+  await ref.set({...proj,name:String(proj.name||"Projet").slice(0,100)+" (restauré)",createdAt:Date.now(),createdBy:S.me?.id||null,restoredFrom:String(d.exportedAt||"")});
+  const okId=x=>typeof x==="string"&&/^[A-Za-z0-9_\-.~:@+]{1,200}$/.test(x)&&x!=="."&&x!=="..";
+  const cols=["scenes","elements","comments","days","locations"];
+  const total=cols.reduce((a,c)=>a+(Array.isArray(d[c])?d[c].length:0),0);let done=0;
+  for(const c of cols){const arr=Array.isArray(d[c])?d[c]:[];
+    await chunked(arr,6,x=>{if(!x||typeof x!=="object")return null;const{id,...rest}=x;
+      return S.db.doc(bs+"/"+c+"/"+(okId(id)?id:uid())).set(rest).then(()=>{done++;onp&&onp(done,total);});});}
+  openProject(ref.id);
+}
 function exportCSV(){
   const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
   const rows=[["Scène","En-tête","INT/EXT","Jour/Nuit","Pages","Catégorie","Élément","Source","Statut scène"]];

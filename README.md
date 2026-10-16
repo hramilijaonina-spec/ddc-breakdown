@@ -9,6 +9,8 @@ Dépouillement de scénario et plan de travail collaboratifs pour l'équipe DDC.
 - Plan de travail : lieux de tournage, journées en glisser-déposer, plan proposé automatiquement, alertes (journée chargée, déplacements, rôles éclatés).
 - Exports : fiches de dépouillement et plan de travail (HTML imprimable, CSV).
 - Temps réel pour toute l'équipe, avec connexion Google.
+- Hors ligne : l'app s'ouvre sans réseau, les modifications sont gardées sur l'appareil et envoyées au retour de la connexion.
+- Sauvegarde : menu ••• du projet → « Sauvegarder le projet (fichier) » ; restauration dans un nouveau projet.
 
 ## Installation (une seule fois)
 
@@ -34,5 +36,6 @@ L'administrateur enregistre une clé API Anthropic pour toute l'équipe : menu d
 |---|---|
 | `index.html` | l'application |
 | `adapter.js` | branchement Firebase (données, comptes, présence), API Anthropic, écrans de connexion et d'équipe |
+| `sw.js` | service worker : ouverture de l'app sans réseau |
 | `config.js` | configuration Firebase, administrateur, modèle |
 | `database.rules.json` | règles de sécurité de la Realtime Database |
