@@ -409,8 +409,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons */
-const APP_VERSION="1.6";const APP_DATE="16 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur */
+const APP_VERSION="1.7";const APP_DATE="16 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -510,11 +510,12 @@ async function boot(){
   if(c&&c.use){
     [db,user,sample,room,dl]=await Promise.all(["db","user","sample","room","downloads"].map(n=>c.use(n).catch(()=>null)));
   }
-  if(!db){db=new MemDB();S.local=true;}
+  if(!db){db=new MemDB();S.local=true;S.isAdmin=true;}
   Object.assign(S,{db,user,sample,room,dl});
   if(user){
     try{S.me=await user.me();}catch{}
     try{const w=await user.can("data.write");if(w===false)S.canWrite=false;}catch{}
+    try{S.isAdmin=!!(await user.isOwner());}catch{S.isAdmin=false;}
   }
   if(S.local)showBanner("Mode local : ouvre cette page sur claude.ai pour partager les projets avec ton équipe. Rien n'est enregistré ici.");
   else if(!S.canWrite)showBanner("Lecture seule : demande à la personne qui a partagé cette page de te donner le rôle Contributeur pour modifier le dépouillement.");
@@ -827,7 +828,7 @@ function projectMenu(anchor){
     {label:"Sauvegarder le projet (fichier)",run:backupProject},
     {label:"Restaurer une sauvegarde…",run:openRestore},
     {label:"Retirer un texte de toutes les scènes",run:()=>cleanupText()},
-    {label:"Supprimer le projet",danger:true,run:()=>confirmDelete()}]);
+    ...(S.isAdmin?[{label:"Supprimer le projet",danger:true,run:()=>confirmDelete()}]:[])]);
 }
 function exportMenu(anchor){
   openPop(anchor.getBoundingClientRect(),"Exporter",[
@@ -865,6 +866,7 @@ function cleanupText(){
       m.remove();toast("Texte retiré de "+r.scs.length+" scène"+(r.scs.length>1?"s":"")+".");}catch(e){m.remove();writeErr(e);}};
 }
 function confirmDelete(){
+  if(!S.isAdmin){toast("Seul l'administrateur peut supprimer un projet.");return;}
   const p=P();const m=modal(`<h3>Supprimer « ${esc(p.name)} » ?</h3><p>Les ${S.scenes.length} scènes, ${S.elements.length} éléments et ${S.comments.length} commentaires seront supprimés pour toute l'équipe. Cette action est définitive.</p><div class="mfoot"><button class="btn" id="d-c">Annuler</button><button class="btn danger" id="d-ok">Supprimer définitivement</button></div>`);
   m.querySelector("#d-c").onclick=()=>m.remove();
   m.querySelector("#d-ok").onclick=async()=>{const b=m.querySelector("#d-ok");b.disabled=true;b.textContent="Suppression…";
