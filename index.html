@@ -801,7 +801,7 @@ function openImport(prefill,prefName){
   if(typeof prefill!=="string")prefill="";
   const m=modal(`<h3>Nouveau projet</h3>
    <div class="row"><span class="label">Titre du projet</span><input type="text" id="im-name" placeholder="Ex. Le Collier" value="${esc(prefName||"")}"></div>
-   <div class="drop" id="im-drop">Dépose ton scénario ici (PDF, Final Draft .fdx, .fountain, .txt)<br><button class="btn small" id="im-pick" style="margin-top:8px">Choisir un fichier</button><input type="file" id="im-file" accept=".pdf,.fdx,.fountain,.txt,.text,application/pdf,text/plain" hidden></div>
+   <div class="drop" id="im-drop">Dépose ton scénario ici (PDF, Final Draft .fdx, .sbx, .fountain, .txt)<br><button class="btn small" id="im-pick" style="margin-top:8px">Choisir un fichier</button><input type="file" id="im-file" accept=".pdf,.fdx,.sbx,.fountain,.txt,.text,application/pdf,text/plain" hidden></div>
    <div class="row"><span class="label">… ou colle le texte du scénario</span><textarea id="im-text" placeholder="1 INT. CUISINE - JOUR&#10;&#10;Marie pose une tasse sur la table…"></textarea></div>
    <div class="row"><span class="label">Textes à ignorer (signature, en-tête, pied de page) · un par ligne</span><textarea id="im-ignore" style="min-height:52px" placeholder="Ex. FACE 2 FACE de Tefihaja Rabekoto"></textarea><span class="empty" id="im-ignore-note"></span></div>
    <div id="im-prev"></div>
@@ -825,6 +825,7 @@ function openImport(prefill,prefName){
         if(r.removed.length){ig.value=[...new Set([...ignored(),...r.removed])].join("\n");igNote.textContent="Retirés automatiquement : textes répétés en haut ou en bas des pages.";}
         fromText(r.text);}
       else if(ext==="fdx"){const r=parseFDX(await f.text());ta.value=r.text;fdx=r.scenes;refresh(r.scenes.map(sc=>({...sc,body:stripPhrases(sc.body,ignored())})),"Final Draft");}
+      else if(ext==="sbx"||/^\s*<div class="divtype\d/.test(await f.slice(0,200).text())){const r=parseSBX(await f.text());if(!r.scenes.length)throw new Error("sbx");ta.value=r.text;fdx=r.scenes;refresh(r.scenes.map(sc=>({...sc,body:stripPhrases(sc.body,ignored())})),"fichier .sbx");}
       else{const t=await f.text();ta.value=t;fromText(t);}
     }catch(e){prev.innerHTML=`<p class="empty" style="color:var(--danger)">Impossible de lire ce fichier. S'il s'agit d'un PDF scanné (image), exporte-le en texte depuis ton logiciel d'écriture ou colle le texte ci-dessus.</p>`;}};
   m.querySelector("#im-pick").onclick=()=>fi.click();
@@ -925,6 +926,25 @@ function stripPhrases(text,phrases){
   return t.split("\n").map(l=>l.replace(/[ \t]{2,}/g," ").replace(/\s+$/,"")).join("\n").replace(/\n{3,}/g,"\n\n");
 }
 function median(a){if(!a.length)return 12;const s=[...a].sort((x,y)=>x-y);return s[Math.floor(s.length/2)];}
+/* .sbx : un bloc <div class="divtypeN"> par paragraphe.
+   0 en-tête de scène (data-scene = numéro), 2 action, 3 personnage, 4 didascalie, 5 dialogue, 6 transition. */
+function parseSBX(html){
+  const doc=new DOMParser().parseFromString("<body>"+html+"</body>","text/html");
+  const txt=el=>{const c=el.cloneNode(true);c.querySelectorAll("br").forEach(b=>b.replaceWith("\n"));return c.textContent.replace(/[ \t]+/g," ").trim();};
+  const scenes=[];let cur=null;const all=[];let lastDN="";
+  for(const d of doc.body.querySelectorAll('div[class^="divtype"]')){
+    const type=Number((d.className.match(/divtype(\d+)/)||[])[1]);const t=txt(d);if(!t)continue;
+    if(type===0){if(cur)scenes.push(cur);const ph=parseHeading(t);if(!ph.dayNight)ph.dayNight=lastDN;lastDN=ph.dayNight;
+      const num=d.getAttribute("data-scene");cur={num:num&&num!=="undefined"?num:String(scenes.length+1),...ph,lines:[]};all.push(cur.num+" "+t);continue;}
+    all.push(t);if(!cur)continue;
+    if(type===3)cur.lines.push("",t.toUpperCase());
+    else if(type===4)cur.lines.push(/^\(.*\)$/.test(t)?t:"("+t+")");
+    else if(type===5)cur.lines.push(t);
+    else if(type===6)cur.lines.push("",t.toUpperCase());
+    else cur.lines.push("",t);}
+  if(cur)scenes.push(cur);
+  return{text:all.join("\n\n"),scenes:scenes.map(s=>{const body=s.lines.join("\n").trim();const{lines,...r}=s;return{...r,body,eighths:linesToEighths(body)};})};
+}
 function parseFDX(xml){
   const doc=new DOMParser().parseFromString(xml,"application/xml");
   const paras=[...doc.querySelectorAll("Content > Paragraph")];
