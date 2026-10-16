@@ -299,7 +299,13 @@ function mountAccount(u,isAdmin,rtdb){
 let resolveSvc;const svcP=new Promise(r=>resolveSvc=r);
 window.claude={use:async name=>{const s=await svcP;return s[name]||null;}};
 function start(){
-  if("serviceWorker" in navigator&&window.isSecureContext&&!CFG.noServiceWorker)navigator.serviceWorker.register("sw.js").catch(()=>{});
+  if("serviceWorker" in navigator&&window.isSecureContext&&!CFG.noServiceWorker){
+    const hadController=!!navigator.serviceWorker.controller;let reloaded=false;
+    /* nouvelle version installée : on recharge une fois pour l'afficher */
+    navigator.serviceWorker.addEventListener("controllerchange",()=>{if(hadController&&!reloaded){reloaded=true;location.reload();}});
+    navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{
+      const check=()=>r.update().catch(()=>{});setInterval(check,5*60*1000);document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check();});
+    }).catch(()=>{});}
   const c=fbConfig();
   if(!window.firebase||!c.apiKey||!c.databaseURL){showSetup();return;}
   firebase.initializeApp(c);

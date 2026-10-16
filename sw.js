@@ -1,5 +1,5 @@
 /* DDC Breakdown — service worker : l'app s'ouvre même sans réseau. */
-const VERSION = "ddc-v3";
+const VERSION = "ddc-v4";
 const SHELL = ["./", "index.html", "adapter.js", "config.js", "manifest.webmanifest",
   "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png"];
 const CDN = [
@@ -26,7 +26,8 @@ self.addEventListener("activate", e => {
 });
 
 function networkFirst(req) {
-  const net = fetch(req).then(res => {
+  /* cache: "no-cache" : on redemande toujours la dernière version au serveur (GitHub Pages met les pages en cache 10 min) */
+  const net = fetch(req.url, { cache: "no-cache", credentials: "same-origin" }).then(res => {
     if (res && res.ok) caches.open(VERSION).then(c => c.put(req, res.clone()));
     return res;
   });
