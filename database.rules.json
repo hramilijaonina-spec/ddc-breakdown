@@ -1,0 +1,39 @@
+{
+  "rules": {
+    "shots": {
+      ".read": true,
+      ".write": true
+    },
+    "notes": {
+      ".read": true,
+      ".write": true
+    },
+    "ddc": {
+      "team": {
+        ".read": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com'",
+        ".write": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com'",
+        "$key": {
+          ".read": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase().replace('.', ',') == $key"
+        }
+      },
+      "data": {
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())",
+        ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())"
+      },
+      "users": {
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())",
+        "$uid": {
+          ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists()) && auth.uid == $uid"
+        }
+      },
+      "presence": {
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())",
+        ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())"
+      },
+      "locks": {
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())",
+        ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())"
+      }
+    }
+  }
+}
