@@ -5,6 +5,7 @@ Dépouillement de scénario et plan de travail collaboratifs pour l'équipe DDC.
 **App :** https://hramilijaonina-spec.github.io/ddc-breakdown/
 
 - Import PDF, Final Draft (.fdx), .sbx, Fountain ou texte ; découpage en scènes (INT/EXT, jour/nuit, huitièmes de page) ; retrait automatique des en-têtes et pieds de page répétés.
+- Éditeur de scénario : mise en page standard (en-tête, action, personnage, didascalie, dialogue, transition, plan), Entrée/Tab, raccourcis, autocomplétion des personnages et décors, verrou par scène pendant l'écriture, export Final Draft et Fountain, impression PDF.
 - Dépouillement par IA (Claude, via clé API Anthropic) dans 13 catégories, correction à la main, commentaires par scène.
 - Plan de travail : lieux de tournage, journées en glisser-déposer, plan proposé automatiquement, alertes (journée chargée, déplacements, rôles éclatés).
 - Exports : fiches de dépouillement et plan de travail (HTML imprimable, CSV).
