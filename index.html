@@ -153,6 +153,12 @@ textarea{resize:vertical}
 .eighths span{padding:0 8px;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
 .synopsis{width:100%;min-height:40px;font-size:13.5px}
 .page{max-width:720px;margin:0 auto;background:var(--page);border:1px solid var(--line);box-shadow:0 1px 3px rgb(0 0 0 / .06);padding:36px clamp(16px,6%,60px) 48px;font-family:var(--f-script);font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere}
+/* dépouillement : même mise en page que l'éditeur */
+.page.sp{white-space:normal;line-height:1.35}
+.page.sp .sb-h{margin-top:0;margin-bottom:.2em}
+.page.sp .sb{min-height:0}
+.page.sp .sb-c mark.hl{text-transform:uppercase}
+@media (max-width:560px){.page.sp .sb-c{margin-left:28%}.page.sp .sb-p{margin-left:18%;width:64%}.page.sp .sb-d{margin-left:8%;width:84%}}
 .page .hline{font-weight:700;text-transform:uppercase;display:block;margin-bottom:1em}
 mark.hl{background:color-mix(in srgb,var(--c) 24%,transparent);color:inherit;border-bottom:2px solid var(--c);border-radius:2px;padding:0 1px;cursor:pointer}
 .hint{max-width:720px;margin:10px auto 0;font-size:12.5px;color:var(--muted)}
@@ -409,8 +415,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur */
-const APP_VERSION="1.7";const APP_DATE="16 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement */
+const APP_VERSION="1.8";const APP_DATE="16 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -699,7 +705,9 @@ function renderScene(){
     <label class="row" style="display:flex;flex-direction:column;gap:4px"><span class="label">Synopsis</span>
       <textarea id="synopsis" class="synopsis" rows="2" placeholder="Une phrase qui résume la scène" ${S.canWrite?"":"readonly"}></textarea></label>
   </div>
-  <div class="page" id="page"><span class="hline">${esc(s.heading)}</span>${highlightHTML(s.body||"",elsOf(s.id))}</div>
+  <div class="page sp" id="page"><div class="sb sb-h">${esc(s.heading)}</div>${(()=>{const els=elsOf(s.id);
+    return sceneBlocks(s).filter(b=>String(b.x||"").trim()).map(b=>{const x=b.t==="p"&&!/^\(/.test(b.x.trim())?"("+b.x.trim()+")":b.x;
+      return `<div class="sb sb-${b.t}">${highlightHTML(x,els)}</div>`;}).join("")||`<p class="empty">Scène vide.</p>`;})()}</div>
   <p class="hint">${S.canWrite?"Sélectionne un mot ou une expression dans le texte pour l'ajouter au dépouillement. Clique sur un passage surligné pour le modifier.":"Les passages surlignés correspondent aux éléments du dépouillement."}</p>`;
   const syn=$("#synopsis");syn.value=synVal??(s.synopsis||"");if(synFocused){syn.focus();}
   syn.onchange=()=>updateScene(s.id,{synopsis:syn.value.trim()});
