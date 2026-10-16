@@ -258,9 +258,17 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 .editor{grid-column:1/-1;display:flex;flex-direction:column;min-height:0}
 .ed-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);background:var(--surface)}
 .ed-types{display:flex;flex-wrap:wrap;gap:4px}
-.ed-tb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r);padding:4px 9px;font-size:12.5px;font-weight:500;color:var(--fg)}
-.ed-tb:hover{border-color:var(--accent)}
-.ed-tb[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+/* une couleur par type de bloc */
+[data-t=h]{--c:#b7791f}[data-t=a]{--c:#3f6fc4}[data-t=c]{--c:#d14343}[data-t=p]{--c:#8259d0}[data-t=d]{--c:#23905a}[data-t=t]{--c:#d9691a}[data-t=s]{--c:#0d8f86}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) [data-t=h]{--c:#e0a84a}:root:not([data-theme="light"]) [data-t=a]{--c:#6d9bf0}:root:not([data-theme="light"]) [data-t=c]{--c:#f07070}:root:not([data-theme="light"]) [data-t=p]{--c:#ab8cf0}:root:not([data-theme="light"]) [data-t=d]{--c:#4cc684}:root:not([data-theme="light"]) [data-t=t]{--c:#f2934a}:root:not([data-theme="light"]) [data-t=s]{--c:#3cc4b8}}
+:root[data-theme="dark"] [data-t=h]{--c:#e0a84a}:root[data-theme="dark"] [data-t=a]{--c:#6d9bf0}:root[data-theme="dark"] [data-t=c]{--c:#f07070}:root[data-theme="dark"] [data-t=p]{--c:#ab8cf0}:root[data-theme="dark"] [data-t=d]{--c:#4cc684}:root[data-theme="dark"] [data-t=t]{--c:#f2934a}:root[data-theme="dark"] [data-t=s]{--c:#3cc4b8}
+.ed-tb{display:inline-flex;align-items:center;gap:6px;border:1px solid color-mix(in srgb,var(--c) 45%,var(--line));background:color-mix(in srgb,var(--c) 10%,var(--surface));border-radius:var(--r);padding:4px 10px;font-size:12.5px;font-weight:600;color:var(--fg);transition:background .12s,color .12s,border-color .12s}
+.ed-tb .ed-ic{color:var(--c)}
+.ed-tb:hover{border-color:var(--c);background:color-mix(in srgb,var(--c) 20%,var(--surface))}
+.ed-tb[aria-pressed=true]{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 1px 3px color-mix(in srgb,var(--c) 45%,transparent)}
+.ed-tb[aria-pressed=true] .ed-ic{color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ed-tb[aria-pressed=true],:root:not([data-theme="light"]) .ed-tb[aria-pressed=true] .ed-ic{color:#0d1517}}
+:root[data-theme="dark"] .ed-tb[aria-pressed=true],:root[data-theme="dark"] .ed-tb[aria-pressed=true] .ed-ic{color:#0d1517}
 .ed-tb:disabled{opacity:.5}
 .ed-ic{display:inline-block;width:14px;height:10px;position:relative;flex:0 0 auto}
 .ed-ic::before{content:"";position:absolute;top:2px;height:2px;border-radius:1px;background:currentColor}
@@ -288,7 +296,7 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 .ed-scene.locked{opacity:.7}
 .ed-lock{position:absolute;right:0;top:-6px;font-family:var(--f-ui);font-size:11px;font-weight:600;color:var(--warn);background:var(--page);padding:0 4px}
 .sb{white-space:pre-wrap;overflow-wrap:anywhere;outline:none;border-radius:2px;min-height:1.35em;position:relative}
-.sb:focus{background:color-mix(in srgb,var(--accent) 7%,transparent);box-shadow:-3px 0 0 var(--accent)}
+.sb:focus{background:color-mix(in srgb,var(--c,var(--accent)) 8%,transparent);box-shadow:-3px 0 0 var(--c,var(--accent))}
 .sb:empty::before{content:attr(data-ph);color:var(--muted);opacity:.7;pointer-events:none}
 .sb-h{font-weight:700;text-transform:uppercase;margin-top:1.8em}
 .ed-scene:first-child .sb-h{margin-top:0}
@@ -401,8 +409,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme */
-const APP_VERSION="1.5";const APP_DATE="16 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons */
+const APP_VERSION="1.6";const APP_DATE="16 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
