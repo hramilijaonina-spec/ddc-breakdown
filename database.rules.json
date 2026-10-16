@@ -8,6 +8,10 @@
       ".read": true,
       ".write": true
     },
+    "detente": {
+      ".read": true,
+      ".write": true
+    },
     "ddc": {
       "team": {
         ".read": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com'",

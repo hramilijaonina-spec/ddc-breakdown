@@ -18,7 +18,7 @@ Le projet Firebase utilisé est `shotlist-298e2` (le même que l'app shotlist).
 2. **Domaine autorisé** : Authentication → Paramètres → Domaines autorisés → ajouter `hramilijaonina-spec.github.io`.
 3. **Application Web** : Paramètres du projet → Vos applications → ajouter une application Web, puis copier `apiKey` et `appId` dans `config.js`.
 4. **Règles de la base** : Realtime Database → Règles → coller le contenu de `database.rules.json` → Publier.
-   Les chemins `shots` et `notes` de l'app shotlist restent ouverts comme avant ; tout ce qui concerne DDC (`ddc/…`) est réservé aux membres de l'équipe.
+   Les chemins `shots`, `notes` (app shotlist) et `detente` (app Détente) restent ouverts comme avant ; tout ce qui concerne DDC (`ddc/…`) est réservé aux membres de l'équipe.
 
 ## Équipe
 
