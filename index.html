@@ -257,8 +257,23 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 /* éditeur de scénario */
 .editor{grid-column:1/-1;display:flex;flex-direction:column;min-height:0}
 .ed-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding-block:8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);background:var(--surface)}
-.ed-bar select{font-weight:600}
+.ed-types{display:flex;flex-wrap:wrap;gap:4px}
+.ed-tb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r);padding:4px 9px;font-size:12.5px;font-weight:500;color:var(--fg)}
+.ed-tb:hover{border-color:var(--accent)}
+.ed-tb[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.ed-tb:disabled{opacity:.5}
+.ed-ic{display:inline-block;width:14px;height:10px;position:relative;flex:0 0 auto}
+.ed-ic::before{content:"";position:absolute;top:2px;height:2px;border-radius:1px;background:currentColor}
+.ed-ic::after{content:"";position:absolute;top:6px;height:2px;border-radius:1px;background:currentColor;opacity:.55}
+.ic-h::before{left:0;width:14px;height:3px;top:1px}.ic-h::after{left:0;width:10px}
+.ic-a::before{left:0;width:14px}.ic-a::after{left:0;width:14px}
+.ic-c::before{left:4px;width:6px}.ic-c::after{display:none}
+.ic-p::before{left:3px;width:8px;opacity:.55}.ic-p::after{display:none}
+.ic-d::before{left:2px;width:10px}.ic-d::after{left:2px;width:10px}
+.ic-t::before{right:0;width:7px}.ic-t::after{display:none}
+.ic-s::before{left:0;width:9px;height:3px;top:1px}.ic-s::after{display:none}
 .ed-hint{font-size:12px;color:var(--muted)}
+@media (max-width:1400px){.ed-hint{display:none}}
 .ed-stats{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
 .ed-body{flex:1;min-height:0;display:grid;grid-template-columns:220px minmax(0,1fr)}
 .ed-nav{overflow:auto;border-right:1px solid var(--line);background:var(--surface);padding:6px 0}
@@ -386,8 +401,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario */
-const APP_VERSION="1.4";const APP_DATE="16 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme */
+const APP_VERSION="1.5";const APP_DATE="16 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -1291,8 +1306,8 @@ function renderEditor(){
   const root=$("#editor");if(!root||!S.pid)return;
   if(!root.dataset.ready){root.dataset.ready="1";
     root.innerHTML=`<div class="ed-bar">
-        <select id="ed-type" aria-label="Type de bloc" ${S.canWrite?"":"disabled"}>${Object.entries(BT).map(([k,v])=>`<option value="${k}">${v.label}  (${MOD}${v.key})</option>`).join("")}</select>
-        <span class="ed-hint">Entrée : bloc suivant · Tab : changer de type · Maj+Entrée : retour à la ligne</span>
+        <div class="ed-types" role="toolbar" aria-label="Type de bloc">${["h","a","c","p","d","t","s"].map(k=>`<button type="button" class="ed-tb" data-t="${k}" aria-pressed="false" title="${BT[k].label} · ${MOD}${BT[k].key}" ${S.canWrite?"":"disabled"}><span class="ed-ic ic-${k}" aria-hidden="true"></span>${k==="h"?"Scène":BT[k].label}</button>`).join("")}</div>
+        <span class="ed-hint">ou Tab · Entrée : bloc suivant · Maj+Entrée : retour à la ligne</span>
         <span class="spacer"></span>
         <span class="ed-stats" id="ed-stats"></span>
         ${S.canWrite?`<button class="btn small" id="ed-renum">Renuméroter</button>`:""}
@@ -1336,11 +1351,13 @@ async function resolveLockNames(page){
 
 function bindEditor(root){
   const page=$("#edpage");
-  $("#ed-type").onchange=e=>{const el=document.activeElement;const b=ED.lastBlock;if(b&&page.contains(b)){setType(b,e.target.value);setCaret(b,getText(b).length);}};
+  root.querySelectorAll(".ed-tb").forEach(btn=>{
+    btn.onmousedown=e=>e.preventDefault();   /* garde le curseur dans le texte */
+    btn.onclick=()=>typeButton(btn.dataset.t);});
   const rn=$("#ed-renum");if(rn)rn.onclick=renumberScenes;
   $("#ed-export").onclick=e=>scriptExportMenu(e.currentTarget);
   $("#ed-nav").onclick=e=>{const b=e.target.closest("button[data-sid]");if(!b)return;const sec=page.querySelector(`.ed-scene[data-sid="${CSS.escape(b.dataset.sid)}"]`);if(sec)sec.scrollIntoView({block:"start",behavior:"smooth"});};
-  page.addEventListener("focusin",e=>{const b=e.target.closest(".sb");if(!b)return;ED.lastBlock=b;$("#ed-type").value=b.dataset.t;
+  page.addEventListener("focusin",e=>{const b=e.target.closest(".sb");if(!b)return;ED.lastBlock=b;markType(b.dataset.t);
     const sid=b.closest(".ed-scene").dataset.sid;if(ED.editing!==sid){ED.editing=sid;S.room?.presence({editing:sid}).catch(()=>{});}});
   page.addEventListener("focusout",e=>{const sec=e.target.closest(".ed-scene");setTimeout(()=>{
     const a=document.activeElement;const inSame=a&&sec&&sec.contains(a);
@@ -1350,9 +1367,23 @@ function bindEditor(root){
   page.addEventListener("paste",onPaste);
   page.addEventListener("keydown",onEdKey);
 }
+function markType(t){document.querySelectorAll(".ed-tb").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.t===t)));}
+function typeButton(t){
+  const page=$("#edpage");if(!page||!S.canWrite)return;
+  let b=ED.lastBlock&&page.contains(ED.lastBlock)&&ED.lastBlock.isContentEditable?ED.lastBlock:null;
+  if(!b){/* aucun bloc actif : on ajoute à la fin du scénario */
+    const secs=[...page.querySelectorAll(".ed-scene:not(.locked)")];const sec=secs[secs.length-1];
+    if(!sec){toast("Clique d'abord dans le texte du scénario.");return;}
+    const n=blockEl(t,"",true);sec.append(n);setCaret(n,0);ED.lastBlock=n;markType(t);n.scrollIntoView({block:"center"});markDirty(sec.dataset.sid);return;}
+  const sec=b.closest(".ed-scene");const isHead=b===sec.querySelector(".sb");
+  if(t==="h"&&(getText(b).trim()||isHead)){/* nouvelle scène : en-tête inséré après la ligne en cours */
+    const n=blockEl("h","",true);b.after(n);setCaret(n,0);ED.lastBlock=n;markType("h");markDirty(sec.dataset.sid);return;}
+  if(isHead&&t!=="h"){toast("Pour retirer un en-tête de scène, efface son texte puis appuie sur Retour arrière.");setCaret(b,getText(b).length);return;}
+  setType(b,t);setCaret(b,getText(b).length);
+}
 function markDirty(sid,now){ED.dirty.add(sid);clearTimeout(ED.timers.get(sid));if(now){commitScene(sid);return;}ED.timers.set(sid,setTimeout(()=>commitScene(sid),900));}
 function setType(el,t){if(!BT[t])return;const old=el.dataset.t;el.dataset.t=t;el.className="sb sb-"+t;el.dataset.ph=BT[t].ph;
-  if(t==="h"&&!el.dataset.num)el.dataset.num="";$("#ed-type").value=t;
+  if(t==="h"&&!el.dataset.num)el.dataset.num="";markType(t);
   const sid=el.closest(".ed-scene").dataset.sid;markDirty(sid,old==="h"||(t==="h"&&!!getText(el).trim()));}
 
 function onEdKey(e){
@@ -1373,7 +1404,7 @@ function onEdKey(e){
     const before=text.slice(0,off).replace(/\s+$/,""),after=text.slice(off).replace(/^\s+/,"");
     if(t==="c"||t==="h"||t==="t"||t==="s")el.textContent=before.toUpperCase();else el.textContent=before;
     let nt=NEXT[t];if(t==="p"&&!/\)\s*$/.test(before)&&before)el.textContent=before+")";
-    const n=blockEl(nt,after,true);el.after(n);setCaret(n,0);$("#ed-type").value=nt;
+    const n=blockEl(nt,after,true);el.after(n);setCaret(n,0);markType(nt);
     markDirty(el.closest(".ed-scene").dataset.sid,nt==="h"&&!!after.trim());return;}
   if(e.key==="Backspace"&&!mod){const sel=getSelection();if(!sel.isCollapsed)return;const off=caretOffset(el);if(off!==0)return;
     const sec=el.closest(".ed-scene");const isHead=el===sec.querySelector(".sb");
@@ -1436,6 +1467,10 @@ async function commitScene(sid){
   const sec=$("#edpage")?.querySelector(`.ed-scene[data-sid="${CSS.escape(sid)}"]`);const s=scene(sid);
   if(!sec||!s){ED.dirty.delete(sid);return;}
   let bl=readSection(sec);ED.dirty.delete(sid);
+  /* où est le curseur : groupe (scène) et position dans le groupe, pour le garder après découpage */
+  const act=document.activeElement&&sec.contains(document.activeElement)?document.activeElement.closest(".sb"):null;
+  let actG=-1,actI=0,actC=0;
+  if(act){let g=-1,i=0;for(const el of sec.querySelectorAll(".sb")){if(el.dataset.t==="h"){g++;i=0;}else i++;if(el===act){actG=g;actI=i;break;}}actC=caretOffset(act);}
   const idx=S.scenes.indexOf(s);const prevS=S.scenes[idx-1];
   try{
     if(bl[0]?.t!=="h"){
@@ -1451,14 +1486,15 @@ async function commitScene(sid){
     await S.db.doc(base()+"/scenes/"+sid).update(patch);
     if(groups.length){
       const nextS=S.scenes[idx+1];let lo=s.order||0;const hi=nextS?(nextS.order||0):lo+groups.length+1;const step=(hi-lo)/(groups.length+1);
-      let lastNum=s.num;let focusId=null;const made=[];
-      for(const g of groups){lo+=step;const ref=S.db.collection(base()+"/scenes").doc();const gb=cleanBlocks(g.blocks.length?g.blocks:[{t:"a",x:""}]);
+      let lastNum=s.num;let focusId=null;const made=[];let gi=0;
+      for(const g of groups){gi++;lo+=step;const ref=S.db.collection(base()+"/scenes").doc();const gb=cleanBlocks(g.blocks.length?g.blocks:[{t:"a",x:""}]);
         lastNum=nextNum(lastNum,made);made.push(lastNum);
         await ref.set({...headingFields(g.h,s),num:lastNum,order:lo,blocks:gb,body:bodyFromBlocks(gb),status:"todo",synopsis:"",
           eighths:Math.max(1,Math.round(sceneLines({blocks:gb})/LINES_PER_PAGE*8)),createdAt:Date.now(),createdBy:S.me?.id||null});
-        focusId=ref.id;}
-      sec.remove();ED.sigs.delete(sid);
-      ED.focus={sid:focusId,idx:0,caret:"end"};
+        if(gi===actG)ED.focus={sid:ref.id,idx:actI,caret:actC};focusId=ref.id;}
+      /* on retire de cette section les blocs passés dans les nouvelles scènes ; ils réapparaissent dans leurs propres sections */
+      let g=-1;for(const el of [...sec.querySelectorAll(".sb")]){if(el.dataset.t==="h")g++;if(g>0)el.remove();}
+      ED.sigs.delete(sid);if(actG<0&&!ED.focus)ED.focus={sid:focusId,idx:0,caret:"end"};
       toast(groups.length>1?groups.length+" scènes ajoutées.":"Scène "+lastNum+" ajoutée.");
     }
   }catch(e){writeErr(e);}
