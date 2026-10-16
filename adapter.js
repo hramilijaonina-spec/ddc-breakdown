@@ -20,6 +20,8 @@ function fbConfig(){
   if(!c.apiKey){try{const o=JSON.parse(LS.get("ddc.fbconfig")||"null");if(o&&o.apiKey)c={...c,...o};}catch{}}
   return c;
 }
+let sharedKey="";let IS_ADMIN=false;let RTDB=null;
+const activeKey=()=>LS.get("ddc.apikey")||sharedKey;
 const isAdminEmail=e=>!!(CFG.adminEmail&&e&&e.toLowerCase()===CFG.adminEmail.toLowerCase());
 
 /* ---------- gate (setup / login / access denied) ---------- */
@@ -125,7 +127,7 @@ function build(u,isAdmin){
     throw{code:"invalid_json",message:"réponse illisible",text:t};
   }
   async function ask(prompt,opts={}){
-    const key=LS.get("ddc.apikey");if(!key)throw{code:"no_key",message:"clé API absente"};
+    const key=activeKey();if(!key)throw{code:"no_key",message:"clé API absente"};
     let r;
     try{r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",signal:opts.signal,
       headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
@@ -146,6 +148,8 @@ function build(u,isAdmin){
     const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
     return{status:"saved"};}};
 
+  IS_ADMIN=isAdmin;RTDB=rtdb;
+  rtdb.ref(ROOT+"/secrets/anthropicKey").on("value",s=>{sharedKey=s.val()||"";},()=>{sharedKey="";});
   mountAccount(u,isAdmin,rtdb);
   return{db,user,room,sample,downloads};
 }
@@ -154,15 +158,27 @@ function build(u,isAdmin){
 function modal(html){const sc=document.createElement("div");sc.className="scrim";sc.innerHTML=`<div class="modal" role="dialog" aria-modal="true">${html}</div>`;
   sc.addEventListener("pointerdown",e=>{if(e.target===sc)sc.remove();});sc.addEventListener("keydown",e=>{if(e.key==="Escape")sc.remove();});document.body.append(sc);return sc;}
 function openKey(bad){
-  const m=modal(`<h3>Clé API Anthropic</h3>
-    ${bad?`<p class="ddc-err">La clé enregistrée a été refusée. Vérifie-la ou crée-en une nouvelle.</p>`:""}
-    <p class="empty">L'analyse IA utilise ta clé API Anthropic, facturée à l'usage (quelques centimes par scénario). Crée une clé sur <b>console.anthropic.com → API Keys</b>. Elle reste enregistrée dans ce navigateur uniquement.</p>
-    <input type="password" id="ddc-key" placeholder="sk-ant-…" autocomplete="off" aria-label="Clé API" value="${escH(LS.get("ddc.apikey")||"")}">
-    <div class="mfoot"><button class="btn danger" id="ddc-key-del">Effacer</button><button class="btn" id="ddc-key-c">Annuler</button><button class="btn primary" id="ddc-key-ok">Enregistrer</button></div>`);
-  const i=m.querySelector("#ddc-key");i.focus();
+  if(IS_ADMIN&&RTDB){openTeamKey(bad);return;}
+  if(sharedKey&&!bad&&!LS.get("ddc.apikey")){const m=modal(`<h3>Analyse IA</h3><p>L'équipe utilise la clé API enregistrée par l'administrateur. Tu n'as rien à configurer.</p><div class="mfoot"><button class="btn primary" id="ddc-k-ok">OK</button></div>`);m.querySelector("#ddc-k-ok").onclick=()=>m.remove();return;}
+  const m=modal(`<h3>Analyse IA</h3>
+    <p>${bad?"La clé API de l'équipe a été refusée par Anthropic.":"Aucune clé API n'est encore enregistrée pour l'équipe."} Préviens l'administrateur ${escH(CFG.adminEmail||"")} pour qu'il l'enregistre ou la remplace.</p>
+    <div class="mfoot"><button class="btn primary" id="ddc-k-ok">OK</button></div>`);
+  m.querySelector("#ddc-k-ok").onclick=()=>m.remove();
+}
+function openTeamKey(bad){
+  const masked=sharedKey?"•••• "+sharedKey.slice(-4):"aucune";
+  const m=modal(`<h3>Clé API de l'équipe</h3>
+    ${bad?`<p class="ddc-err">La clé actuelle a été refusée par Anthropic. Remplace-la.</p>`:""}
+    <p class="empty">Cette clé Anthropic sert à l'analyse IA pour tous les membres. Elle est stockée dans Firebase, lisible seulement par l'équipe connectée, et n'apparaît jamais dans le code GitHub. Clé actuelle : <b>${escH(masked)}</b></p>
+    <input type="password" id="ddc-key" placeholder="sk-ant-… (nouvelle clé)" autocomplete="off" aria-label="Nouvelle clé API">
+    <div class="mfoot">${sharedKey?`<button class="btn danger" id="ddc-key-del">Supprimer la clé</button>`:""}<button class="btn" id="ddc-key-c">Annuler</button><button class="btn primary" id="ddc-key-ok">Enregistrer pour l'équipe</button></div>`);
+  const i=m.querySelector("#ddc-key");i.focus();const ref=RTDB.ref(ROOT+"/secrets/anthropicKey");
+  const fail=e=>alert("Enregistrement refusé : "+(e.code||e.message)+". Vérifie que les règles de la base sont à jour.");
   m.querySelector("#ddc-key-c").onclick=()=>m.remove();
-  m.querySelector("#ddc-key-del").onclick=()=>{LS.del("ddc.apikey");m.remove();};
-  m.querySelector("#ddc-key-ok").onclick=()=>{const v=i.value.trim();if(v)LS.set("ddc.apikey",v);m.remove();};
+  const del=m.querySelector("#ddc-key-del");if(del)del.onclick=()=>ref.remove().then(()=>m.remove(),fail);
+  m.querySelector("#ddc-key-ok").onclick=()=>{const v=i.value.trim();if(!v)return;
+    if(!/^sk-ant-/.test(v)&&!confirm("Cette clé ne commence pas par sk-ant-. L'enregistrer quand même ?"))return;
+    LS.del("ddc.apikey");ref.set(v).then(()=>m.remove(),fail);};
 }
 window.DDC_openKey=openKey;
 function openTeam(rtdb){
@@ -190,7 +206,7 @@ function mountAccount(u,isAdmin,rtdb){
     b.onclick=()=>{const old=document.getElementById("ddc-menu");if(old){old.remove();return;}
       const d=document.createElement("div");d.id="ddc-menu";d.className="pop";
       d.innerHTML=`<div class="ptitle">${escH(u.email||"")}</div>
-        <button data-a="key"><span>Clé API Anthropic${LS.get("ddc.apikey")?" ✓":""}</span></button>
+        <button data-a="key"><span>${isAdmin?"Clé API de l'équipe":"Analyse IA"}${activeKey()?" ✓":""}</span></button>
         ${isAdmin&&rtdb?`<button data-a="team"><span>Équipe</span></button>`:""}
         <button data-a="out"><span>Se déconnecter</span></button>`;
       document.body.append(d);const r=b.getBoundingClientRect();d.style.top=(r.bottom+6)+"px";d.style.left=Math.max(8,r.right-d.offsetWidth)+"px";

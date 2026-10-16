@@ -33,6 +33,10 @@
       "locks": {
         ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())",
         ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())"
+      },
+      "secrets": {
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())",
+        ".write": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com'"
       }
     }
   }

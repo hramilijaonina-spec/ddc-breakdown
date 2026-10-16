@@ -26,7 +26,7 @@ L'administrateur (`adminEmail` dans `config.js`) ajoute les adresses Google des 
 
 ## IA
 
-Chaque membre saisit une clé API Anthropic (menu du compte → **Clé API Anthropic**). La clé reste dans son navigateur. Le modèle est réglable dans `config.js`.
+L'administrateur enregistre une clé API Anthropic pour toute l'équipe : menu du compte → **Clé API de l'équipe**. Elle est stockée dans Firebase (`ddc/secrets`), lisible seulement par les membres connectés, et n'est jamais dans le code. Pour la changer, même menu. Le modèle est réglable dans `config.js`.
 
 ## Fichiers
 
