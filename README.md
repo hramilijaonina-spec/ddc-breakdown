@@ -25,7 +25,7 @@ Le projet Firebase utilisé est `shotlist-298e2` (le même que l'app shotlist).
 
 ## Équipe
 
-L'administrateur (`adminEmail` dans `config.js`) ajoute les adresses e-mail des membres (Gmail ou autre) depuis le menu du compte → **Équipe**.
+L'administrateur (`adminEmail` dans `config.js`) ajoute les adresses e-mail des membres (Gmail ou autre) depuis le menu du compte → **Équipe**. Une personne non autorisée qui se connecte envoie automatiquement une demande d'accès : badge rouge sur l'avatar de l'administrateur, à accepter ou refuser dans **Équipe**.
 
 ## IA
 

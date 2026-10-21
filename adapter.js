@@ -93,12 +93,19 @@ async function completeEmailLink(){
   finally{try{history.replaceState(null,"",cleanUrl());}catch{}setTimeout(()=>{linkPending=false;},4000);}
 }
 function showDenied(u){
-  whenBody(()=>{const g=gate(`<span class="label">DDC Breakdown</span>
+  whenBody(async()=>{const g=gate(`<span class="label">DDC Breakdown</span>
     <h1>Accès en attente</h1>
-    <p>Le compte <b>${escH(u.email)}</b> ne fait pas encore partie de l'équipe. Demande à la production de l'ajouter dans <b>Équipe</b>, puis recharge la page.</p>
+    <p>Le compte <b>${escH(u.email)}</b> ne fait pas encore partie de l'équipe.</p>
+    <p id="ddc-req-st" class="empty">Envoi de ta demande d'accès…</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="ddc-retry">Réessayer</button><button class="btn" id="ddc-out">Changer de compte</button></div>`);
     g.querySelector("#ddc-retry").onclick=()=>location.reload();
-    g.querySelector("#ddc-out").onclick=()=>firebase.auth().signOut().then(()=>location.reload());});
+    g.querySelector("#ddc-out").onclick=()=>firebase.auth().signOut().then(()=>location.reload());
+    const st=g.querySelector("#ddc-req-st");
+    /* demande d'accès : l'administrateur la voit dans l'app et l'accepte en un clic */
+    try{const ref=firebase.database().ref(ROOT+"/requests/"+emailKey(u.email));const prev=await ref.get().catch(()=>null);
+      await ref.set({email:(u.email||"").toLowerCase(),name:u.displayName||"",at:prev&&prev.exists()&&prev.val().at||Date.now(),last:Date.now()});
+      st.className="ddc-ok";st.textContent="Ta demande d'accès a été envoyée à l'administrateur. Dès qu'elle est acceptée, clique sur Réessayer.";}
+    catch{st.className="empty";st.textContent="Demande à la production de t'ajouter dans Équipe, puis clique sur Réessayer.";}});
 }
 
 /* ---------- services ---------- */
@@ -293,18 +300,27 @@ window.DDC_openKey=openKey;
 function openTeam(rtdb){
   const m=modal(`<h3>Équipe</h3><p class="empty">Seules les adresses listées ici peuvent ouvrir les projets. Gmail : connexion avec Google ou par lien e-mail. Autres adresses (Yahoo, Outlook, pro…) : connexion par lien e-mail.</p>
     <form class="addrow" id="ddc-tf"><input type="text" id="ddc-te" placeholder="prenom@exemple.com" aria-label="E-mail" autocomplete="off"><button class="btn" type="submit">Ajouter</button></form>
+    <div id="ddc-rq"></div>
     <div id="ddc-tl" class="ddc-team"></div><div class="mfoot"><button class="btn primary" id="ddc-tok">Terminé</button></div>`);
   const ref=rtdb.ref(ROOT+"/team");const list=m.querySelector("#ddc-tl");
+  const rqRef=rtdb.ref(ROOT+"/requests");const rqBox=m.querySelector("#ddc-rq");
+  const fmt=t=>t?new Date(t).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+  const hr=s=>{const v=s.val()||{};const keys=Object.keys(v).sort((a,b)=>(v[b].last||0)-(v[a].last||0));
+    rqBox.innerHTML=keys.length?`<span class="label">Demandes d'accès · ${keys.length}</span><div class="ddc-team ddc-rq">${keys.map(k=>`<div><span>${escH(v[k].email||k.replace(/,/g,"."))}${v[k].name?` <small>${escH(v[k].name)}</small>`:""}<br><small>${escH(fmt(v[k].last||v[k].at))}</small></span><span class="ddc-rq-a"><button class="btn small primary" data-ok="${escH(k)}">Accepter</button><button class="btn ghost small danger" data-no="${escH(k)}">Refuser</button></span></div>`).join("")}</div>`:"";
+    rqBox.querySelectorAll("[data-ok]").forEach(b=>b.onclick=async()=>{const k=b.dataset.ok;const e=(v[k]&&v[k].email)||k.replace(/,/g,".");b.disabled=true;
+      try{await ref.child(emailKey(e)).set({email:e,at:Date.now()});await rqRef.child(k).remove();}catch(err){b.disabled=false;alert("Ajout refusé : "+(err.code||err.message));}});
+    rqBox.querySelectorAll("[data-no]").forEach(b=>b.onclick=()=>rqRef.child(b.dataset.no).remove());};
+  rqRef.on("value",hr,()=>{rqBox.innerHTML="";});
   const h=s=>{const v=s.val()||{};const rows=Object.keys(v).map(k=>v[k].email||k.replace(/,/g,".")).sort();
     list.innerHTML=(CFG.adminEmail?`<div><span>${escH(CFG.adminEmail)}</span><small>administrateur</small></div>`:"")+
       rows.map(e=>`<div><span>${escH(e)}</span><button class="btn ghost small danger" data-k="${escH(emailKey(e))}">Retirer</button></div>`).join("");
     list.querySelectorAll("button[data-k]").forEach(b=>b.onclick=()=>ref.child(b.dataset.k).remove());};
   ref.on("value",h,()=>{list.innerHTML=`<p class="ddc-err">Lecture de l'équipe refusée. Vérifie les règles de la base.</p>`;});
-  const close=()=>{ref.off("value",h);m.remove();};
+  const close=()=>{ref.off("value",h);rqRef.off("value",hr);m.remove();};
   m.querySelector("#ddc-tok").onclick=close;
   m.querySelector("#ddc-tf").onsubmit=ev=>{ev.preventDefault();const e=m.querySelector("#ddc-te").value.trim().toLowerCase();
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return;m.querySelector("#ddc-te").value="";
-    ref.child(emailKey(e)).set({email:e,at:Date.now()}).catch(err=>alert("Ajout refusé : "+(err.code||err.message)));};
+    ref.child(emailKey(e)).set({email:e,at:Date.now()}).then(()=>rqRef.child(emailKey(e)).remove().catch(()=>{})).catch(err=>alert("Ajout refusé : "+(err.code||err.message)));};
 }
 function mountAccount(u,isAdmin,rtdb){
   whenBody(()=>{
@@ -312,12 +328,18 @@ function mountAccount(u,isAdmin,rtdb){
     const b=document.createElement("button");b.id="ddc-acct";b.className="ddc-acct";b.setAttribute("aria-label","Mon compte");
     b.innerHTML=`<img alt="" src="${escH(u.photoURL||initials(u.displayName,u.uid))}" referrerpolicy="no-referrer">`;
     const act=document.getElementById("actions");if(act)top.insertBefore(b,act);else top.append(b);
+    let pending=0;
+    if(isAdmin&&rtdb){const badge=document.createElement("span");badge.className="ddc-badge";badge.hidden=true;b.append(badge);
+      rtdb.ref(ROOT+"/requests").on("value",s=>{const v=s.val()||{};const n=Object.keys(v).length;const prevN=pending;pending=n;
+        badge.hidden=!n;badge.textContent=n>9?"9+":String(n);b.setAttribute("aria-label",n?"Mon compte · "+n+" demande"+(n>1?"s":"")+" d'accès":"Mon compte");
+        if(n>prevN&&b.dataset.seen){const t=document.createElement("div");t.className="toast";t.setAttribute("role","status");t.textContent="Nouvelle demande d'accès : ouvre ton avatar → Équipe.";document.body.append(t);setTimeout(()=>t.remove(),6000);}
+        b.dataset.seen="1";},()=>{});}
     const net=document.createElement("span");net.id="ddc-net";net.className="ddc-net";net.hidden=true;net.setAttribute("role","status");top.insertBefore(net,b);
     b.onclick=()=>{const old=document.getElementById("ddc-menu");if(old){old.remove();return;}
       const d=document.createElement("div");d.id="ddc-menu";d.className="pop";
       d.innerHTML=`<div class="ptitle">${escH(u.email||"")}</div>
         <button data-a="key"><span>${isAdmin?"Clé API de l'équipe":"Analyse IA"}${activeKey()?" ✓":""}</span></button>
-        ${isAdmin&&rtdb?`<button data-a="team"><span>Équipe</span></button>`:""}
+        ${isAdmin&&rtdb?`<button data-a="team"><span>Équipe${pending?` · <b class="ddc-badge-in">${pending} demande${pending>1?"s":""}</b>`:""}</span></button>`:""}
         <button data-a="out"><span>Se déconnecter</span></button>`;
       document.body.append(d);const r=b.getBoundingClientRect();d.style.top=(r.bottom+6)+"px";d.style.left=Math.max(8,r.right-d.offsetWidth)+"px";
       const off=e=>{if(!d.contains(e.target)&&e.target!==b){d.remove();document.removeEventListener("pointerdown",off,true);}};

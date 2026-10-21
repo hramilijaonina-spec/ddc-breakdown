@@ -45,6 +45,14 @@
       "secrets": {
         ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com' || root.child('ddc/team').child(auth.token.email.toLowerCase().replace('.', ',')).exists())",
         ".write": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com'"
+      },
+      "requests": {
+        ".read": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com'",
+        ".write": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase() == 'h.ramilijaonina@gmail.com'",
+        "$key": {
+          ".read": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase().replace('.', ',') == $key",
+          ".write": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase().replace('.', ',') == $key && (!newData.exists() || newData.child('email').val() == auth.token.email.toLowerCase())"
+        }
       }
     }
   }
