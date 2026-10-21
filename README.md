@@ -9,7 +9,7 @@ Dépouillement de scénario et plan de travail collaboratifs pour l'équipe DDC.
 - Dépouillement par IA (Claude, via clé API Anthropic) dans 13 catégories, correction à la main, commentaires par scène.
 - Plan de travail : lieux de tournage, journées en glisser-déposer, plan proposé automatiquement, alertes (journée chargée, déplacements, rôles éclatés).
 - Exports : fiches de dépouillement et plan de travail (HTML imprimable, CSV).
-- Temps réel pour toute l'équipe, avec connexion Google.
+- Temps réel pour toute l'équipe ; connexion avec Google ou par lien e-mail (toute adresse, sans mot de passe).
 - Hors ligne : l'app s'ouvre sans réseau, les modifications sont gardées sur l'appareil et envoyées au retour de la connexion.
 - Sauvegarde : menu ••• du projet → « Sauvegarder le projet (fichier) » ; restauration dans un nouveau projet.
 
@@ -17,7 +17,7 @@ Dépouillement de scénario et plan de travail collaboratifs pour l'équipe DDC.
 
 Le projet Firebase utilisé est `shotlist-298e2` (le même que l'app shotlist).
 
-1. **Connexion Google** : console Firebase → Authentication → Méthode de connexion → activer **Google**.
+1. **Connexion** : console Firebase → Authentication → Méthode de connexion → activer **Google**, puis **E-mail/Mot de passe** avec l'option **Lien envoyé par e-mail (connexion sans mot de passe)**.
 2. **Domaine autorisé** : Authentication → Paramètres → Domaines autorisés → ajouter `hramilijaonina-spec.github.io`.
 3. **Application Web** : Paramètres du projet → Vos applications → ajouter une application Web, puis copier `apiKey` et `appId` dans `config.js`.
 4. **Règles de la base** : Realtime Database → Règles → coller le contenu de `database.rules.json` → Publier.
@@ -25,7 +25,7 @@ Le projet Firebase utilisé est `shotlist-298e2` (le même que l'app shotlist).
 
 ## Équipe
 
-L'administrateur (`adminEmail` dans `config.js`) ajoute les adresses Google des membres depuis le menu du compte → **Équipe**.
+L'administrateur (`adminEmail` dans `config.js`) ajoute les adresses e-mail des membres (Gmail ou autre) depuis le menu du compte → **Équipe**.
 
 ## IA
 

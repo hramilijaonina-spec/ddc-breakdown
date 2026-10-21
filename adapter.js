@@ -45,20 +45,52 @@ function showSetup(){
       if(!o.apiKey){g.querySelector("#ddc-cfg-err").textContent="Je ne trouve pas apiKey dans ce texte.";return;}
       LS.set("ddc.fbconfig",JSON.stringify(o));location.reload();};});
 }
-function showLogin(err){
+const LINK_KEY="ddc.linkEmail";
+const cleanUrl=()=>location.origin+location.pathname;
+const authErr=c=>c==="auth/unauthorized-domain"||c==="auth/unauthorized-continue-uri"?"Ce site n'est pas autorisé dans Firebase. Ajoute "+location.hostname+" dans Authentication → Paramètres → Domaines autorisés.":
+  c==="auth/operation-not-allowed"?"Cette méthode de connexion n'est pas activée dans Firebase (Authentication → Méthode de connexion).":
+  c==="auth/invalid-email"?"Cette adresse e-mail n'est pas valide.":
+  c==="auth/invalid-action-code"||c==="auth/expired-action-code"?"Ce lien de connexion a expiré ou a déjà servi. Demande un nouveau lien.":
+  c==="auth/too-many-requests"?"Trop de tentatives. Réessaie dans quelques minutes.":
+  "Connexion impossible ("+(c||"erreur")+").";
+function showLogin(err,info){
   whenBody(()=>{const g=gate(`<span class="label">DDC Breakdown</span>
     <h1>Dépouillement et plan de travail</h1>
-    <p>Connecte-toi avec le compte Google que la production a ajouté à l'équipe.</p>
+    <p>Connecte-toi avec l'adresse e-mail que la production a ajoutée à l'équipe.</p>
     <div><button class="btn primary" id="ddc-login">Se connecter avec Google</button></div>
+    <div class="ddc-or"><span>ou, avec n'importe quelle adresse e-mail</span></div>
+    <form class="ddc-link" id="ddc-link"><input type="email" id="ddc-email" placeholder="prenom@exemple.com" autocomplete="email" required aria-label="Adresse e-mail" value="${escH(LS.get(LINK_KEY)||"")}"><button class="btn" type="submit" id="ddc-send">Recevoir un lien de connexion</button></form>
+    ${info?`<p class="ddc-ok">${info}</p>`:""}
     ${err?`<p class="ddc-err">${escH(err)}</p>`:""}`);
     g.querySelector("#ddc-login").onclick=async()=>{
       try{await firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());}
       catch(e){const c=e&&e.code||"";
         if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;
         if(c==="auth/popup-blocked"){firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());return;}
-        showLogin(c==="auth/unauthorized-domain"?"Ce site n'est pas autorisé dans Firebase. Ajoute "+location.hostname+" dans Authentication → Paramètres → Domaines autorisés.":
-          c==="auth/operation-not-allowed"?"La connexion Google n'est pas activée dans Firebase (Authentication → Méthode de connexion → Google).":
-          "Connexion impossible ("+(c||"erreur")+").");}};});
+        showLogin(authErr(c));}};
+    g.querySelector("#ddc-link").onsubmit=async ev=>{ev.preventDefault();
+      const email=g.querySelector("#ddc-email").value.trim().toLowerCase();if(!email)return;
+      const btn=g.querySelector("#ddc-send");btn.disabled=true;btn.textContent="Envoi…";
+      try{await firebase.auth().sendSignInLinkToEmail(email,{url:cleanUrl(),handleCodeInApp:true});LS.set(LINK_KEY,email);
+        showLogin(null,`Lien envoyé à <b>${escH(email)}</b>. Ouvre cet e-mail et clique sur le lien, de préférence sur cet appareil. Pense à regarder dans les spams.`);}
+      catch(e){showLogin(authErr(e&&e.code));}};});
+}
+function askLinkEmail(){
+  return new Promise(res=>whenBody(()=>{const g=gate(`<span class="label">DDC Breakdown</span>
+    <h1>Confirme ton adresse</h1>
+    <p>Tu as ouvert le lien sur un autre appareil ou navigateur. Saisis l'adresse e-mail à laquelle tu l'as reçu.</p>
+    <form class="ddc-link" id="ddc-conf"><input type="email" id="ddc-email2" autocomplete="email" required aria-label="Adresse e-mail"><button class="btn primary" type="submit">Se connecter</button></form>`);
+    const f=g.querySelector("#ddc-conf");g.querySelector("#ddc-email2").focus();
+    f.onsubmit=ev=>{ev.preventDefault();res(g.querySelector("#ddc-email2").value.trim().toLowerCase());};}));
+}
+let linkPending=false;
+async function completeEmailLink(){
+  const auth=firebase.auth();if(!auth.isSignInWithEmailLink||!auth.isSignInWithEmailLink(location.href))return;
+  linkPending=true;
+  let email=LS.get(LINK_KEY);if(!email)email=await askLinkEmail();
+  try{await auth.signInWithEmailLink(email,location.href);LS.del(LINK_KEY);}
+  catch(e){linkPending=false;showLogin(authErr(e&&e.code));}
+  finally{try{history.replaceState(null,"",cleanUrl());}catch{}setTimeout(()=>{linkPending=false;},4000);}
 }
 function showDenied(u){
   whenBody(()=>{const g=gate(`<span class="label">DDC Breakdown</span>
@@ -259,8 +291,8 @@ function openTeamKey(bad){
 }
 window.DDC_openKey=openKey;
 function openTeam(rtdb){
-  const m=modal(`<h3>Équipe</h3><p class="empty">Seules les adresses Google listées ici peuvent ouvrir les projets.</p>
-    <form class="addrow" id="ddc-tf"><input type="text" id="ddc-te" placeholder="prenom.nom@gmail.com" aria-label="E-mail" autocomplete="off"><button class="btn" type="submit">Ajouter</button></form>
+  const m=modal(`<h3>Équipe</h3><p class="empty">Seules les adresses listées ici peuvent ouvrir les projets. Gmail : connexion avec Google ou par lien e-mail. Autres adresses (Yahoo, Outlook, pro…) : connexion par lien e-mail.</p>
+    <form class="addrow" id="ddc-tf"><input type="text" id="ddc-te" placeholder="prenom@exemple.com" aria-label="E-mail" autocomplete="off"><button class="btn" type="submit">Ajouter</button></form>
     <div id="ddc-tl" class="ddc-team"></div><div class="mfoot"><button class="btn primary" id="ddc-tok">Terminé</button></div>`);
   const ref=rtdb.ref(ROOT+"/team");const list=m.querySelector("#ddc-tl");
   const h=s=>{const v=s.val()||{};const rows=Object.keys(v).map(k=>v[k].email||k.replace(/,/g,".")).sort();
@@ -310,8 +342,10 @@ function start(){
   if(!window.firebase||!c.apiKey||!c.databaseURL){showSetup();return;}
   firebase.initializeApp(c);
   let done=false;
+  const linkUrl=firebase.auth().isSignInWithEmailLink&&firebase.auth().isSignInWithEmailLink(location.href);if(linkUrl)linkPending=true;
   firebase.auth().onAuthStateChanged(async u=>{
-    if(done){location.reload();return;}
+    if(!u&&linkPending)return;             /* connexion par lien en cours : on attend son résultat */
+    if(done){if(!u)location.reload();return;}
     if(!u){showLogin();return;}
     const admin=isAdminEmail(u.email);let member=admin;
     const MK="ddc.member."+u.uid;
@@ -321,6 +355,7 @@ function start(){
     firebase.database().ref(ROOT+"/users/"+u.uid).update({name:u.displayName||u.email||"",photo:u.photoURL||"",email:(u.email||"").toLowerCase()}).catch(()=>{});
     done=true;hideGate();resolveSvc(build(u,admin));
   });
+  completeEmailLink();
   firebase.auth().getRedirectResult().catch(e=>{if(!done&&navigator.onLine)showLogin("Connexion impossible ("+(e.code||"erreur")+").");});
 }
 start();

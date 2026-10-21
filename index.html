@@ -19,6 +19,11 @@ img{max-width:100%}
 #ddc-gate textarea{width:100%;font-family:var(--f-script);font-size:12.5px}
 #ddc-gate code{font-size:12.5px;background:var(--sunk);padding:1px 4px;border-radius:3px}
 .ddc-err{color:var(--danger);margin:0}
+.ddc-ok{color:var(--ok);margin:0}
+.ddc-or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12.5px}
+.ddc-or::before,.ddc-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.ddc-link{display:flex;gap:8px;flex-wrap:wrap}
+.ddc-link input{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r);padding:7px 10px;color:var(--fg)}
 .ddc-acct{border:0;background:transparent;padding:0;border-radius:50%;width:32px;height:32px;flex:0 0 auto}
 .ddc-acct img{width:32px;height:32px;border-radius:50%;display:block}
 .ddc-team{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r)}
@@ -415,8 +420,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.8.1 défilement du plan de travail */
-const APP_VERSION="1.8.1";const APP_DATE="16 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.8.1 défilement du plan de travail · 1.9 connexion par lien e-mail */
+const APP_VERSION="1.9";const APP_DATE="16 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
