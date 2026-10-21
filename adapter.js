@@ -28,7 +28,8 @@ const isAdminEmail=e=>!!(CFG.adminEmail&&e&&e.toLowerCase()===CFG.adminEmail.toL
 function gate(html){
   let g=document.getElementById("ddc-gate");
   if(!g){g=document.createElement("div");g.id="ddc-gate";document.body.append(g);}
-  g.innerHTML=`<div class="welcome-card">${html}</div>`;return g;
+  const v=typeof APP_VERSION!=="undefined"?APP_VERSION:"";
+  g.innerHTML=`<div class="welcome-card">${html.replace('<span class="label">DDC Breakdown</span>','<span class="label">DDC Breakdown'+(v?' · v'+v:'')+'</span>')}</div>`;return g;
 }
 function hideGate(){const g=document.getElementById("ddc-gate");if(g)g.remove();}
 function whenBody(fn){if(document.body)fn();else document.addEventListener("DOMContentLoaded",fn);}
