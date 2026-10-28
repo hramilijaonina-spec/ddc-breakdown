@@ -445,7 +445,7 @@ const CATS=[
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
 /* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.8.1 défilement du plan de travail · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.10.2 affichage téléphone et tablette · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets */
-const APP_VERSION="1.12";const APP_DATE="16 oct. 2026";
+const APP_VERSION="1.12.1";const APP_DATE="16 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -1356,6 +1356,7 @@ const knownLocations=()=>[...new Set(S.scenes.map(s=>s.location).filter(Boolean)
 function renderEditor(){
   const root=$("#editor");if(!root||!S.pid)return;
   if(!root.dataset.ready){root.dataset.ready="1";
+    ED.sigs.clear();ED.lastBlock=null;   /* nouvel éditeur (retour sur l'onglet) : tout redessiner */
     root.innerHTML=`<div class="ed-bar">
         <div class="ed-types" role="toolbar" aria-label="Type de bloc">${["h","a","c","p","d","t","s"].map(k=>`<button type="button" class="ed-tb" data-t="${k}" aria-pressed="false" title="${BT[k].label} · ${MOD}${BT[k].key}" ${S.canWrite?"":"disabled"}><span class="ed-ic ic-${k}" aria-hidden="true"></span>${k==="h"?"Scène":BT[k].label}</button>`).join("")}</div>
         <span class="ed-hint">ou Tab · Entrée : bloc suivant · Maj+Entrée : retour à la ligne</span>

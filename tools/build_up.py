@@ -6,7 +6,7 @@ SRC = "/home/claude/depouillement.html"
 DDC = "/home/claude/ddc-breakdown"
 OUT_ART = "/home/claude/up-slatebook.html"
 OUT = "/home/claude/up-slatebook"
-UP_VERSION = "1.2"
+UP_VERSION = "1.2.1"
 
 s = open(SRC).read()
 

@@ -1,6 +1,6 @@
 /* DDC Breakdown — service worker : l'app s'ouvre même sans réseau. */
 const APP = "ddc";                       /* préfixe propre à cette app (plusieurs apps sur le même site) */
-const VERSION = APP + "-v1.12";
+const VERSION = APP + "-v1.12.1";
 const SHELL = ["./", "index.html", "adapter.js", "config.js", "manifest.webmanifest",
   "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png"];
 const CDN = [
