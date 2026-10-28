@@ -1,5 +1,6 @@
 /* DDC Breakdown — service worker : l'app s'ouvre même sans réseau. */
-const VERSION = "ddc-v1.10.2";
+const APP = "ddc";                       /* préfixe propre à cette app (plusieurs apps sur le même site) */
+const VERSION = APP + "-v1.10.3";
 const SHELL = ["./", "index.html", "adapter.js", "config.js", "manifest.webmanifest",
   "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png"];
 const CDN = [
@@ -21,7 +22,7 @@ self.addEventListener("install", e => {
 
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== VERSION).map(k => caches.delete(k))))
+    .then(keys => Promise.all(keys.filter(k => k.startsWith(APP + "-v") && k !== VERSION).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 

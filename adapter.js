@@ -4,7 +4,9 @@
 (function(){
 "use strict";
 const CFG=window.DDC_CONFIG||{};
-const ROOT="ddc";
+const ROOT=CFG.root||"ddc";                 /* racine des données dans Firebase */
+const NS=CFG.storageKey||"ddc";             /* préfixe du stockage local (plusieurs apps sur le même site) */
+const APP_NAME=CFG.appName||"DDC Breakdown";
 const LS={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
 const emailKey=e=>String(e||"").trim().toLowerCase().replace(/\./g,",");
 const enc=p=>String(p).split("/").join("~");
@@ -17,11 +19,11 @@ const initials=(name,id)=>{const t=(String(name||"?").trim().split(/\s+/).map(w=
 
 function fbConfig(){
   let c={...(CFG.firebase||{})};
-  if(!c.apiKey){try{const o=JSON.parse(LS.get("ddc.fbconfig")||"null");if(o&&o.apiKey)c={...c,...o};}catch{}}
+  if(!c.apiKey){try{const o=JSON.parse(LS.get(NS+".fbconfig")||"null");if(o&&o.apiKey)c={...c,...o};}catch{}}
   return c;
 }
 let sharedKey="";let IS_ADMIN=false;let RTDB=null;
-const activeKey=()=>LS.get("ddc.apikey")||sharedKey;
+const activeKey=()=>LS.get(NS+".apikey")||sharedKey;
 const isAdminEmail=e=>!!(CFG.adminEmail&&e&&e.toLowerCase()===CFG.adminEmail.toLowerCase());
 
 /* ---------- gate (setup / login / access denied) ---------- */
@@ -29,13 +31,13 @@ function gate(html){
   let g=document.getElementById("ddc-gate");
   if(!g){g=document.createElement("div");g.id="ddc-gate";document.body.append(g);}
   const v=typeof APP_VERSION!=="undefined"?APP_VERSION:"";
-  g.innerHTML=`<div class="welcome-card">${html.replace('<span class="label">DDC Breakdown</span>','<span class="label">DDC Breakdown'+(v?' · v'+v:'')+'</span>')}</div>`;return g;
+  g.innerHTML=`<div class="welcome-card">${html.replace('<span class="label">'+escH(APP_NAME)+'</span>','<span class="label">'+escH(APP_NAME)+(v?' · v'+v:'')+'</span>')}</div>`;return g;
 }
 function hideGate(){const g=document.getElementById("ddc-gate");if(g)g.remove();}
 function whenBody(fn){if(document.body)fn();else document.addEventListener("DOMContentLoaded",fn);}
 
 function showSetup(){
-  whenBody(()=>{const g=gate(`<span class="label">DDC Breakdown · installation</span>
+  whenBody(()=>{const g=gate(`<span class="label">${escH(APP_NAME)} · installation</span>
     <h1>Relier l'app à Firebase</h1>
     <p>Il manque la configuration web Firebase. Dans la console Firebase du projet, ouvre <b>Paramètres du projet → Vos applications → Application Web</b> et copie le bloc <code>firebaseConfig</code>, puis colle-le ici.</p>
     <textarea id="ddc-cfg" rows="8" placeholder="const firebaseConfig = { apiKey: &quot;…&quot;, authDomain: &quot;…&quot;, … };"></textarea>
@@ -44,9 +46,9 @@ function showSetup(){
     g.querySelector("#ddc-cfg-ok").onclick=()=>{const t=g.querySelector("#ddc-cfg").value;const o={};
       for(const k of["apiKey","authDomain","databaseURL","projectId","storageBucket","messagingSenderId","appId"]){const m=t.match(new RegExp(k+"\\s*[:=]\\s*[\"']([^\"']+)[\"']"));if(m)o[k]=m[1];}
       if(!o.apiKey){g.querySelector("#ddc-cfg-err").textContent="Je ne trouve pas apiKey dans ce texte.";return;}
-      LS.set("ddc.fbconfig",JSON.stringify(o));location.reload();};});
+      LS.set(NS+".fbconfig",JSON.stringify(o));location.reload();};});
 }
-const LINK_KEY="ddc.linkEmail";
+const LINK_KEY=NS+".linkEmail";
 const cleanUrl=()=>location.origin+location.pathname;
 const authErr=c=>c==="auth/unauthorized-domain"||c==="auth/unauthorized-continue-uri"?"Ce site n'est pas autorisé dans Firebase. Ajoute "+location.hostname+" dans Authentication → Paramètres → Domaines autorisés.":
   c==="auth/operation-not-allowed"?"Cette méthode de connexion n'est pas activée dans Firebase (Authentication → Méthode de connexion).":
@@ -55,7 +57,7 @@ const authErr=c=>c==="auth/unauthorized-domain"||c==="auth/unauthorized-continue
   c==="auth/too-many-requests"?"Trop de tentatives. Réessaie dans quelques minutes.":
   "Connexion impossible ("+(c||"erreur")+").";
 function showLogin(err,info){
-  whenBody(()=>{const g=gate(`<span class="label">DDC Breakdown</span>
+  whenBody(()=>{const g=gate(`<span class="label">${escH(APP_NAME)}</span>
     <h1>Dépouillement et plan de travail</h1>
     <p>Connecte-toi avec l'adresse e-mail que la production a ajoutée à l'équipe.</p>
     <div><button class="btn primary" id="ddc-login">Se connecter avec Google</button></div>
@@ -77,7 +79,7 @@ function showLogin(err,info){
       catch(e){showLogin(authErr(e&&e.code));}};});
 }
 function askLinkEmail(){
-  return new Promise(res=>whenBody(()=>{const g=gate(`<span class="label">DDC Breakdown</span>
+  return new Promise(res=>whenBody(()=>{const g=gate(`<span class="label">${escH(APP_NAME)}</span>
     <h1>Confirme ton adresse</h1>
     <p>Tu as ouvert le lien sur un autre appareil ou navigateur. Saisis l'adresse e-mail à laquelle tu l'as reçu.</p>
     <form class="ddc-link" id="ddc-conf"><input type="email" id="ddc-email2" autocomplete="email" required aria-label="Adresse e-mail"><button class="btn primary" type="submit">Se connecter</button></form>`);
@@ -94,7 +96,7 @@ async function completeEmailLink(){
   finally{try{history.replaceState(null,"",cleanUrl());}catch{}setTimeout(()=>{linkPending=false;},4000);}
 }
 function showDenied(u){
-  whenBody(async()=>{const g=gate(`<span class="label">DDC Breakdown</span>
+  whenBody(async()=>{const g=gate(`<span class="label">${escH(APP_NAME)}</span>
     <h1>Accès en attente</h1>
     <p>Le compte <b>${escH(u.email)}</b> ne fait pas encore partie de l'équipe.</p>
     <p id="ddc-req-st" class="empty">Envoi de ta demande d'accès…</p>
@@ -124,7 +126,7 @@ function build(u,isAdmin){
 
   /* ---- copie locale (IndexedDB) ---- */
   const idb=(()=>{let dbp=null;
-    const open=()=>dbp||(dbp=new Promise((res,rej)=>{const r=indexedDB.open("ddc-breakdown",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}));
+    const open=()=>dbp||(dbp=new Promise((res,rej)=>{const r=indexedDB.open(CFG.idbName||"ddc-breakdown",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);}));
     const tx=(mode,fn)=>open().then(d=>new Promise((res,rej)=>{const t=d.transaction("kv",mode);const out=fn(t.objectStore("kv"));t.oncomplete=()=>res(out&&out.result);t.onerror=()=>rej(t.error);}));
     return{get:k=>tx("readonly",st=>st.get(k)).catch(()=>undefined),set:(k,v)=>tx("readwrite",st=>{st.put(v,k);}).catch(()=>{})};})();
   const PFX="u:"+u.uid+":";
@@ -276,7 +278,7 @@ function modal(html){const sc=document.createElement("div");sc.className="scrim"
   sc.addEventListener("pointerdown",e=>{if(e.target===sc)sc.remove();});sc.addEventListener("keydown",e=>{if(e.key==="Escape")sc.remove();});document.body.append(sc);return sc;}
 function openKey(bad){
   if(IS_ADMIN&&RTDB){openTeamKey(bad);return;}
-  if(sharedKey&&!bad&&!LS.get("ddc.apikey")){const m=modal(`<h3>Analyse IA</h3><p>L'équipe utilise la clé API enregistrée par l'administrateur. Tu n'as rien à configurer.</p><div class="mfoot"><button class="btn primary" id="ddc-k-ok">OK</button></div>`);m.querySelector("#ddc-k-ok").onclick=()=>m.remove();return;}
+  if(sharedKey&&!bad&&!LS.get(NS+".apikey")){const m=modal(`<h3>Analyse IA</h3><p>L'équipe utilise la clé API enregistrée par l'administrateur. Tu n'as rien à configurer.</p><div class="mfoot"><button class="btn primary" id="ddc-k-ok">OK</button></div>`);m.querySelector("#ddc-k-ok").onclick=()=>m.remove();return;}
   const m=modal(`<h3>Analyse IA</h3>
     <p>${bad?"La clé API de l'équipe a été refusée par Anthropic.":"Aucune clé API n'est encore enregistrée pour l'équipe."} Préviens l'administrateur ${escH(CFG.adminEmail||"")} pour qu'il l'enregistre ou la remplace.</p>
     <div class="mfoot"><button class="btn primary" id="ddc-k-ok">OK</button></div>`);
@@ -295,7 +297,7 @@ function openTeamKey(bad){
   const del=m.querySelector("#ddc-key-del");if(del)del.onclick=()=>ref.remove().then(()=>m.remove(),fail);
   m.querySelector("#ddc-key-ok").onclick=()=>{const v=i.value.trim();if(!v)return;
     if(!/^sk-ant-/.test(v)&&!confirm("Cette clé ne commence pas par sk-ant-. L'enregistrer quand même ?"))return;
-    LS.del("ddc.apikey");ref.set(v).then(()=>m.remove(),fail);};
+    LS.del(NS+".apikey");ref.set(v).then(()=>m.remove(),fail);};
 }
 window.DDC_openKey=openKey;
 function openTeam(rtdb){
@@ -371,7 +373,7 @@ function start(){
     if(done){if(!u)location.reload();return;}
     if(!u){showLogin();return;}
     const admin=isAdminEmail(u.email);let member=admin;
-    const MK="ddc.member."+u.uid;
+    const MK=NS+".member."+u.uid;
     if(!member){try{member=(await Promise.race([firebase.database().ref(ROOT+"/team/"+emailKey(u.email)).get(),new Promise((_,r)=>setTimeout(()=>r("timeout"),6000))])).exists();if(member)LS.set(MK,"1");else LS.del(MK);}
       catch{member=LS.get(MK)==="1";}}
     if(!member){showDenied(u);return;}
