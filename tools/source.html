@@ -382,8 +382,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.8.1 défilement du plan de travail · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.10.2 affichage téléphone et tablette */
-const APP_VERSION="1.10.3";const APP_DATE="16 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.8.1 défilement du plan de travail · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.10.2 affichage téléphone et tablette · 1.11 rôles lecteur, commentateur, éditeur */
+const APP_VERSION="1.11";const APP_DATE="16 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -465,7 +465,7 @@ class MemDB{
 }
 
 /* ---------- state ---------- */
-const S={db:null,user:null,sample:null,room:null,dl:null,me:null,canWrite:true,local:false,
+const S={db:null,user:null,sample:null,room:null,dl:null,me:null,canWrite:true,canComment:true,role:null,local:false,
   projects:[],projectsLoaded:false,pid:null,scenes:[],elements:[],comments:[],sid:null,tab:"scenes",
   peers:[],busy:null,analyzing:new Set(),aiOff:false,filterCat:null,search:"",rpSearch:"",unsubP:[],holder:uid(),days:[],locations:[],planGroup:"lieu",dragging:null,pendingRender:false,modalRefresh:null};
 
@@ -488,9 +488,13 @@ async function boot(){
   if(user){
     try{S.me=await user.me();}catch{}
     try{const w=await user.can("data.write");if(w===false)S.canWrite=false;}catch{}
+    try{if(user.role)S.role=await user.role();}catch{}
     try{S.isAdmin=!!(await user.isOwner());}catch{S.isAdmin=false;}
   }
   if(S.local)showBanner("Mode local : ouvre cette page sur claude.ai pour partager les projets avec ton équipe. Rien n'est enregistré ici.");
+  S.canComment=S.canWrite||S.role==="commenter";
+  if(S.role==="viewer")showBanner("Accès lecteur : tu peux consulter et exporter. Pour commenter ou modifier, demande un autre rôle à l'administrateur.");
+  else if(S.role==="commenter")showBanner("Accès commentateur : tu peux consulter et commenter les scènes. Pour modifier, demande le rôle Éditeur à l'administrateur.");
   else if(!S.canWrite)showBanner("Lecture seule : demande à la personne qui a partagé cette page de te donner le rôle Contributeur pour modifier le dépouillement.");
   if(!sample)S.aiOff=true;
   if(room){
@@ -712,7 +716,7 @@ function renderSheet(){
   <div class="sheet-sec">
     <h2>Commentaires</h2>
     <div class="comments" id="comments"></div>
-    ${S.canWrite?`<form class="composer" id="cmform"><textarea id="cm-text" rows="2" placeholder="Une remarque pour l'équipe sur cette scène"></textarea><div><button class="btn" type="submit">Envoyer</button></div></form>`:""}
+    ${S.canComment?`<form class="composer" id="cmform"><textarea id="cm-text" rows="2" placeholder="Une remarque pour l'équipe sur cette scène"></textarea><div><button class="btn" type="submit">Envoyer</button></div></form>`:""}
   </div>`;
   sh.querySelectorAll(".el-menu").forEach(b=>b.onclick=()=>{const e=S.elements.find(x=>x.id===b.dataset.eid);if(e)elementMenu(e,b);});
   const af=$("#addform");
@@ -738,7 +742,7 @@ async function renderComments(sid){
     const body=document.createElement("div");
     const who=document.createElement("div");who.className="who";who.textContent=pr.isMe?"Toi":(pr.name||"Quelqu'un");
     const sm=document.createElement("small");sm.textContent=timeAgo(c.at||Date.now());who.append(sm);
-    if(S.canWrite&&(pr.isMe||(S.local))){const del=document.createElement("button");del.className="del";del.textContent="Supprimer";del.onclick=()=>S.db.doc(base()+"/comments/"+c.id).delete().catch(e=>toast("Suppression impossible ("+e.code+")"));who.append(del);}
+    if(S.canComment&&(pr.isMe||(S.local))){const del=document.createElement("button");del.className="del";del.textContent="Supprimer";del.onclick=()=>S.db.doc(base()+"/comments/"+c.id).delete().catch(e=>toast("Suppression impossible ("+e.code+")"));who.append(del);}
     const p=document.createElement("p");p.textContent=c.text;
     body.append(who,p);d.append(img,body);box.append(d);}
 }

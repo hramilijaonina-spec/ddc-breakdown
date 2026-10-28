@@ -6,7 +6,7 @@ SRC = "/home/claude/depouillement.html"
 DDC = "/home/claude/ddc-breakdown"
 OUT_ART = "/home/claude/up-slatebook.html"
 OUT = "/home/claude/up-slatebook"
-UP_VERSION = "1.0"
+UP_VERSION = "1.1"
 
 s = open(SRC).read()
 
@@ -24,7 +24,7 @@ R('<div class="brand">', '<div class="brand up">')
 
 # --- version propre à UP ---
 s = re.sub(r'/\* Version : [^\n]*\*/\nconst APP_VERSION="[^"]*";const APP_DATE="[^"]*";',
-           '/* UP Slatebook — copie de DDC Breakdown 1.10.3 · 1.0 première version UP */\n'
+           '/* UP Slatebook — copie de DDC Breakdown 1.10.3 · 1.0 première version UP · 1.1 rôles lecteur, commentateur, éditeur */\n'
            'const APP_VERSION="' + UP_VERSION + '";const APP_DATE="28 oct. 2026";', s)
 assert 'APP_VERSION="' + UP_VERSION + '"' in s
 

@@ -27,6 +27,8 @@ Le projet Firebase utilisé est `shotlist-298e2` (le même que l'app shotlist).
 
 L'administrateur (`adminEmail` dans `config.js`) ajoute les adresses e-mail des membres (Gmail ou autre) depuis le menu du compte → **Équipe**. Une personne non autorisée qui se connecte envoie automatiquement une demande d'accès : badge rouge sur l'avatar de l'administrateur, à accepter ou refuser dans **Équipe**.
 
+Chaque membre a un rôle : **Lecteur** (consulte et exporte), **Commentateur** (consulte et commente), **Éditeur** (modifie tout). Seul l'administrateur supprime un projet. Les rôles sont appliqués par l'app et par les règles de la base (`tools/rules.py` génère `database.rules.json`).
+
 ## IA
 
 L'administrateur enregistre une clé API Anthropic pour toute l'équipe : menu du compte → **Clé API de l'équipe**. Elle est stockée dans Firebase (`ddc/secrets`), lisible seulement par les membres connectés, et n'est jamais dans le code. Pour la changer, même menu. Le modèle est réglable dans `config.js`.

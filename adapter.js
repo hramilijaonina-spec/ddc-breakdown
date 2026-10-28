@@ -24,6 +24,9 @@ function fbConfig(){
 }
 let sharedKey="";let IS_ADMIN=false;let RTDB=null;
 const activeKey=()=>LS.get(NS+".apikey")||sharedKey;
+const ROLES={viewer:"Lecteur",commenter:"Commentateur",editor:"Éditeur"};
+const roleOf=v=>v&&ROLES[v.role]?v.role:"editor";   /* membres sans rôle enregistré : éditeurs */
+const roleSelect=(id,cur)=>`<select class="ddc-role" ${id?`id="${id}"`:""} aria-label="Rôle">${Object.entries(ROLES).map(([k,l])=>`<option value="${k}"${k===cur?" selected":""}>${l}</option>`).join("")}</select>`;
 const isAdminEmail=e=>!!(CFG.adminEmail&&e&&e.toLowerCase()===CFG.adminEmail.toLowerCase());
 
 /* ---------- gate (setup / login / access denied) ---------- */
@@ -112,7 +115,8 @@ function showDenied(u){
 }
 
 /* ---------- services ---------- */
-function build(u,isAdmin){
+function build(u,isAdmin,role){
+  const canWrite=isAdmin||role==="editor";
   const rtdb=firebase.database();
   const mapErr=e=>{const m=String(e&&(e.code||e.message)||"");return{code:/permission|denied/i.test(m)?"permission_denied":"unavailable",message:m};};
   const clean=d=>JSON.parse(JSON.stringify(d,(k,v)=>v===undefined?null:v));
@@ -221,8 +225,9 @@ function build(u,isAdmin){
   rtdb.ref(ROOT+"/users").on("value",s=>{Object.assign(users,s.val()||{});idb.set(PFX+"users",users);usersReady();},()=>usersReady());
   const profileOf=id=>{const p=users[id]||{};return{id,name:p.name||"",avatarUrl:p.photo||initials(p.name,id),color:colorOf(id),email:p.email||null,isMe:id===u.uid,guest:false};};
   const user={
-    async me(){return{id:u.uid,name:u.displayName||u.email||"",avatarUrl:u.photoURL||initials(u.displayName,u.uid),color:colorOf(u.uid),email:u.email||null,isOwner:isAdmin,canEdit:true};},
-    async id(){return u.uid;},async isOwner(){return isAdmin;},async canEdit(){return true;},async can(){return true;},
+    async me(){return{id:u.uid,name:u.displayName||u.email||"",avatarUrl:u.photoURL||initials(u.displayName,u.uid),color:colorOf(u.uid),email:u.email||null,isOwner:isAdmin,canEdit:canWrite};},
+    async id(){return u.uid;},async isOwner(){return isAdmin;},async canEdit(){return canWrite;},async can(cap){return cap==="data.write"?canWrite:true;},
+    async role(){return isAdmin?"admin":role;},
     async name(){return u.displayName||"";},async email(){return u.email||null;},
     async profiles(ids){await usersP;const o={};for(const id of[].concat(ids||[]))o[id]=profileOf(id);return o;},
     async search(){await usersP;return Object.keys(users).map(profileOf);}
@@ -269,7 +274,10 @@ function build(u,isAdmin){
 
   IS_ADMIN=isAdmin;RTDB=rtdb;
   rtdb.ref(ROOT+"/secrets/anthropicKey").on("value",s=>{sharedKey=s.val()||"";},()=>{});
-  mountAccount(u,isAdmin,rtdb);whenBody(()=>setTimeout(notifyNet,0));
+  mountAccount(u,isAdmin,rtdb,role);
+  /* rôle retiré ou modifié par l'administrateur : on recharge pour l'appliquer */
+  if(!isAdmin){let first=true;rtdb.ref(ROOT+"/team/"+emailKey(u.email)).on("value",s=>{if(first){first=false;return;}
+    if(!s.exists()||roleOf(s.val())!==role){LS.del(NS+".member."+u.uid);location.reload();}},()=>{});}whenBody(()=>setTimeout(notifyNet,0));
   return{db,user,room,sample,downloads};
 }
 
@@ -302,30 +310,33 @@ function openTeamKey(bad){
 window.DDC_openKey=openKey;
 function openTeam(rtdb){
   const m=modal(`<h3>Équipe</h3><p class="empty">Seules les adresses listées ici peuvent ouvrir les projets. Gmail : connexion avec Google ou par lien e-mail. Autres adresses (Yahoo, Outlook, pro…) : connexion par lien e-mail.</p>
-    <form class="addrow" id="ddc-tf"><input type="text" id="ddc-te" placeholder="prenom@exemple.com" aria-label="E-mail" autocomplete="off"><button class="btn" type="submit">Ajouter</button></form>
+    <p class="empty"><b>Lecteur</b> : consulte et exporte · <b>Commentateur</b> : consulte et commente · <b>Éditeur</b> : modifie tout (scénario, dépouillement, IA, plan de travail).</p>
+    <form class="addrow" id="ddc-tf"><input type="text" id="ddc-te" placeholder="prenom@exemple.com" aria-label="E-mail" autocomplete="off">${roleSelect("ddc-tr","editor")}<button class="btn" type="submit">Ajouter</button></form>
     <div id="ddc-rq"></div>
     <div id="ddc-tl" class="ddc-team"></div><div class="mfoot"><button class="btn primary" id="ddc-tok">Terminé</button></div>`);
   const ref=rtdb.ref(ROOT+"/team");const list=m.querySelector("#ddc-tl");
   const rqRef=rtdb.ref(ROOT+"/requests");const rqBox=m.querySelector("#ddc-rq");
   const fmt=t=>t?new Date(t).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
   const hr=s=>{const v=s.val()||{};const keys=Object.keys(v).sort((a,b)=>(v[b].last||0)-(v[a].last||0));
-    rqBox.innerHTML=keys.length?`<span class="label">Demandes d'accès · ${keys.length}</span><div class="ddc-team ddc-rq">${keys.map(k=>`<div><span>${escH(v[k].email||k.replace(/,/g,"."))}${v[k].name?` <small>${escH(v[k].name)}</small>`:""}<br><small>${escH(fmt(v[k].last||v[k].at))}</small></span><span class="ddc-rq-a"><button class="btn small primary" data-ok="${escH(k)}">Accepter</button><button class="btn ghost small danger" data-no="${escH(k)}">Refuser</button></span></div>`).join("")}</div>`:"";
+    rqBox.innerHTML=keys.length?`<span class="label">Demandes d'accès · ${keys.length}</span><div class="ddc-team ddc-rq">${keys.map(k=>`<div><span>${escH(v[k].email||k.replace(/,/g,"."))}${v[k].name?` <small>${escH(v[k].name)}</small>`:""}<br><small>${escH(fmt(v[k].last||v[k].at))}</small></span><span class="ddc-rq-a">${roleSelect("","editor").replace('<select ','<select data-rk="'+escH(k)+'" ')}<button class="btn small primary" data-ok="${escH(k)}">Accepter</button><button class="btn ghost small danger" data-no="${escH(k)}">Refuser</button></span></div>`).join("")}</div>`:"";
     rqBox.querySelectorAll("[data-ok]").forEach(b=>b.onclick=async()=>{const k=b.dataset.ok;const e=(v[k]&&v[k].email)||k.replace(/,/g,".");b.disabled=true;
-      try{await ref.child(emailKey(e)).set({email:e,at:Date.now()});await rqRef.child(k).remove();}catch(err){b.disabled=false;alert("Ajout refusé : "+(err.code||err.message));}});
+      const sel=rqBox.querySelector(`select[data-rk="${CSS.escape(k)}"]`);const r=sel&&ROLES[sel.value]?sel.value:"editor";
+      try{await ref.child(emailKey(e)).set({email:e,role:r,at:Date.now()});await rqRef.child(k).remove();}catch(err){b.disabled=false;alert("Ajout refusé : "+(err.code||err.message));}});
     rqBox.querySelectorAll("[data-no]").forEach(b=>b.onclick=()=>rqRef.child(b.dataset.no).remove());};
   rqRef.on("value",hr,()=>{rqBox.innerHTML="";});
-  const h=s=>{const v=s.val()||{};const rows=Object.keys(v).map(k=>v[k].email||k.replace(/,/g,".")).sort();
+  const h=s=>{const v=s.val()||{};const rows=Object.keys(v).map(k=>({k,email:v[k].email||k.replace(/,/g,"."),role:roleOf(v[k])})).sort((a,b)=>a.email.localeCompare(b.email));
     list.innerHTML=(CFG.adminEmail?`<div><span>${escH(CFG.adminEmail)}</span><small>administrateur</small></div>`:"")+
-      rows.map(e=>`<div><span>${escH(e)}</span><button class="btn ghost small danger" data-k="${escH(emailKey(e))}">Retirer</button></div>`).join("");
+      rows.map(r=>`<div><span>${escH(r.email)}</span><span class="ddc-rq-a">${roleSelect("",r.role).replace('<select ','<select data-mk="'+escH(r.k)+'" ')}<button class="btn ghost small danger" data-k="${escH(r.k)}">Retirer</button></span></div>`).join("");
+    list.querySelectorAll("select[data-mk]").forEach(sel=>sel.onchange=()=>ref.child(sel.dataset.mk).update({role:sel.value}).catch(err=>alert("Modification refusée : "+(err.code||err.message))));
     list.querySelectorAll("button[data-k]").forEach(b=>b.onclick=()=>ref.child(b.dataset.k).remove());};
   ref.on("value",h,()=>{list.innerHTML=`<p class="ddc-err">Lecture de l'équipe refusée. Vérifie les règles de la base.</p>`;});
   const close=()=>{ref.off("value",h);rqRef.off("value",hr);m.remove();};
   m.querySelector("#ddc-tok").onclick=close;
   m.querySelector("#ddc-tf").onsubmit=ev=>{ev.preventDefault();const e=m.querySelector("#ddc-te").value.trim().toLowerCase();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return;m.querySelector("#ddc-te").value="";
-    ref.child(emailKey(e)).set({email:e,at:Date.now()}).then(()=>rqRef.child(emailKey(e)).remove().catch(()=>{})).catch(err=>alert("Ajout refusé : "+(err.code||err.message)));};
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return;m.querySelector("#ddc-te").value="";const r=m.querySelector("#ddc-tr").value;
+    ref.child(emailKey(e)).set({email:e,role:ROLES[r]?r:"editor",at:Date.now()}).then(()=>rqRef.child(emailKey(e)).remove().catch(()=>{})).catch(err=>alert("Ajout refusé : "+(err.code||err.message)));};
 }
-function mountAccount(u,isAdmin,rtdb){
+function mountAccount(u,isAdmin,rtdb,role){
   whenBody(()=>{
     const top=document.getElementById("top");if(!top||document.getElementById("ddc-acct"))return;
     const b=document.createElement("button");b.id="ddc-acct";b.className="ddc-acct";b.setAttribute("aria-label","Mon compte");
@@ -341,7 +352,8 @@ function mountAccount(u,isAdmin,rtdb){
     b.onclick=()=>{const old=document.getElementById("ddc-menu");if(old){old.remove();return;}
       const d=document.createElement("div");d.id="ddc-menu";d.className="pop";
       d.innerHTML=`<div class="ptitle">${escH(u.email||"")}</div>
-        <button data-a="key"><span>${isAdmin?"Clé API de l'équipe":"Analyse IA"}${activeKey()?" ✓":""}</span></button>
+        ${isAdmin?"":`<div class="ptitle">Rôle : ${escH(ROLES[role]||"Éditeur")}</div>`}
+        ${isAdmin||role==="editor"?`<button data-a="key"><span>${isAdmin?"Clé API de l'équipe":"Analyse IA"}${activeKey()?" ✓":""}</span></button>`:""}
         ${isAdmin&&rtdb?`<button data-a="team"><span>Équipe${pending?` · <b class="ddc-badge-in">${pending} demande${pending>1?"s":""}</b>`:""}</span></button>`:""}
         <button data-a="out"><span>Se déconnecter</span></button>`;
       document.body.append(d);const r=b.getBoundingClientRect();d.style.top=(r.bottom+6)+"px";d.style.left=Math.max(8,r.right-d.offsetWidth)+"px";
@@ -372,13 +384,14 @@ function start(){
     if(!u&&linkPending)return;             /* connexion par lien en cours : on attend son résultat */
     if(done){if(!u)location.reload();return;}
     if(!u){showLogin();return;}
-    const admin=isAdminEmail(u.email);let member=admin;
+    const admin=isAdminEmail(u.email);let member=admin,role=admin?"admin":"editor";
     const MK=NS+".member."+u.uid;
-    if(!member){try{member=(await Promise.race([firebase.database().ref(ROOT+"/team/"+emailKey(u.email)).get(),new Promise((_,r)=>setTimeout(()=>r("timeout"),6000))])).exists();if(member)LS.set(MK,"1");else LS.del(MK);}
-      catch{member=LS.get(MK)==="1";}}
+    if(!member){try{const snap=await Promise.race([firebase.database().ref(ROOT+"/team/"+emailKey(u.email)).get(),new Promise((_,r)=>setTimeout(()=>r("timeout"),6000))]);
+        member=snap.exists();if(member){role=roleOf(snap.val());LS.set(MK,role);}else LS.del(MK);}
+      catch{const c=LS.get(MK);member=!!c;role=ROLES[c]?c:"editor";}}
     if(!member){showDenied(u);return;}
     firebase.database().ref(ROOT+"/users/"+u.uid).update({name:u.displayName||u.email||"",photo:u.photoURL||"",email:(u.email||"").toLowerCase()}).catch(()=>{});
-    done=true;hideGate();resolveSvc(build(u,admin));
+    done=true;hideGate();resolveSvc(build(u,admin,role));
   });
   completeEmailLink();
   firebase.auth().getRedirectResult().catch(e=>{if(!done&&navigator.onLine)showLogin("Connexion impossible ("+(e.code||"erreur")+").");});
