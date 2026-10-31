@@ -24,6 +24,7 @@ Depuis la version 2.0, l'app reprend toutes les fonctions de UP Slatebook, avec 
 ## Revue ergonomique (v1.18 · Dydz 2.8)
 
 - Téléphone : en-tête sur une ligne qui se replie quand on fait défiler ; découpage en cartes (vignette, plan, caméra, description, audio, notes) ; cases et boutons plus grands.
+- Découpage sur téléphone : barre de navigation collée en haut (◀ scène ▾ ▶) qui suit la scène affichée ; ▾ ouvre la liste des scènes pour y sauter directement.
 - Menus : tout ce qui concerne le projet est dans ☰ → PROJET (plus de •••) ; les réglages propres au découpage et au plan de travail ont une icône à curseurs.
 - Une seule page d'accueil (avec un état vide pour le premier projet).
 - Recherche dans le projet (loupe ou ⌘K) : scènes, éléments du dépouillement, plans.
