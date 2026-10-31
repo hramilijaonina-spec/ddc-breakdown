@@ -1,4 +1,4 @@
-/* DDC Breakdown — couche autonome.
+/* Dydz Studio (ex-DDC Breakdown) — couche autonome.
    Fournit à l'app les mêmes services que l'artefact Claude (db, user, room, sample, downloads)
    en s'appuyant sur Firebase (Realtime Database + connexion Google) et sur l'API Anthropic. */
 (function(){
@@ -6,7 +6,7 @@
 const CFG=window.DDC_CONFIG||{};
 const ROOT=CFG.root||"ddc";                 /* racine des données dans Firebase */
 const NS=CFG.storageKey||"ddc";             /* préfixe du stockage local (plusieurs apps sur le même site) */
-const APP_NAME=CFG.appName||"DDC Breakdown";
+const APP_NAME=CFG.appName||"Dydz Studio";
 const LS={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
 const emailKey=e=>String(e||"").trim().toLowerCase().replace(/\./g,",");
 const enc=p=>String(p).split("/").join("~");

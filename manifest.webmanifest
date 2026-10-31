@@ -1,7 +1,7 @@
 {
-  "name": "DDC Breakdown",
-  "short_name": "DDC",
-  "description": "Dépouillement et plan de travail collaboratifs",
+  "name": "Dydz Studio",
+  "short_name": "Dydz",
+  "description": "Scénario, découpage, dépouillement et plan de travail collaboratifs",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

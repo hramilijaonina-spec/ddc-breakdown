@@ -1,11 +1,11 @@
-# Construit DDC Breakdown 2.x à partir de UP Slatebook (même code, nom, couleurs et assistant DDC).
+# Construit Dydz Studio (ex-DDC Breakdown) à partir de UP Slatebook : même code, nom, couleurs et assistant Dydz.
 # Usage : python3 build_from_up.py <index.html UP> <sortie> [gh|art]
 #   gh  : site GitHub Pages (en-tête Firebase de UP, métadonnées DDC)
 #   art : artefact Claude
 import re, sys
 
 SRC, OUT, MODE = sys.argv[1], sys.argv[2], (sys.argv[3] if len(sys.argv) > 3 else "gh")
-DDC_VERSION, DDC_DATE = "2.0.0", "31 oct. 2026"
+DDC_VERSION, DDC_DATE = "2.1.0", "31 oct. 2026"
 s = open(SRC, encoding="utf-8").read()
 
 def R(a, b, n=1):
@@ -21,18 +21,20 @@ s, k = re.subn(r'/\* UP Slatebook — copie de DDC Breakdown[^\n]*\*/\nconst APP
     "1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · "
     "1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · "
     "2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, "
-    "annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune */\n"
+    "annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · "
+    "2.1 DDC Breakdown devient Dydz Studio */\n"
     'const APP_VERSION="' + DDC_VERSION + '";const APP_DATE="' + DDC_DATE + '";', s)
 assert k == 1
 
 # --- nom, logo, assistant ---
 R('<div class="brand up"><span class="logo" id="logo" aria-label="UP">UP</span>Slatebook',
-  '<div class="brand ddc"><span class="logo" id="logo" aria-label="DDC">DDC</span>Breakdown')
-R("l'assistant de préproduction de l'agence UP intégré à UP Slatebook", "l'assistant de préproduction de DDC intégré à DDC Breakdown")
-s = s.replace("UP Slatebook", "DDC Breakdown").replace("UpCopilot", "Dydz")
+  '<div class="brand ddc"><span class="logo" id="logo" aria-label="Dydz">Dydz</span>Studio')
+R("l'assistant de préproduction de l'agence UP intégré à UP Slatebook", "l'assistant de préproduction intégré à Dydz Studio")
+R("2.0 reprise de UP Slatebook", "2.0 reprise de UP_SLATEBOOK")
+s = s.replace("UP Slatebook", "Dydz Studio").replace("UpCopilot", "Dydz").replace("UP_SLATEBOOK", "UP Slatebook")
 s = s.replace("ressort en couleur UP", "ressort dans la couleur de l'app")
 s = s.replace('"upsb.', '"dep.')
-assert "upsb" not in s and "Slatebook" not in s and "UpCopilot" not in s, "reste UP"
+assert "upsb" not in s and s.count("Slatebook") == 1 and "UpCopilot" not in s and s.count("DDC Breakdown") == 1, "reste UP"
 
 # --- couleurs DDC : gris sombre + jaune ---
 DDC_TOKENS = ("--bg:#1c1d1f; --surface:#26272a; --sunk:#202123; --line:#37393d; --line-strong:#4b4e53;\n"
@@ -57,7 +59,7 @@ assert "#1fc8e3" not in s and "#1b1e21" not in s.split("<style>", 1)[1], "reste 
 
 if MODE == "gh":
     R('<meta name="theme-color" content="#1b1e21">', '<meta name="theme-color" content="#1c1d1f">')
-    R('<meta name="apple-mobile-web-app-title" content="DDC Breakdown">', '<meta name="apple-mobile-web-app-title" content="DDC Breakdown">')
+    assert '<meta name="apple-mobile-web-app-title" content="Dydz Studio">' in s
 
 open(OUT, "w", encoding="utf-8").write(s)
 print("built", OUT, MODE, len(s))

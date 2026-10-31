@@ -1,10 +1,10 @@
-# DDC Breakdown
+# Dydz Studio
 
-Dépouillement de scénario et plan de travail collaboratifs pour l'équipe DDC.
+Scénario, découpage, dépouillement et plan de travail collaboratifs pour l'équipe DDC (anciennement « DDC Breakdown »).
 
-**App :** https://hramilijaonina-spec.github.io/ddc-breakdown/
+**App :** https://hramilijaonina-spec.github.io/dydz-studio/
 
-Depuis la version 2.0, DDC Breakdown reprend toutes les fonctions de UP Slatebook, avec ses propres données (`ddc/…`), le thème gris sombre et jaune de DDC et l'assistant **Dydz**.
+Depuis la version 2.0, l'app reprend toutes les fonctions de UP Slatebook, avec ses propres données (`ddc/…`), le thème gris sombre et jaune de DDC et l'assistant **Dydz**.
 
 - **Scénario** : import PDF, Final Draft (.fdx), .sbx, Fountain ou texte ; découpage en scènes (INT/EXT, jour/nuit, huitièmes de page) ; un scénario à plusieurs épisodes devient un projet par épisode. Éditeur à la mise en page standard, export Final Draft et Fountain, impression PDF.
 - **Découpage** : tableau plan par plan (séquence, plan, description, audio, caméra, vignette, notes), cellules modifiables avec menus (valeur de plan, mouvement, angle), photo ou image par plan, plans optionnels à 0 s (grisés, masquables), découpage par l'IA, mise à jour du scénario d'après le découpage, aperçu et export PDF, PowerPoint ou CSV en paysage.
@@ -45,5 +45,5 @@ L'administrateur enregistre une clé API Anthropic pour toute l'équipe : menu d
 | `sw.js` | service worker : ouverture de l'app sans réseau |
 | `config.js` | configuration Firebase, administrateur, modèle |
 | `vendor/` | outils d'export PDF et PowerPoint (fonctionnent hors ligne) |
-| `tools/build_from_up.py` | reconstruit DDC Breakdown à partir de UP Slatebook (nom, couleurs, Dydz) |
+| `tools/build_from_up.py` | reconstruit Dydz Studio à partir de UP Slatebook (nom, couleurs, assistant Dydz) |
 | `database.rules.json` | règles de sécurité de la Realtime Database |

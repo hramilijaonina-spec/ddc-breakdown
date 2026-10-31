@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1c1d1f">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="DDC Breakdown">
+<meta name="apple-mobile-web-app-title" content="Dydz Studio">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -49,7 +49,7 @@ img{max-width:100%}
 <script src="adapter.js"></script>
 </head>
 <body>
-<title>DDC Breakdown</title>
+<title>Dydz Studio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -708,7 +708,7 @@ table.dct{min-width:1180px;width:100%;border-collapse:collapse;font-size:13.5px}
 </style>
 
 <header class="top" id="top">
-  <div class="brand ddc"><span class="logo" id="logo" aria-label="DDC">DDC</span>Breakdown<span class="ver" id="app-ver" title="Version de l'app">v1.3</span></div>
+  <div class="brand ddc"><span class="logo" id="logo" aria-label="Dydz">Dydz</span>Studio<span class="ver" id="app-ver" title="Version de l'app">v1.3</span></div>
   <div class="spacer"></div>
   <div class="progress" id="progress" hidden></div>
   <div class="peers" id="peers" aria-label="Personnes connectées"></div>
@@ -793,8 +793,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de DDC Breakdown : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune */
-const APP_VERSION="2.0.0";const APP_DATE="31 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio */
+const APP_VERSION="2.1.0";const APP_DATE="31 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -1023,7 +1023,7 @@ function renderDesk(){
 
 function welcomeHTML(){
   return `<div class="welcome"><div class="welcome-card">
-    <span class="label">DDC Breakdown · préproduction</span>
+    <span class="label">Dydz Studio · préproduction</span>
     <h1>Dépouille ton scénario en équipe</h1>
     <p>Importe un scénario en PDF, Final Draft ou texte. L'outil le découpe en scènes, l'IA repère rôles, accessoires, costumes, véhicules et effets, puis toute l'équipe corrige et commente en direct.</p>
     <div class="steps">
@@ -1695,7 +1695,7 @@ function backupProject(){
 }
 function openRestore(){
   const m=modal(`<h3>Restaurer une sauvegarde</h3>
-    <p class="empty">Choisis un fichier de sauvegarde DDC Breakdown (.json). Il est restauré dans un <b>nouveau projet</b> : aucun projet existant n'est modifié.</p>
+    <p class="empty">Choisis un fichier de sauvegarde Dydz Studio (.json). Il est restauré dans un <b>nouveau projet</b> : aucun projet existant n'est modifié.</p>
     <input type="file" id="rs-file" accept=".json,application/json" aria-label="Fichier de sauvegarde">
     <div id="rs-info" class="empty"></div>
     <div class="mfoot"><button class="btn" id="rs-c">Annuler</button><button class="btn primary" id="rs-go" disabled>Restaurer</button></div>`);
@@ -1706,7 +1706,7 @@ function openRestore(){
       const n=k=>Array.isArray(d[k])?d[k].length:0;
       info.innerHTML=`<b>${esc(d.project.name||"Sans titre")}</b> · sauvegardé le ${esc(new Date(d.exportedAt).toLocaleString("fr-FR"))}<br>${n("scenes")} scènes · ${n("elements")} éléments · ${n("comments")} commentaires · ${n("days")} journées · ${n("locations")} lieux · ${n("shots")} plans`;
       go.disabled=false;}
-    catch{info.innerHTML=`<span style="color:var(--danger)">Ce fichier n'est pas une sauvegarde DDC Breakdown.</span>`;}};
+    catch{info.innerHTML=`<span style="color:var(--danger)">Ce fichier n'est pas une sauvegarde Dydz Studio.</span>`;}};
   go.onclick=async()=>{if(!data)return;go.disabled=true;
     try{await restoreBackup(data,(d,t)=>{go.textContent="Restauration "+Math.round(d/Math.max(1,t)*100)+" %";});m.remove();toast("Projet restauré.");}
     catch(e){go.disabled=false;go.textContent="Restaurer";writeErr(e);}};
@@ -1733,9 +1733,9 @@ function exportCSV(){
 function exportSheets(){
   const p=P();const sheets=S.scenes.map(s=>{const els=elsOf(s.id);
     const boxes=CATS.map(c=>{const it=els.filter(e=>e.cat===c.id);return`<div class="b" style="border-color:${c.color}"><h4 style="background:${c.color}">${c.label}</h4><ul>${it.map(e=>`<li>${esc(e.name)}</li>`).join("")}</ul></div>`;}).join("");
-    return`<section class="sheet"><header><div class="n">${esc(s.num)}</div><div><div class="t">${esc(s.heading)}</div><div class="m">${esc(s.intExt||"")} · ${s.dayNight==="N"?"Nuit":s.dayNight==="J"?"Jour":"—"} · ${fmtE(s.eighths)} p. · ${esc(STATUS[s.status||"todo"])}</div></div><div class="pr"><b>DDC Breakdown</b><br>${esc(p?.name||"")} · ${esc(verTag(p))}</div></header>
+    return`<section class="sheet"><header><div class="n">${esc(s.num)}</div><div><div class="t">${esc(s.heading)}</div><div class="m">${esc(s.intExt||"")} · ${s.dayNight==="N"?"Nuit":s.dayNight==="J"?"Jour":"—"} · ${fmtE(s.eighths)} p. · ${esc(STATUS[s.status||"todo"])}</div></div><div class="pr"><b>Dydz Studio</b><br>${esc(p?.name||"")} · ${esc(verTag(p))}</div></header>
     <p class="syn"><b>Synopsis :</b> ${esc(s.synopsis||"")}</p><div class="grid">${boxes}</div></section>`;}).join("");
-  const html=`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(p?.name)} ${esc(verTag(p))} — DDC Breakdown</title><style>
+  const html=`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(p?.name)} ${esc(verTag(p))} — Dydz Studio</title><style>
   body{font-family:Helvetica,Arial,sans-serif;margin:0;color:#111}.sheet{page-break-after:always;padding:14mm;max-width:190mm;margin:auto}
   header{display:flex;gap:12px;align-items:center;border:2px solid #111;padding:8px}.n{font-size:34px;font-weight:700;min-width:50px;text-align:center}.t{font-weight:700;font-family:Courier,monospace;font-size:15px}.m{font-size:12px;color:#444}.pr{margin-left:auto;font-size:12px;text-align:right}
   .syn{font-size:13px;border:1px solid #999;border-top:0;padding:8px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -2343,10 +2343,10 @@ function exportPlanHTML(){
     <table><thead><tr><th></th><th>Sc.</th><th>Décor</th><th>Lieu de tournage</th><th>I/E</th><th>J/N</th><th>Pages</th><th>Rôles</th></tr></thead><tbody>
     ${sc.map(s=>{const l=lieuOf(s);return`<tr><td style="background:${BC[bandKey(s)]||"#ccc"};width:8px"></td><td><b>${esc(s.num)}</b></td><td>${esc(s.location||s.heading)}<br><small>${esc(s.synopsis||"")}</small></td><td>${esc(l?.name||"")}${l?.address?"<br><small>"+esc(l.address)+"</small>":""}</td><td>${esc(s.intExt||"")}</td><td>${s.dayNight==="N"?"Nuit":s.dayNight==="J"?"Jour":""}</td><td>${fmtE(s.eighths)}</td><td>${esc([...castOf(s.id).values()].join(", "))}</td></tr>`;}).join("")}
     </tbody></table></section>`;}).join("");
-  const html=`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(p?.name)} — plan de travail — DDC Breakdown</title><style>
+  const html=`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(p?.name)} — plan de travail — Dydz Studio</title><style>
   body{font-family:Helvetica,Arial,sans-serif;margin:12mm;color:#111}h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:18px 0 6px;border-bottom:2px solid #111;padding-bottom:3px}h2 small{font-weight:400;color:#555}
   table{border-collapse:collapse;width:100%;font-size:12px}th,td{border:1px solid #bbb;padding:4px 6px;text-align:left;vertical-align:top}th{background:#eee;font-size:10.5px;text-transform:uppercase}small{color:#555}section{page-break-inside:avoid}</style></head>
-  <body><h1>${esc(p?.name||"")} · ${esc(verTag(p))} · Plan de travail</h1><div style="font-size:12px;color:#555">DDC Breakdown · ${daysSorted().length} journées</div>${days}</body></html>`;
+  <body><h1>${esc(p?.name||"")} · ${esc(verTag(p))} · Plan de travail</h1><div style="font-size:12px;color:#555">Dydz Studio · ${daysSorted().length} journées</div>${days}</body></html>`;
   save(fileBase(p)+"-plan-de-travail.html",html);
 }
 
@@ -2851,7 +2851,7 @@ function copPrompt(req){
     if(!list.length)lines.push("  (aucun plan)");
     for(const x of list)lines.push(`  ${shotNum(x)} | ${x.type} | ${x.move} | ${x.angle} | ${x.effect||"—"} | ${isOpt(x)?"0 s (optionnel)":x.dur+" s"} | ${cut(x.action)} | ${cut(x.sound)}`);}
   const hist=COP.msgs.slice(-7,-1).filter(m=>m.role!=="err").map(m=>(m.role==="user"?"Réalisateur : ":"Dydz : ")+m.text.slice(0,400)).join("\n");
-  return `Tu es Dydz, l'assistant de préproduction de DDC intégré à DDC Breakdown. Tu aides le réalisateur à modifier le découpage technique de l'épisode ouvert.
+  return `Tu es Dydz, l'assistant de préproduction intégré à Dydz Studio. Tu aides le réalisateur à modifier le découpage technique de l'épisode ouvert.
 
 Projet : ${P()?.name||""}
 Durée actuelle : ${Math.round(tot*10)/10} s pour ${S.shots.length} plans. Durée cible : ${tgt?tgt+" s":"non définie"}.
@@ -3030,7 +3030,7 @@ async function buildDecPDF(groups,imgs){
       doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(110,110,110);doc.text(T.meta,10,16.5);}
   });
   const n=doc.getNumberOfPages();
-  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(130,130,130);doc.text("DDC Breakdown · page "+i+" / "+n,287,203,{align:"right"});}
+  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(130,130,130);doc.text("Dydz Studio · page "+i+" / "+n,287,203,{align:"right"});}
   await save(fileBase(P())+"-decoupage.pdf",doc.output("blob"));
 }
 async function buildDecPPTX(groups,imgs){
