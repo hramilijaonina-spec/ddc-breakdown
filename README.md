@@ -21,6 +21,20 @@ Depuis la version 2.0, l'app reprend toutes les fonctions de UP Slatebook, avec 
 - **Clap numérique** pour le tournage sur téléphone.
 - Temps réel pour toute l'équipe ; connexion avec Google ou par lien e-mail ; hors ligne ; sauvegarde du projet en fichier.
 
+## Revue ergonomique (v1.18 · Dydz 2.8)
+
+- Téléphone : en-tête sur une ligne qui se replie quand on fait défiler ; découpage en cartes (vignette, plan, caméra, description, audio, notes) ; cases et boutons plus grands.
+- Menus : tout ce qui concerne le projet est dans ☰ → PROJET (plus de •••) ; les réglages propres au découpage et au plan de travail ont une icône à curseurs.
+- Une seule page d'accueil (avec un état vide pour le premier projet).
+- Recherche dans le projet (loupe ou ⌘K) : scènes, éléments du dépouillement, plans.
+- Un seul écran « Exporter » : scénario, découpage, dépouillement, plan de travail, sauvegarde du projet.
+- Annuler / rétablir (⌘Z, ⇧⌘Z) aussi dans le plan de travail et le dépouillement.
+- Dépouillement au doigt : toucher un mot propose de l'ajouter.
+- Pastille d'avancement identique partout : D (dépouillement), plans faits / plans, T (tournée).
+- Plan de travail : durée estimée d'après le découpage, par journée et au total.
+- Historique des versions : les photos des plans sont gardées et reviennent avec la version.
+- Le mode local est une petite pastille ; les messages en bandeau se ferment.
+
 ## Installation (une seule fois)
 
 Le projet Firebase utilisé est `shotlist-298e2` (le même que l'app shotlist).

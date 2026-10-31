@@ -453,6 +453,83 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 
 .brand.ddc .logo{background:var(--accent);color:var(--accent-fg);letter-spacing:.06em}
 .brand.ddc{color:var(--fg)}
+/* en-tête : recherche, mode local, bandeau */
+.localpill{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:10px;border:1px solid color-mix(in srgb,var(--warn) 55%,var(--line));color:var(--warn);cursor:help;white-space:nowrap}
+.banner{display:flex;align-items:center;gap:10px}.banner span{flex:1;min-width:0}
+.banner-x{flex:0 0 auto;border:0;background:transparent;color:var(--fg);font-size:20px;line-height:1;width:30px;height:30px;border-radius:6px}
+.banner-x:hover{background:var(--surface)}
+.mm-sub hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+.mm-sub button.danger{color:var(--danger)}
+/* écran Exporter */
+.ex{display:flex;flex-direction:column;gap:10px;max-height:min(70vh,620px);overflow:auto}
+.ex-sec{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.ex-sec.focus{border-color:var(--accent);background:var(--accent-soft)}
+.ex-sec h4{margin:0 0 8px;font-family:var(--f-display);font-size:16px;text-transform:uppercase;letter-spacing:.03em}
+.ex-sec h4 small{font-family:var(--f-ui);font-size:11.5px;text-transform:none;letter-spacing:0;color:var(--muted);font-weight:500}
+.ex-btns{display:flex;flex-wrap:wrap;gap:6px}
+/* recherche */
+.srch-m{max-width:620px!important;padding:12px!important}
+.srch{display:flex;flex-direction:column;gap:8px}
+.srch input{width:100%;font-size:16px;padding:10px 12px;background:var(--sunk);border:1px solid var(--line-strong);border-radius:8px;color:var(--fg)}
+.sr{display:flex;flex-direction:column;max-height:min(60vh,520px);overflow:auto}
+.sr-i{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;align-items:start;text-align:left;border:0;background:transparent;padding:8px;border-radius:6px;color:var(--fg)}
+.sr-i[aria-selected=true],.sr-i:hover{background:var(--sunk)}
+.sr-k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--c,var(--muted));padding-top:2px}
+.sr-t b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-t small{display:block;color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-hint{margin:0;font-size:11.5px}
+/* pastille d'avancement */
+.prog{display:inline-flex;gap:3px;vertical-align:middle}
+.prog i{font-style:normal;font-size:10px;font-weight:700;padding:0 5px;border-radius:8px;border:1px solid var(--line-strong);color:var(--muted);line-height:15px;font-variant-numeric:tabular-nums}
+.prog i.ok,.prog .pg-d.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 60%,var(--line));background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.prog .pg-d.ai{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 55%,var(--line))}
+.dct-seq .prog{margin-top:6px;display:flex}
+.home-empty{display:flex;flex-direction:column;gap:12px;color:var(--muted)}
+.home-empty p{margin:0;max-width:62ch}
+.icbtn svg,.menubtn.h-undo svg,.menubtn.h-redo svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.menubtn:disabled{opacity:.4}
+/* ---------- téléphone ---------- */
+@media (max-width:760px){
+  .top{flex-wrap:nowrap;gap:6px;padding-block:6px}
+  .brand{font-size:18px;gap:6px;min-width:0}
+  .brand .logo{font-size:14px;height:22px}
+  .brand .ver{display:none}
+  .top .menubtn{width:34px;height:34px}
+  .projbar{flex-wrap:nowrap;gap:8px;padding-block:6px;overflow-x:auto;scrollbar-width:none}
+  .projbar::-webkit-scrollbar{display:none}
+  .projbar .label,.projbar .savest{display:none}
+  .projbar select{max-width:48vw;flex:0 1 auto}
+  .projbar .eps{flex-wrap:nowrap}
+  .projbar .ep{padding:4px 9px;font-size:12.5px;white-space:nowrap;flex:0 0 auto}.projbar .ep i{display:none}.projbar .pver{flex:0 0 auto}
+  body.hdr-hide .top,body.hdr-hide .projbar{display:none}
+  .banner{padding-block:4px;font-size:12px}
+  /* découpage : une carte par plan */
+  .dct-wrap{border:0;background:transparent;overflow:visible;margin-top:10px}
+  table.dct,.dct tbody{display:block!important;width:100%!important;min-width:0!important}
+  .dct thead{display:none}
+  .dct tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"seq seq" "thumb thumb" "plan cam" "desc desc" "audio audio" "notes notes";border:1px solid var(--line);border-radius:10px;margin:0 0 10px;overflow:hidden;background:var(--surface)}
+  .dct tr.dct-add{display:block;border:0;background:transparent;margin:-2px 0 18px}
+  .dct tr.dct-add td{border:0;padding:0}
+  .dct td{display:block;width:auto!important;border:0!important}
+  .dct tr.first td{border-top:0!important}
+  .dct-seq{grid-area:seq;display:flex!important;flex-wrap:wrap;align-items:baseline;gap:4px 10px;border-right:0!important;border-bottom:1px solid var(--line)!important}
+  .dct-seq b{font-size:22px}.dct-seq .h{margin-top:0;font-size:12px}.dct-seq small{margin-top:0;flex-basis:100%}.dct-seq .prog{margin-top:0}
+  .dct-plan{grid-area:plan;border-right:1px solid var(--line)!important}
+  .dct-cam{grid-area:cam}
+  .dct-thumb{grid-area:thumb;padding:0!important}.dct-thumb .dc-frame{width:100%!important;max-width:none!important;border-radius:0}
+  .dct-desc{grid-area:desc}.dct-audio{grid-area:audio}.dct-notes{grid-area:notes}
+  .dct-desc,.dct-audio,.dct-notes{border-top:1px solid var(--line)!important}
+  .dct td.ed::before{content:attr(data-l);display:block;padding:8px 10px 0;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+  .dct td.ed textarea{font-size:15px}
+  /* cibles tactiles plus grandes */
+  .dc-done input,.p-done input,.d-done input,.addsc input{width:26px;height:26px}
+  .dc-done{bottom:8px;right:8px}
+  .pmove,.prm{width:38px;height:38px}
+  .btn.small{min-height:34px}
+  .pstrip{grid-template-columns:8px 34px 30px minmax(0,1fr) auto auto auto;padding-block:8px}
+  .el{padding:5px 6px 5px 9px;font-size:13.5px}
+  .el button{min-width:28px;min-height:26px}
+}
 /* menu principal */
 .mm{min-width:240px;padding:6px;gap:2px}
 .mm button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;text-align:left;padding:8px 10px;border-radius:6px;color:var(--fg);font-size:13.5px}
@@ -816,6 +893,8 @@ table.dct{min-width:1180px;width:100%;border-collapse:collapse;font-size:13.5px}
 <header class="top" id="top">
   <div class="brand ddc"><span class="logo" id="logo" aria-label="Dydz">Dydz</span>Studio<span class="ver" id="app-ver" title="Version de l'app">v1.3</span></div>
   <button class="menubtn" id="b-menu" type="button" aria-label="Menu" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <button class="menubtn" id="b-search" type="button" aria-label="Rechercher dans le projet" title="Rechercher (⌘K)"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5.5 5.5"/></svg></button>
+  <span class="localpill" id="localpill" hidden title="Mode local : ouvre cette page sur claude.ai pour partager les projets avec ton équipe. Rien n'est enregistré ici.">Local</span>
   <div class="spacer"></div>
   <div class="progress" id="progress" hidden></div>
   <div class="peers" id="peers" aria-label="Personnes connectées"></div>
@@ -899,8 +978,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables · 2.5 menu du plan de travail · 2.6 « Proposer un plan » garde ce qui est tourné · 2.6.1 numéros de scène à l export · 2.7 menu Accueil et Projet, page d accueil, boutons sobres, PDF du scénario */
-const APP_VERSION="2.7.0";const APP_DATE="31 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables · 2.5 menu du plan de travail · 2.6 « Proposer un plan » garde ce qui est tourné · 2.6.1 numéros de scène à l export · 2.7 menu Accueil et Projet, page d accueil, boutons sobres, PDF du scénario · 2.8 revue : téléphone, recherche, écran Exporter, annuler partout, durée, avancement, photos dans l historique */
+const APP_VERSION="2.8.0";const APP_DATE="31 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -1008,7 +1087,7 @@ async function boot(){
     try{if(user.role)S.role=await user.role();}catch{}
     try{S.isAdmin=!!(await user.isOwner());}catch{S.isAdmin=false;}
   }
-  if(S.local)showBanner("Mode local : ouvre cette page sur claude.ai pour partager les projets avec ton équipe. Rien n'est enregistré ici.");
+  if(S.local){const lp=$("#localpill");if(lp){lp.hidden=false;lp.onclick=()=>toast(lp.title,6000);}}
   S.canComment=S.canWrite||S.role==="commenter";
   if(S.role==="viewer")showBanner("Accès lecteur : tu peux consulter et exporter. Pour commenter ou modifier, demande un autre rôle à l'administrateur.");
   else if(S.role==="commenter")showBanner("Accès commentateur : tu peux consulter et commenter les scènes. Pour modifier, demande le rôle Éditeur à l'administrateur.");
@@ -1025,7 +1104,7 @@ async function boot(){
     else render();
   },err=>{showBanner("Impossible de charger les projets ("+err.code+"). Recharge la page.");});
 }
-function showBanner(t){const b=$("#banner");b.textContent=t;b.hidden=false;}
+function showBanner(t){const b=$("#banner");b.innerHTML=`<span>${esc(t)}</span><button type="button" class="banner-x" aria-label="Fermer le message">×</button>`;b.hidden=false;b.querySelector(".banner-x").onclick=()=>{b.hidden=true;};}
 
 function openProject(pid){
   S.home=false;store.set("dep.seen."+pid,String(Date.now()));
@@ -1072,11 +1151,10 @@ function renderTop(){
     proj.innerHTML=`<span class="label">Projet en cours</span>
       <select id="projsel" aria-label="Projet en cours">${groups.map(x=>`<option value="${esc(x.key)}"${x.key===gk?" selected":""}>${esc(x.name||"Sans titre")}${x.items.length>1?" · "+x.items.length+" épisodes":""}</option>`).join("")}</select>
       ${g&&g.items.length>1?`<div class="eps" role="group" aria-label="Épisodes">${g.items.map(p=>`<button type="button" class="ep" data-pid="${esc(p.id)}" aria-pressed="${p.id===S.pid}" title="${esc(p.name||"")}"><i aria-hidden="true"></i>Ép. ${esc(p.episode||"?")}</button>`).join("")}</div>`:""}
-      ${cur?`<button type="button" class="pver" id="projver" title="Versions et sauvegardes du projet">${esc(verTag(cur))}</button><span class="savest" id="savest" aria-live="polite">${esc(saveStatus())}</span>`:""}
-      ${S.canWrite&&cur?`<button class="btn ghost small" id="projmenu" aria-label="Options du projet">•••</button>`:""}`;
+      ${cur?`<button type="button" class="pver" id="projver" title="Historique des versions du projet">${esc(verTag(cur))}</button><span class="savest" id="savest" aria-live="polite">${esc(saveStatus())}</span>`:""}
+`;
     $("#projsel").onchange=e=>{const x=groups.find(y=>y.key===e.target.value);if(!x)return;const last=store.get("dep.ep."+x.key);const pick=x.items.find(p=>p.id===last)||x.items[0];if(pick)openProject(pick.id);};
     proj.querySelectorAll(".ep").forEach(b=>b.onclick=()=>{if(b.dataset.pid!==S.pid)openProject(b.dataset.pid);});
-    const pm=$("#projmenu");if(pm)pm.onclick=e=>projectMenu(e.currentTarget);
     const pv=$("#projver");if(pv)pv.onclick=openVersions;
   }else{proj.hidden=true;proj.innerHTML="";}
   const tabs=$("#tabs");tabs.hidden=!S.pid||!!S.home;
@@ -1098,30 +1176,64 @@ function mainMenu(anchor){
   closePop();
   const d=document.createElement("div");d.className="pop mm";d.setAttribute("role","menu");d.setAttribute("aria-label","Menu");
   const todo=S.scenes.filter(s=>!s.status||s.status==="todo").length;
-  const sub=[];
+  const sub=[];const cp=S.pid&&!S.home?P():null;
   if(S.canWrite)sub.push(["new","Nouveau projet"]);
-  if(S.pid&&S.canWrite&&!S.aiOff)sub.push(["ai","Analyser tout avec l'IA"+(todo?" · "+todo+" scène"+(todo>1?"s":""):"")]);
-  if(S.pid&&S.dl)sub.push(["export","Exporter…"]);
-  if(S.pid)sub.push(["versions","Versions et sauvegardes"]);
-  if(S.pid&&S.canWrite)sub.push(["options","Options du projet…"]);
+  if(cp&&S.canWrite&&!S.aiOff)sub.push(["ai","Analyser tout avec l'IA"+(todo?" · "+todo+" scène"+(todo>1?"s":""):"")]);
+  if(cp)sub.push(["export","Exporter…"]);
+  if(cp)sub.push(["-"],["versions","Historique des versions"]);
+  if(cp&&S.canWrite)sub.push(["bump","Nouvelle version ("+verTag(cp)+" → v"+nextVer(cp)+")…"],["rename","Renommer le projet"],["backup","Sauvegarder le projet (fichier)"],["restore","Restaurer une sauvegarde…"],["clean","Retirer un texte de toutes les scènes"]);
+  if(cp&&S.isAdmin)sub.push(["-"],["delete","Supprimer le projet"]);
   const draw=()=>{d.innerHTML=`<button type="button" role="menuitem" class="mm-top${S.home||!S.pid?" on":""}" data-a="home">${MI.home}<span>Accueil</span></button>
     <button type="button" class="mm-top mm-grp" aria-expanded="${mmProjOpen}" data-a="toggle">${MI.proj}<span>Projet${S.pid&&!S.home&&P()?`<small>${esc(P().name||"")}</small>`:""}</span>${MI.chev}</button>
-    <div class="mm-sub"${mmProjOpen?"":" hidden"}>${sub.map(([k,l])=>`<button type="button" role="menuitem" data-a="${k}">${esc(l)}</button>`).join("")||`<p class="empty" style="padding:4px 8px;margin:0">Aucune action pour ton rôle.</p>`}</div>`;
+    <div class="mm-sub"${mmProjOpen?"":" hidden"}>${sub.map(([k,l])=>k==="-"?`<hr>`:`<button type="button" role="menuitem" data-a="${k}"${k==="delete"?' class="danger"':""}>${esc(l)}</button>`).join("")||`<p class="empty" style="padding:4px 8px;margin:0">Aucune action pour ton rôle.</p>`}</div>`;
     d.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{const k=b.dataset.a;
       if(k==="toggle"){mmProjOpen=!mmProjOpen;draw();return;}
       closePop();
       if(k==="home")goHome();
       else if(k==="new")openImport();
       else if(k==="ai"){if(S.busy){toast("Une analyse est déjà en cours.");return;}if(!todo){toast("Toutes les scènes sont déjà analysées.");return;}leaveHome();analyzeAll();}
-      else if(k==="export")exportMenu(anchor);
+      else if(k==="export")openExport();
       else if(k==="versions")openVersions();
-      else if(k==="options")projectMenu(anchor);});};
+      else if(k==="bump")bumpVersion();
+      else if(k==="rename")renameProject();
+      else if(k==="backup")backupProject();
+      else if(k==="restore")openRestore();
+      else if(k==="clean")cleanupText();
+      else if(k==="delete")confirmDelete();});};
   draw();document.body.append(d);popEl=d;
   const r=anchor.getBoundingClientRect();d.style.left=Math.min(Math.max(8,r.left),innerWidth-d.offsetWidth-8)+"px";d.style.top=(r.bottom+6)+"px";
   anchor.setAttribute("aria-expanded","true");
   const obs=new MutationObserver(()=>{if(!document.body.contains(d)){anchor.setAttribute("aria-expanded","false");obs.disconnect();}});obs.observe(document.body,{childList:true});
   d.querySelector("button")?.focus();
 }
+/* ---------- recherche dans le projet (⌘K) ---------- */
+function openSearch(){
+  if(document.querySelector(".srch"))return;
+  const m=modal(`<div class="srch"><input type="search" id="sq" placeholder="${S.pid&&!S.home?"Scène, personnage, accessoire, plan…":"Nom du projet…"}" aria-label="Rechercher" autocomplete="off"><div class="sr" id="sr" role="listbox"></div><p class="empty sr-hint">↑ ↓ pour choisir · Entrée pour ouvrir · Échap pour fermer</p></div>`);
+  m.querySelector(".modal").classList.add("srch-m");
+  const q=m.querySelector("#sq"),box=m.querySelector("#sr");let res=[],sel=0;
+  const hit=(txt,k)=>{const n=norm(txt);const i=n.indexOf(k);return i<0?null:String(txt).slice(Math.max(0,i-30),i+k.length+50).replace(/\s+/g," ");};
+  const run=()=>{const k=norm(q.value);res=[];
+    if(!S.pid||S.home){for(const g of seriesGroups())if(!k||norm(g.name).includes(k))res.push({kind:"Projet",title:g.name||"Sans titre",sub:g.items.length>1?g.items.length+" épisodes":"",go:()=>openProject(g.items[0].id)});}
+    else if(k.length>=2){
+      for(const s of S.scenes){const h=norm(s.num+" "+s.heading).includes(k)?"":hit((s.synopsis||"")+" "+(s.body||""),k);
+        if(norm(s.num+" "+s.heading).includes(k)||h)res.push({kind:"Scène",title:s.num+" · "+s.heading,sub:h||"",go:()=>{leaveHome();S.tab="scenes";$("#desk").innerHTML="";selectScene(s.id);}});}
+      const seen=new Set();
+      for(const e of S.elements){if(!norm(e.name).includes(k))continue;const s=scene(e.sceneId);if(!s)continue;const key=e.id;if(seen.has(key))continue;seen.add(key);
+        res.push({kind:CAT[e.cat]?.label||"Élément",color:CAT[e.cat]?.color,title:e.name,sub:"scène "+s.num+" · "+s.heading,go:()=>{leaveHome();S.tab="scenes";$("#desk").innerHTML="";selectScene(s.id);setTimeout(()=>findStart(e.id),250);}});}
+      for(const x of S.shots){const h=hit((x.action||"")+" "+(x.sound||"")+" "+(x.notes||""),k);if(!h)continue;const s=scene(x.sceneId);
+        res.push({kind:"Plan",title:"Plan "+shotNum(x)+(s?" · "+s.heading:""),sub:h,go:()=>{leaveHome();goTab("dec");setTimeout(()=>{const r=document.getElementById("dc-"+x.id);if(r){r.scrollIntoView({block:"center"});r.classList.add("dc-flash");setTimeout(()=>r.classList.remove("dc-flash"),1300);}},400);}});}
+    }
+    res=res.slice(0,60);sel=0;draw();};
+  const draw=()=>{box.innerHTML=res.length?res.map((r,i)=>`<button type="button" role="option" class="sr-i" data-i="${i}" aria-selected="${i===sel}"><span class="sr-k"${r.color?` style="--c:${r.color}"`:""}>${esc(r.kind)}</span><span class="sr-t"><b>${esc(r.title)}</b>${r.sub?`<small>${esc(r.sub)}</small>`:""}</span></button>`).join("")
+      :`<p class="empty" style="padding:10px">${q.value.trim().length<2&&S.pid&&!S.home?"Tape au moins 2 lettres.":"Aucun résultat."}</p>`;
+    box.querySelectorAll(".sr-i").forEach(b=>b.onclick=()=>pick(+b.dataset.i));};
+  const pick=i=>{const r=res[i];if(!r)return;m.remove();r.go();};
+  q.oninput=run;q.onkeydown=e=>{if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();if(!res.length)return;sel=(sel+(e.key==="ArrowDown"?1:-1)+res.length)%res.length;draw();box.querySelector('[aria-selected="true"]')?.scrollIntoView({block:"nearest"});}
+    else if(e.key==="Enter"){e.preventDefault();pick(sel);}};
+  run();q.focus();
+}
+document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"&&S.projectsLoaded){e.preventDefault();openSearch();}});
 /* ---------- accueil : derniers projets ---------- */
 function goHome(){flushEditor().then(()=>{S.home=true;$("#desk").innerHTML="";render();});}
 function leaveHome(){if(S.home){S.home=false;$("#desk").innerHTML="";}}
@@ -1131,20 +1243,24 @@ function homeHTML(){
     .sort((a,b)=>(b.seen-a.seen)||(b.created-a.created));
   const when=t=>t?new Date(t).toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"}):"";
   return `<div class="home"><div class="home-in">
-    <div class="home-h"><div><span class="label">Dydz Studio</span><h1>Accueil</h1></div>
+    <div class="home-h"><div><span class="label">Dydz Studio · préproduction</span><h1>${S.projects.length?"Accueil":"Bienvenue"}</h1></div>
       ${S.canWrite?`<div class="home-acts"><button class="btn primary" id="h-new">+ Nouveau projet</button><button class="btn ghost" id="h-restore">Restaurer une sauvegarde</button></div>`:""}</div>
-    <h2 class="label">Derniers projets</h2>
+    ${groups.length?`<h2 class="label">Derniers projets</h2>`:""}
     <div class="home-list">${groups.map(g=>{const cur=g.items.some(p=>p.id===S.pid);const multi=g.items.length>1;const one=g.items[0];
       const pick=g.items.find(p=>p.id===store.get("dep.ep."+g.key))||g.items[0];
       return `<div class="hp${cur?" cur":""}">
         <button type="button" class="hp-main" data-pid="${esc(pick.id)}"><b>${esc(g.name||"Sans titre")}</b>
           <small>${multi?g.items.length+" épisodes · ":""}${g.seen?"ouvert "+savedAgo(g.seen):"créé le "+esc(when(g.created))}${cur?" · en cours":""}</small></button>
         ${multi?`<span class="hp-eps">${g.items.map(p=>`<button type="button" class="ep" data-pid="${esc(p.id)}" title="${esc(p.name||"")}">Ép. ${esc(p.episode||"?")}</button>`).join("")}</span>`:`<span class="pver">${esc(verTag(one))}</span>`}
-      </div>`;}).join("")||`<p class="empty">Aucun projet pour l'instant.</p>`}</div>
+      </div>`;}).join("")||""}</div>
+    ${groups.length?"":`<div class="home-empty"><p>Importe un scénario en PDF, Word converti en PDF, Final Draft ou texte. L'outil le découpe en scènes, l'IA repère rôles, accessoires, costumes et véhicules, puis toute l'équipe corrige et commente en direct.</p>
+      <div class="steps"><div><b>1 · Importer</b>PDF, .fdx, .fountain ou texte collé, même écrit « en prose ».</div><div><b>2 · Découper</b>Plan par plan, à la main ou avec l'IA.</div><div><b>3 · Organiser</b>Dépouillement, plan de travail, suivi du tournage.</div></div>
+      ${S.canWrite?`<div class="home-acts"><button class="btn" id="h-example">Essayer avec un exemple</button></div>`:`<p>Aucun projet pour l'instant. Une personne avec le rôle Éditeur doit en créer un.</p>`}</div>`}
   </div></div>`;
 }
 function bindHome(){
   const n=$("#h-new");if(n)n.onclick=()=>openImport();const r=$("#h-restore");if(r)r.onclick=openRestore;
+  const ex=$("#h-example");if(ex)ex.onclick=()=>openImport(EXAMPLE,"Le Collier (exemple)");
   document.querySelectorAll(".home [data-pid]").forEach(b=>b.onclick=()=>{S.home=false;$("#desk").innerHTML="";if(b.dataset.pid===S.pid)render();else openProject(b.dataset.pid);});
 }
 async function renderPeers(){
@@ -1161,7 +1277,6 @@ async function renderPeers(){
 function renderDesk(){
   const desk=$("#desk");
   if(!S.projectsLoaded){return;}
-  if(!S.pid&&!S.projects.length){desk.innerHTML=welcomeHTML();bindWelcome();return;}
   if(S.home||!S.pid){desk.innerHTML=homeHTML();bindHome();return;}
   if(S.tab==="script"){if(!$("#editor"))desk.innerHTML=`<section class="editor" id="editor"></section>`;renderEditor();return;}
   if(S.tab==="plan"){if(S.dragging){S.pendingRender=true;return;}if(!$("#plan"))desk.innerHTML=`<section class="plan" id="plan"></section>`;keepFocus(renderPlan);return;}
@@ -1220,7 +1335,7 @@ function renderList(){
       <span class="num">${esc(s.num)}</span>
       <span class="hd" title="${esc(s.heading)}">${esc(s.location||s.heading)}</span>
       <span class="side">${fmtE(s.eighths)}</span>
-      <span class="meta">${busy?`<span class="spin" title="Analyse en cours"></span>`:`<span class="st ${st}">${STATUS[st]}</span>`}${isPlanned(s)?`<span>J${dayIdx[s.dayId]+1}</span>`:""}<span>${elCount[s.id]||0} élém.</span>${cmCount[s.id]?`<span>${cmCount[s.id]} comm.</span>`:""}${pe?`<span class="dots">${pe}</span>`:""}</span>
+      <span class="meta">${busy?`<span class="spin" title="Analyse en cours"></span>`:`<span class="st ${st}">${STATUS[st]}</span>`}${isPlanned(s)?`<span>J${dayIdx[s.dayId]+1}</span>`:""}<span>${elCount[s.id]||0} élém.</span>${progHTML(s)}${cmCount[s.id]?`<span>${cmCount[s.id]} comm.</span>`:""}${pe?`<span class="dots">${pe}</span>`:""}</span>
      </button>`;}).join("")||`<p class="empty" style="padding:12px">Aucune scène ne correspond.</p>`}</div></div>`;
   const drop=list.querySelector(".sc-drop");if(drop)drop.scrollTop=prevScroll;
   const si=$("#search");si.oninput=e=>{S.search=e.target.value;renderListKeepFocus();};
@@ -1236,6 +1351,11 @@ function setListOpen(v){
 }
 document.addEventListener("click",e=>{if(S.listOpen&&e.target.isConnected&&!e.target.closest("#list"))setListOpen(false);});
 document.addEventListener("keydown",e=>{if(S.listOpen&&e.key==="Escape"){e.preventDefault();e.stopImmediatePropagation();setListOpen(false);$("#sc-pick")?.focus();}},true);
+/* avancement d'une scène : D dépouillement · plans faits / plans · T tournée */
+function progHTML(s){
+  const st=s.status||"todo";const sh=shotsOf(s.id).filter(x=>!isOpt(x));const done=sh.filter(x=>x.done).length;
+  return `<span class="prog" title="Dépouillement : ${STATUS[st]} · plans faits : ${done}/${sh.length} · ${s.filmed?"tournée":"pas encore tournée"}"><i class="pg-d ${st}">D</i><i class="pg-p${sh.length&&done===sh.length?" ok":""}">${sh.length?done+"/"+sh.length:"0"}</i><i class="pg-t${s.filmed?" ok":""}">T</i></span>`;
+}
 function renderListKeepFocus(){const pos=$("#search").selectionStart;renderList();const si=$("#search");si.focus();si.setSelectionRange(pos,pos);}
 
 
@@ -1253,6 +1373,8 @@ function highlightHTML(text,els){
 function renderScene(){
   const pane=$("#scriptpane");if(!pane)return;
   const s=scene(S.sid);
+  if(s){const sig=JSON.stringify([s,elsOf(s.id),S.analyzing.has(s.id),S.canWrite,S.aiOff,!!S.busy,S.scenes.indexOf(s),S.scenes.length,shotsOf(s.id).map(x=>[x.dur,x.done])]);
+    if(pane.dataset.sig===sig&&pane.childElementCount){findApply(false);hButtons();return;}pane.dataset.sig=sig;}
   if(!s){pane.innerHTML=`<p class="empty" style="text-align:center;margin-top:10vh">Ce projet n'a pas encore de scène.</p>`;return;}
   const k=bandKey(s);const st=s.status||"todo";const busy=S.analyzing.has(s.id);
   const synFocused=document.activeElement?.id==="synopsis";
@@ -1275,6 +1397,7 @@ function renderScene(){
       ${S.canWrite?`<button class="btn small ${st==="ok"?"":"primary"}" id="b-ok">${st==="ok"?"Rouvrir la scène":"Marquer vérifiée"}</button>`:""}
       <span class="spacer"></span>
       ${S.canWrite?`<button class="btn small" id="b-edit">Modifier le texte</button>`:""}
+      ${S.canWrite?`<button class="btn ghost small icbtn h-undo" type="button" aria-label="Annuler"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button class="btn ghost small icbtn h-redo" type="button" aria-label="Rétablir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>`:""}
       <button class="btn ghost small" id="b-prev" aria-label="Scène précédente">←</button><button class="btn ghost small" id="b-next" aria-label="Scène suivante">→</button>
     </div>
     <label class="row" style="display:flex;flex-direction:column;gap:4px"><span class="label">Synopsis</span>
@@ -1283,7 +1406,7 @@ function renderScene(){
   <div class="page sp" id="page"><div class="sb sb-h">${esc(s.heading)}</div>${(()=>{const els=elsOf(s.id);
     return sceneBlocks(s).filter(b=>String(b.x||"").trim()).map(b=>{const x=b.t==="p"&&!/^\(/.test(b.x.trim())?"("+b.x.trim()+")":b.x;
       return `<div class="sb sb-${b.t}">${highlightHTML(x,els)}</div>`;}).join("")||`<p class="empty">Scène vide.</p>`;})()}</div>
-  <p class="hint">${S.canWrite?"Sélectionne un mot ou une expression dans le texte pour l'ajouter au dépouillement. Clique sur un passage surligné pour le modifier, ou sur un élément de la fiche pour retrouver ses passages.":"Les passages surlignés correspondent aux éléments du dépouillement."}</p>`;
+  <p class="hint">${S.canWrite?(matchMedia("(pointer:coarse)").matches?"Touche un mot pour l'ajouter au dépouillement (étire la sélection pour plusieurs mots). Touche un passage surligné pour le modifier, ou un élément de la fiche pour retrouver ses passages.":"Sélectionne un mot ou une expression dans le texte pour l'ajouter au dépouillement. Clique sur un passage surligné pour le modifier, ou sur un élément de la fiche pour retrouver ses passages."):"Les passages surlignés correspondent aux éléments du dépouillement."}</p>`;
   const syn=$("#synopsis");syn.value=synVal??(s.synopsis||"");if(synFocused){syn.focus();}
   syn.onchange=()=>updateScene(s.id,{synopsis:syn.value.trim()});
   const em=$("#e-minus"),ep=$("#e-plus");
@@ -1297,7 +1420,7 @@ function renderScene(){
   $("#b-prev").onclick=()=>i>0&&selectScene(S.scenes[i-1].id);
   $("#b-next").onclick=()=>i<S.scenes.length-1&&selectScene(S.scenes[i+1].id);
   $("#page").querySelectorAll("mark.hl").forEach(m=>m.onclick=ev=>{if(!S.canWrite)return;const e=S.elements.find(x=>x.id===m.dataset.eid);if(e)elementMenu(e,m);});
-  findApply(false);
+  findApply(false);hButtons();
 }
 /* ---------- retrouver les passages d'un élément dans la scène (comme « Rechercher » d'un éditeur) ---------- */
 const FIND={sid:null,eid:null,i:0};
@@ -1387,13 +1510,13 @@ async function renderComments(sid){
 
 /* ---------- writes ---------- */
 function writeErr(e){if(e&&e.code==="permission_denied"){toast("Accès refusé par la base. Ton e-mail fait-il toujours partie de l'équipe ?",5000);return;}if(e&&e.code==="invalid_argument"&&!S.local){S.canWrite=false;showBanner("Lecture seule : tes modifications ne sont pas enregistrées. Demande le rôle Contributeur.");render();}else toast("Enregistrement impossible ("+(e?.code||"erreur")+"). Réessaie.");}
-function updateScene(sid,patch){return S.db.doc(base()+"/scenes/"+sid).update({...patch,updatedAt:Date.now(),updatedBy:S.me?.id||null}).catch(writeErr);}
+function updateScene(sid,patch,label){return trk(base()+"/scenes/"+sid).update({...patch,updatedAt:Date.now(),updatedBy:S.me?.id||null},{label:label||"Scène "+(scene(sid)?.num||"")}).catch(writeErr);}
 function addElement(sid,cat,name,src){
   const key=norm(name);if(elsOf(sid).some(e=>e.cat===cat&&norm(e.name)===key)){toast("« "+name+" » est déjà dans "+CAT[cat].label+".");return Promise.resolve();}
   const s=scene(sid);
-  const p=S.db.collection(base()+"/elements").add({sceneId:sid,cat,name:name.trim().slice(0,120),src,by:S.me?.id||null,at:Date.now()}).catch(writeErr);
-  if(s&&(s.status||"todo")==="todo")updateScene(sid,{status:"ai"});
-  return p;
+  return hGroup("Ajouter « "+name.trim()+" »",async()=>{
+    await trk(base()+"/elements/"+uid()).set({sceneId:sid,cat,name:name.trim().slice(0,120),src,by:S.me?.id||null,at:Date.now()},{before:null}).catch(writeErr);
+    if(s&&(s.status||"todo")==="todo")await updateScene(sid,{status:"ai"});});
 }
 function addComment(sid,text){S.db.collection(base()+"/comments").add({sceneId:sid,text:text.slice(0,2000),by:S.me?.id||null,at:Date.now()}).catch(writeErr);}
 
@@ -1430,13 +1553,30 @@ function bindScriptSelection(){
     openPop(r,"Ajouter « "+txt+" »",CATS.map((c,i)=>({label:c.label,color:c.color,key:i<9?String(i+1):undefined,run:()=>{addElement(sid,c.id,txt,"manual");getSelection().removeAllRanges();}})));
   };
   pane.addEventListener("mouseup",()=>setTimeout(handler,10));
-  pane.addEventListener("touchend",()=>setTimeout(handler,350));
+  let tapAt=0,skipTap=false;
+  /* un appui qui sert à refermer un menu ou la liste des scènes n'ouvre pas l'ajout */
+  window.addEventListener("pointerdown",()=>{skipTap=!!(popEl||S.listOpen||document.querySelector(".dc-pop"));},true);
+  pane.addEventListener("touchend",()=>setTimeout(()=>{if(Date.now()-tapAt>700)handler();},350));
+  /* téléphone : un appui sur un mot le sélectionne et propose de l'ajouter ; on peut ensuite étendre la sélection avec les poignées */
+  pane.addEventListener("click",e=>{
+    if(!S.canWrite||skipTap||!matchMedia("(pointer:coarse)").matches)return;
+    const page=$("#page");if(!page||!page.contains(e.target)||e.target.closest("mark,button,a"))return;
+    const sel=getSelection();if(sel&&!sel.isCollapsed)return;
+    let node,off;
+    if(document.caretPositionFromPoint){const cp=document.caretPositionFromPoint(e.clientX,e.clientY);if(cp){node=cp.offsetNode;off=cp.offset;}}
+    else if(document.caretRangeFromPoint){const cr=document.caretRangeFromPoint(e.clientX,e.clientY);if(cr){node=cr.startContainer;off=cr.startOffset;}}
+    if(!node||node.nodeType!==3)return;
+    const txt=node.textContent;const W=/[\p{L}\p{N}'’-]/u;let a=off,b=off;
+    while(a>0&&W.test(txt[a-1]))a--;while(b<txt.length&&W.test(txt[b]))b++;
+    if(b-a<2)return;
+    const r=document.createRange();r.setStart(node,a);r.setEnd(node,b);sel.removeAllRanges();sel.addRange(r);tapAt=Date.now();handler();
+  });
 }
 function elementMenu(e,anchor){
   const r=anchor.getBoundingClientRect();
   openPop(r,e.name,[
-    ...CATS.filter(c=>c.id!==e.cat).map(c=>({label:"Déplacer vers "+c.label,color:c.color,run:()=>S.db.doc(base()+"/elements/"+e.id).update({cat:c.id}).catch(writeErr)})),
-    {label:"Retirer de la scène",danger:true,run:()=>S.db.doc(base()+"/elements/"+e.id).delete().catch(writeErr)}]);
+    ...CATS.filter(c=>c.id!==e.cat).map(c=>({label:"Déplacer vers "+c.label,color:c.color,run:()=>trk(base()+"/elements/"+e.id).update({cat:c.id},{label:"« "+e.name+" » → "+c.label}).catch(writeErr)})),
+    {label:"Retirer de la scène",danger:true,run:()=>trk(base()+"/elements/"+e.id).delete({label:"Retirer « "+e.name+" »"}).catch(writeErr)}]);
 }
 function projectMenu(anchor){
   const p=P();if(!p)return;
@@ -1448,7 +1588,29 @@ function projectMenu(anchor){
     {label:"Retirer un texte de toutes les scènes",run:()=>cleanupText()},
     ...(S.isAdmin?[{label:"Supprimer le projet",danger:true,run:()=>confirmDelete()}]:[])]);
 }
-function exportMenu(anchor){
+function exportMenu(){openExport();}
+function openExport(focus){
+  if(!S.pid){toast("Ouvre d'abord un projet.");return;}
+  if(!S.dl){toast("L'export n'est pas disponible ici.");return;}
+  const has=S.shots.some(x=>!isOpt(x));const p=P();
+  const sec=(k,title,items)=>`<section class="ex-sec${focus===k?" focus":""}" data-k="${k}"><h4>${title}</h4><div class="ex-btns">${items.map(([id,l,dis])=>`<button type="button" class="btn" data-x="${id}" ${dis?"disabled":""}>${l}</button>`).join("")}</div></section>`;
+  const m=modal(`<h3>Exporter · ${esc(p?.name||"")}</h3>
+    <div class="ex">
+    ${sec("script","Scénario",[["s-pdf","PDF"],["s-fdx","Final Draft (.fdx)"],["s-fountain","Fountain"]])}
+    ${sec("dec","Découpage technique <small>sans les plans optionnels</small>",[["d-pdf","PDF paysage",!has],["d-pptx","PowerPoint paysage",!has],["d-csv","CSV pour Excel",!has]])}
+    ${sec("dep","Dépouillement",[["e-sheets","Fiches imprimables"],["e-csv","Liste des éléments (CSV)"]])}
+    ${sec("plan","Plan de travail",[["p-html","Plan imprimable"],["p-csv","CSV pour Excel"]])}
+    ${sec("proj","Projet complet",[["j-json","Sauvegarde (fichier .json)"]])}
+    </div>
+    <div class="mfoot"><button class="btn primary" id="ex-c">Fermer</button></div>`);
+  m.querySelector(".modal").style.maxWidth="640px";
+  const run={"s-pdf":exportScriptPDF,"s-fdx":exportFDX,"s-fountain":exportFountain,"d-pdf":()=>runDecExport("pdf"),"d-pptx":()=>runDecExport("pptx"),"d-csv":exportDecCSV,
+    "e-sheets":exportSheets,"e-csv":exportCSV,"p-html":exportPlanHTML,"p-csv":exportPlanCSV,"j-json":backupProject};
+  m.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{m.remove();run[b.dataset.x]();});
+  m.querySelector("#ex-c").onclick=()=>m.remove();
+  m.querySelector(".ex-sec.focus")?.scrollIntoView({block:"nearest"});
+}
+function exportMenuOld(anchor){
   openPop(anchor.getBoundingClientRect(),"Exporter",[
     {label:"Fiches de dépouillement (HTML imprimable)",run:exportSheets},
     {label:"Liste des éléments (CSV pour Excel)",run:exportCSV},
@@ -2126,7 +2288,7 @@ function bindEditor(root){
     btn.onmousedown=e=>e.preventDefault();   /* garde le curseur dans le texte */
     btn.onclick=()=>typeButton(btn.dataset.t);});
   const rn=$("#ed-renum");if(rn)rn.onclick=renumberScenes;
-  $("#ed-export").onclick=e=>scriptExportMenu(e.currentTarget);
+  $("#ed-export").onclick=()=>openExport("script");
   $("#ed-nav").onclick=e=>{const b=e.target.closest("button[data-sid]");if(!b)return;const sec=page.querySelector(`.ed-scene[data-sid="${CSS.escape(b.dataset.sid)}"]`);if(sec)sec.scrollIntoView({block:"start",behavior:"smooth"});};
   page.addEventListener("focusin",e=>{const b=e.target.closest(".sb");if(!b)return;ED.lastBlock=b;markType(b.dataset.t);
     const sid=b.closest(".ed-scene").dataset.sid;if(ED.editing!==sid){ED.editing=sid;S.room?.presence({editing:sid}).catch(()=>{});}});
@@ -2363,6 +2525,9 @@ const scenesOfDay=did=>S.scenes.filter(s=>s.dayId===did).sort((a,b)=>(a.dayPos||
 const isPlanned=s=>!!(s.dayId&&S.days.some(d=>d.id===s.dayId));
 function dayIndexMap(){const m={};daysSorted().forEach((d,i)=>m[d.id]=i);return m;}
 const targetE8=()=>Math.round((Number(P()?.pagesPerDay)||4)*8);
+/* durée estimée d'après le découpage (plans optionnels exclus) */
+const sceneDur=s=>sumDur(shotsOf(s.id).filter(x=>!isOpt(x)));
+const scenesDur=list=>list.reduce((a,s)=>a+sceneDur(s),0);
 const fmtDate=iso=>{if(!iso)return"";const d=new Date(iso+"T12:00:00");return isNaN(d)?"":d.toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"});};
 
 function keepFocus(fn){
@@ -2399,7 +2564,7 @@ function planStrip(s,did){
     <label class="p-done" title="${s.filmed?"Scène tournée":"Marquer la scène comme tournée"}"><input type="checkbox" class="p-donecb" data-sid="${esc(s.id)}" ${s.filmed?"checked":""} ${S.canWrite?"":"disabled"} aria-label="Scène ${esc(s.num)} tournée"></label>
     <span class="num">${esc(s.num)}</span>
     <span class="pmain"><span class="hd" title="${esc(s.heading)}">${esc(s.location||s.heading)}</span>
-      <span class="sub">${esc([s.intExt,s.time].filter(Boolean).join(" · "))}${lieu?` · <b>${esc(lieu.name)}</b>`:""}</span>
+      <span class="sub">${progHTML(s)} ${esc([s.intExt,s.time].filter(Boolean).join(" · "))}${lieu?` · <b>${esc(lieu.name)}</b>`:""}</span>
       ${cast.length?`<span class="sub cast">${esc(cast.join(", "))}</span>`:""}</span>
     <span class="pg">${fmtE(s.eighths)}</span>
     ${S.canWrite?`<button class="pmove" data-sid="${esc(s.id)}" aria-label="Déplacer la scène ${esc(s.num)}" title="Déplacer">⇄</button>`:""}
@@ -2467,6 +2632,7 @@ function planMenu(anchor){
   d.innerHTML=`<h4>Plan de travail</h4>
     <div class="stats plm-stats">
       <div class="stat"><b>${days.length}</b><span>journée${days.length>1?"s":""}</span></div>
+      ${scenesDur(S.scenes)?`<div class="stat"><b>${fmtDur(scenesDur(S.scenes.filter(isPlanned)))}<small> / ${fmtDur(scenesDur(S.scenes))}</small></b><span>durée planifiée</span></div>`:""}
       <div class="stat"><b>${fmtE(planned)}<small> / ${fmtE(tot)}</small></b><span>pages planifiées</span></div>
       <div class="stat"><b>${pool.length}</b><span>scène${pool.length>1?"s":""} à placer</span></div>
       <div class="stat"><b>${S.scenes.filter(s=>s.filmed).length}<small> / ${S.scenes.length}</small></b><span>scènes tournées</span></div>
@@ -2492,8 +2658,15 @@ function planMenu(anchor){
   const obs=new MutationObserver(()=>{if(!document.body.contains(d)){saveT();const a=$("#pl-menu");if(a)a.setAttribute("aria-expanded","false");obs.disconnect();}});obs.observe(document.body,{childList:true});
   placeDcPop(d,anchor);
 }
+function planSig(){
+  const pick=(a,f)=>a.map(x=>f.map(k=>x[k]));
+  return JSON.stringify([S.pid,S.canWrite,S.planGroup,S.poolOpen,matchMedia("(max-width:1150px)").matches,[...planOpenSet()],P()?.pagesPerDay,
+    pick(S.days,["id","order","date"]),pick(S.scenes,["id","num","heading","location","intExt","time","dayNight","eighths","dayId","dayPos","filmed","status"]),
+    pick(S.locations,["id","name","address","decors"]),pick(S.elements.filter(e=>e.cat==="cast"),["id","sceneId","name"]),pick(S.shots,["id","sceneId","dur","done","pos"])]);
+}
 function renderPlan(){
   const box=$("#plan");if(!box||!S.pid)return;
+  const sig=planSig();if(box.dataset.sig===sig&&box.childElementCount){hButtons();return;}box.dataset.sig=sig;
   const keep={b:box.scrollTop,d:box.querySelector(".days")?.scrollTop||0,p:box.querySelector(".pool")?.scrollTop||0};
   const openSet=planOpenSet();
   const narrow=matchMedia("(max-width:1150px)").matches;
@@ -2502,7 +2675,8 @@ function renderPlan(){
   const alerts=castAlerts();const groups=planGroups(pool);
   const decorsNoLieu=new Set(S.scenes.filter(s=>!lieuOf(s)).map(decorKey)).size;
   box.innerHTML=`<div class="plan-bar slim">
-      <button class="menubtn" id="pl-menu" type="button" aria-label="Menu du plan de travail" aria-haspopup="dialog" aria-expanded="false" title="Compteurs, pages par jour, rapports, lieux, plan proposé"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <button class="menubtn" id="pl-menu" type="button" aria-label="Menu du plan de travail" aria-haspopup="dialog" aria-expanded="false" title="Compteurs, pages par jour, rapports, lieux, plan proposé"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
+      ${S.canWrite?`<button class="menubtn h-undo" type="button" aria-label="Annuler"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button class="menubtn h-redo" type="button" aria-label="Rétablir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>`:""}
       ${alerts.length?`<span class="st ai" title="Rôles convoqués sur des jours non consécutifs : voir le menu">⚠ ${alerts.length} rôle${alerts.length>1?"s":""}</span>`:""}
       <span class="spacer"></span>
       ${days.length?`<button type="button" class="btn ghost small" id="d-openall">Tout déplier</button><button type="button" class="btn ghost small" id="d-closeall">Tout replier</button>`:""}
@@ -2537,7 +2711,7 @@ function renderPlan(){
             <span class="dnum">J${i+1}</span>
             <input type="date" id="dd-${esc(d.id)}" data-did="${esc(d.id)}" class="ddate" value="${esc(d.date||"")}" aria-label="Date de la journée ${i+1}" ${S.canWrite?"":"disabled"}>
             <span class="dprog" title="${nf} scène${nf>1?"s":""} tournée${nf>1?"s":""} sur ${sc.length}"><b>Scènes ${nf}/${sc.length}</b><span class="dbar"><i style="width:${sc.length?Math.round(nf/sc.length*100):0}%"></i></span></span>
-            <span class="dmeta"><b>${fmtE(e8)} p.</b>${lieux.length?" · "+esc(lieux.join(" · ")):""}</span>
+            <span class="dmeta">${scenesDur(sc)?`<b>≈ ${fmtDur(scenesDur(sc))}</b> · `:""}<b>${fmtE(e8)} p.</b>${lieux.length?" · "+esc(lieux.join(" · ")):""}</span>
             ${w.length?`<span class="st ai dwarn" title="${esc(w.join(" · "))}">⚠ ${w.length>1?w.length+" alertes":esc(w[0])}</span>`:""}
             <span class="spacer"></span>
             <label class="d-done" title="${all?"Journée tournée":sc.length?"Marquer toute la journée comme tournée":"Aucune scène"}"><input type="checkbox" class="d-donecb" data-did="${esc(d.id)}" data-part="${nf>0&&!all?1:0}" ${all?"checked":""} ${S.canWrite&&sc.length?"":"disabled"} aria-label="Journée ${i+1} tournée"></label>
@@ -2550,10 +2724,10 @@ function renderPlan(){
             <div class="dropzone" data-day="${esc(d.id)}">${sc.map(s=>planStrip(s,d.id)).join("")||`<p class="empty pad">Aucune scène. ${S.canWrite?"Ajoute des scènes ou glisse-les ici.":""}</p>`}</div>
             ${S.canWrite?`<div class="day-add"><button type="button" class="btn small d-add" data-did="${esc(d.id)}">+ Ajouter des scènes</button></div>`:""}
           </div>
-        </section>`;}).join(""):`<div class="welcome-card" style="padding:20px 0"><p>Aucune journée de tournage. ${S.canWrite?"Ouvre le menu ☰ puis <b>Proposer un plan</b> pour un premier découpage par lieu, ou ajoute une journée ci-dessous.":""}</p></div>`}
+        </section>`;}).join(""):`<div class="welcome-card" style="padding:20px 0"><p>Aucune journée de tournage. ${S.canWrite?"Ouvre les réglages de la page (icône à curseurs) puis <b>Proposer un plan</b> pour un premier découpage par lieu, ou ajoute une journée ci-dessous.":""}</p></div>`}
       ${S.canWrite?`<button type="button" class="btn day-new" id="pl-day">+ Journée</button>`:""}
     </div>`;
-  box.querySelectorAll(".d-donecb").forEach(c=>{c.indeterminate=c.dataset.part==="1";});
+  box.querySelectorAll(".d-donecb").forEach(c=>{c.indeterminate=c.dataset.part==="1";});hButtons();
   box.scrollTop=keep.b;const dz=box.querySelector(".days");if(dz)dz.scrollTop=keep.d;const pl=box.querySelector(".pool");if(pl)pl.scrollTop=keep.p;
   bindPlan(box);
 }
@@ -2563,7 +2737,7 @@ function bindPlan(box){
   const on=(id,fn)=>{const b=document.getElementById(id);if(b)b.onclick=fn;};
   on("pl-menu",e=>planMenu(e.currentTarget));on("pl-reports",()=>goTab("reports"));on("pl-lieux",openLieux);on("pl-day",async()=>{const id=await addDay();if(id){planOpenSet().add(id);planOpenSave();render();}});on("pl-auto",openAutoPlan);
   on("g-lieu",()=>{S.planGroup="lieu";render();});on("g-decor",()=>{S.planGroup="decor";render();});
-  box.querySelectorAll(".ddate").forEach(i=>i.onchange=()=>S.db.doc(base()+"/days/"+i.dataset.did).update({date:i.value||""}).catch(writeErr));
+  box.querySelectorAll(".ddate").forEach(i=>i.onchange=()=>trk(base()+"/days/"+i.dataset.did).update({date:i.value||""},{label:"Date de la journée"}).catch(writeErr));
   box.querySelectorAll(".d-tg").forEach(b=>b.onclick=e=>{e.stopPropagation();toggleDay(b.dataset.did);});
   box.querySelectorAll(".day-h").forEach(h=>h.onclick=e=>{if(e.target.closest("button,input,label,select,a"))return;toggleDay(h.dataset.did);});
   box.querySelectorAll(".d-more").forEach(b=>b.onclick=e=>{e.stopPropagation();dayMenu(b.dataset.did,b);});
@@ -2603,14 +2777,18 @@ function dropTarget(zone,y){
   return null;
 }
 async function moveScenes(sids,dayId,beforeSid){
+  const lab=(dayId?"Placer ":"Retirer ")+(sids.length>1?sids.length+" scènes":"la scène "+(scene(sids[0])?.num||""));
+  return hGroup(lab,()=>moveScenesRaw(sids,dayId,beforeSid));
+}
+async function moveScenesRaw(sids,dayId,beforeSid){
   try{
-    if(!dayId){await chunked(sids,5,sid=>S.db.doc(base()+"/scenes/"+sid).update({dayId:null,dayPos:null}));return;}
+    if(!dayId){await chunked(sids,5,sid=>trk(base()+"/scenes/"+sid).update({dayId:null,dayPos:null}));return;}
     const list=scenesOfDay(dayId).filter(s=>!sids.includes(s.id));
     let lo,hi;
     if(beforeSid){const i=list.findIndex(s=>s.id===beforeSid);hi=i>-1?(list[i].dayPos||0):null;lo=i>0?(list[i-1].dayPos||0):(hi!==null?hi-1024*(sids.length+1):0);}
     else{lo=list.length?(list[list.length-1].dayPos||0):0;hi=null;}
     const step=hi===null?1024:(hi-lo)/(sids.length+1);
-    await chunked(sids.map((sid,i)=>({sid,pos:lo+step*(i+1)})),5,({sid,pos})=>S.db.doc(base()+"/scenes/"+sid).update({dayId,dayPos:pos}));
+    await chunked(sids.map((sid,i)=>({sid,pos:lo+step*(i+1)})),5,({sid,pos})=>trk(base()+"/scenes/"+sid).update({dayId,dayPos:pos}));
   }catch(e){writeErr(e);}
 }
 function moveMenu(sids,anchor){
@@ -2626,16 +2804,16 @@ function moveMenu(sids,anchor){
 }
 async function addDay(){
   const max=S.days.reduce((a,d)=>Math.max(a,d.order||0),0);
-  try{const ref=S.db.collection(base()+"/days").doc();await ref.set({order:max+1,date:nextDate(),createdAt:Date.now()});return ref.id;}catch(e){writeErr(e);return null;}
+  try{const id=uid();await trk(base()+"/days/"+id).set({order:max+1,date:nextDate(),createdAt:Date.now()},{before:null,label:"Nouvelle journée"});return id;}catch(e){writeErr(e);return null;}
 }
 function nextDate(){const ds=daysSorted().map(d=>d.date).filter(Boolean);if(!ds.length)return"";const d=new Date(ds[ds.length-1]+"T12:00:00");if(isNaN(d))return"";d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);}
 async function swapDay(did,dir){
   const days=daysSorted();const i=days.findIndex(d=>d.id===did);const j=i+dir;if(i<0||j<0||j>=days.length)return;
-  try{await chunked(days.map((d,k)=>({d,o:k===i?j:k===j?i:k})),5,({d,o})=>d.order===o+1?null:S.db.doc(base()+"/days/"+d.id).update({order:o+1}));}catch(e){writeErr(e);}
+  try{await hGroup("Déplacer J"+(i+1),()=>chunked(days.map((d,k)=>({d,o:k===i?j:k===j?i:k})),5,({d,o})=>d.order===o+1?null:trk(base()+"/days/"+d.id).update({order:o+1})));}catch(e){writeErr(e);}
 }
 async function deleteDay(did){
   const i=daysSorted().findIndex(d=>d.id===did);const sc=scenesOfDay(did);
-  try{await chunked(sc,5,s=>S.db.doc(base()+"/scenes/"+s.id).update({dayId:null,dayPos:null}));await S.db.doc(base()+"/days/"+did).delete();
+  try{await hGroup("Supprimer J"+(i+1),async()=>{await chunked(sc,5,s=>trk(base()+"/scenes/"+s.id).update({dayId:null,dayPos:null}));await trk(base()+"/days/"+did).delete();});
     toast("J"+(i+1)+" supprimée."+(sc.length?" Ses "+sc.length+" scène"+(sc.length>1?"s sont revenues":" est revenue")+" dans la liste.":""));}catch(e){writeErr(e);}
 }
 
@@ -2715,24 +2893,24 @@ function openAutoPlan(){
   go.onclick=async()=>{const{d:plan,t8}=calc();const md=mode();
     if(md==="all"&&S.days.length&&!go.dataset.sure){go.dataset.sure="1";go.textContent="Confirmer : tout refaire";go.classList.add("danger-fill");return;}
     go.disabled=true;go.textContent="Création…";
-    try{
+    try{await hGroup("Proposer un plan",async()=>{
       const all=md==="all";let order,date=m.querySelector("#ap-d").value;
-      if(all){await chunked(S.scenes.filter(s=>s.dayId),5,s=>S.db.doc(base()+"/scenes/"+s.id).update({dayId:null,dayPos:null}));await chunked([...S.days],5,x=>S.db.doc(base()+"/days/"+x.id).delete());order=0;}
+      if(all){await chunked(S.scenes.filter(s=>s.dayId),5,s=>trk(base()+"/scenes/"+s.id).update({dayId:null,dayPos:null}));await chunked([...S.days],5,x=>trk(base()+"/days/"+x.id).delete());order=0;}
       else if(md==="keep"){
         const keepIds=new Set(keepDays.map(d=>d.id));
         /* les scènes pas tournées quittent leur journée ; les journées sans scène tournée disparaissent */
-        await chunked(S.scenes.filter(s=>s.dayId&&!s.filmed),5,s=>S.db.doc(base()+"/scenes/"+s.id).update({dayId:null,dayPos:null}));
-        await chunked(S.days.filter(d=>!keepIds.has(d.id)),5,x=>S.db.doc(base()+"/days/"+x.id).delete());
+        await chunked(S.scenes.filter(s=>s.dayId&&!s.filmed),5,s=>trk(base()+"/scenes/"+s.id).update({dayId:null,dayPos:null}));
+        await chunked(S.days.filter(d=>!keepIds.has(d.id)),5,x=>trk(base()+"/days/"+x.id).delete());
         order=keepDays.reduce((a,x)=>Math.max(a,x.order||0),0);
         if(!date){const ds=keepDays.map(d=>d.date).filter(Boolean).sort();if(ds.length){const x=new Date(ds[ds.length-1]+"T12:00:00");if(!isNaN(x)){x.setDate(x.getDate()+1);date=x.toISOString().slice(0,10);}}}}
       else{order=S.days.reduce((a,x)=>Math.max(a,x.order||0),0);if(!date)date=nextDate();}
       date=date||"";
       await S.db.doc("projects/"+S.pid).update({pagesPerDay:t8/8});
-      for(const ids of plan){const ref=S.db.collection(base()+"/days").doc();order++;
-        await ref.set({order,date:date||"",createdAt:Date.now()});
-        await chunked(ids.map((sid,i)=>({sid,i})),5,({sid,i})=>S.db.doc(base()+"/scenes/"+sid).update({dayId:ref.id,dayPos:(i+1)*1024}));
+      for(const ids of plan){const did=uid();order++;
+        await trk(base()+"/days/"+did).set({order,date:date||"",createdAt:Date.now()},{before:null});
+        await chunked(ids.map((sid,i)=>({sid,i})),5,({sid,i})=>trk(base()+"/scenes/"+sid).update({dayId:did,dayPos:(i+1)*1024}));
         if(date){const x=new Date(date+"T12:00:00");x.setDate(x.getDate()+1);date=x.toISOString().slice(0,10);}}
-      m.remove();toast(plan.length+" journée"+(plan.length>1?"s":"")+" créée"+(plan.length>1?"s":"")+(md==="keep"?" à la suite des journées tournées":"")+". Ajuste en glissant les scènes.",5000);
+      });m.remove();toast(plan.length+" journée"+(plan.length>1?"s":"")+" créée"+(plan.length>1?"s":"")+(md==="keep"?" à la suite des journées tournées":"")+". Ajuste en glissant les scènes.",5000);
     }catch(e){m.remove();writeErr(e);}};
 }
 
@@ -2810,7 +2988,7 @@ function decEditHTML(){
   const cut=S.scenes.filter(s=>shotsOf(s.id).length).length;const todo=S.scenes.length-cut;
   const canAI=S.canWrite&&!S.aiOff;
   const bar=`<div class="dc-bar">
-    <button class="menubtn" id="dc-menu" type="button" aria-label="Options du découpage" aria-haspopup="dialog" aria-expanded="false" title="Durée cible, plans optionnels, export"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="menubtn" id="dc-menu" type="button" aria-label="Options du découpage" aria-haspopup="dialog" aria-expanded="false" title="Durée cible, plans optionnels, export"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
     <div class="stats">
       <div class="stat"><b>${S.shots.length}</b><span>plan${S.shots.length>1?"s":""}</span></div>
       <div class="stat"><b>${fmtDur(total)}${tgt?`<small> / ${fmtDur(tgt)}</small>`:""}</b><span>durée estimée</span></div>
@@ -2825,7 +3003,7 @@ function decEditHTML(){
   const note=!S.shots.length?`<div class="dc-note"><b>Le découpage est vide.</b> Ajoute les plans scène par scène avec « + Ajouter un plan »${canAI?", ou clique sur <b>Découper avec l'IA</b> pour une première proposition plan par plan":""}. Clique ensuite sur une cellule pour la modifier.</div>`:"";
   let body="";
   for(const s of S.scenes){const all=shotsOf(s.id);const nOpt=all.filter(isOpt).length;const list=DEC.showOpt?all:all.filter(x=>!isOpt(x));const rows=list.length+(S.canWrite?1:0)||1;
-    const seq=`<td class="dct-seq" rowspan="${rows}"><b>${esc(s.num)}</b><span class="h">${esc(s.heading)}</span><small>${all.length} plan${all.length>1?"s":""} · ${fmtDur(sumDur(all))}${nOpt?" · "+nOpt+" optionnel"+(nOpt>1?"s":"")+(DEC.showOpt?"":" masqué"+(nOpt>1?"s":"")):""}</small>${seqAI(s,all,canAI)}</td>`;
+    const seq=`<td class="dct-seq" rowspan="${rows}"><b>${esc(s.num)}</b><span class="h">${esc(s.heading)}</span><small>${all.length} plan${all.length>1?"s":""} · ${fmtDur(sumDur(all))}${nOpt?" · "+nOpt+" optionnel"+(nOpt>1?"s":"")+(DEC.showOpt?"":" masqué"+(nOpt>1?"s":"")):""}</small>${progHTML(s)}${seqAI(s,all,canAI)}</td>`;
     list.forEach((x,i)=>{body+=shotRowHTML(x,i,i===0?seq:"");});
     if(S.canWrite)body+=`<tr class="dct-add${list.length?"":" first"}">${list.length?"":seq}<td colspan="6"><button class="dc-add" data-sid="${esc(s.id)}">+ Ajouter un plan à la scène ${esc(s.num)}</button></td></tr>`;
     else if(!list.length)body+=`<tr class="first">${seq}<td colspan="6" class="dct-none">${all.length?"Plans optionnels masqués.":"Aucun plan pour cette scène."}</td></tr>`;
@@ -2849,11 +3027,11 @@ function shotRowHTML(x,i,seq){
   const opt=isOpt(x);const cls=[i===0?"first":"",opt?"opt":"",x.done?"done":""].filter(Boolean).join(" ");
   return `<tr data-id="${id}" id="dc-${id}"${cls?` class="${cls}"`:""}>${seq}
     <td class="dct-plan"><label class="dc-done" title="${x.done?"Plan fait":"Marquer le plan comme fait"}"><input type="checkbox" class="dc-donecb" ${x.done?"checked":""} ${w?"":"disabled"} aria-label="Plan ${n} fait"></label>${cell("dc-plan","Plan "+n+(opt?" (optionnel)":"")+" : durée et actions",`<b>${n}</b>${opt?`<small class="opt-tag">Optionnel</small>`:`<small>${esc(String(x.dur??"").replace(".",","))} s</small>`}`)}</td>
-    <td class="ed dct-desc">${ta("action","a","Ce qu'on voit dans le cadre…","Description")}</td>
-    <td class="ed dct-audio"><div class="dc-hl"><div class="dc-hl-bg" aria-hidden="true">${hlQuotes(x.sound)}</div>${ta("sound","s","Répliques, voix off, ambiance…","Audio","dc-hl-ta")}</div></td>
+    <td class="ed dct-desc" data-l="Description">${ta("action","a","Ce qu'on voit dans le cadre…","Description")}</td>
+    <td class="ed dct-audio" data-l="Audio"><div class="dc-hl"><div class="dc-hl-bg" aria-hidden="true">${hlQuotes(x.sound)}</div>${ta("sound","s","Répliques, voix off, ambiance…","Audio","dc-hl-ta")}</div></td>
     <td class="dct-cam">${cell("dc-cam","Caméra du plan "+n+" : type de plan, mouvement, angle",`<b>${esc(SHOT_T[x.type]||x.type||"")}</b><span>${esc(x.move||"")}</span><span>${esc(x.angle||"")}</span>${fx?`<span class="dc-fx">${esc(x.effect)}</span>`:""}`)}</td>
     <td class="dct-thumb">${thumbHTML(x)}</td>
-    <td class="ed dct-notes">${ta("notes","n","Incrustations, accessoires…","Notes")}</td></tr>`;
+    <td class="ed dct-notes" data-l="Notes">${ta("notes","n","Incrustations, accessoires…","Notes")}</td></tr>`;
 }
 function bindDec(box){
   const on=(id,fn)=>{const b=document.getElementById(id);if(b)b.onclick=fn;};
@@ -2892,16 +3070,13 @@ function decMenu(anchor){
   d.innerHTML=`<h4>Découpage</h4>
     <label><span class="dc-lbl">Durée cible</span><input type="text" id="dcm-target" value="${tgt?esc(fmtDur(tgt)):""}" placeholder="2:30" inputmode="numeric" ${S.canWrite?"":"disabled"}></label>
     <label class="dc-switch" title="Afficher ou masquer les plans à 0 s"><input type="checkbox" role="switch" id="dcm-opt" ${DEC.showOpt?"checked":""}><span class="tr" aria-hidden="true"></span>Plans optionnels${nOpt?" ("+nOpt+")":""}</label>
-    ${S.dl?`<div class="dcm-ex"><span class="dc-lbl">Exporter · sans les plans optionnels</span>
-      <button class="btn small" type="button" data-ex="pdf" ${has?"":"disabled"}>PDF · paysage</button>
-      <button class="btn small" type="button" data-ex="pptx" ${has?"":"disabled"}>PowerPoint (.pptx) · paysage</button>
-      <button class="btn small" type="button" data-ex="csv" ${has?"":"disabled"}>CSV pour Excel</button></div>`:""}
+    ${S.dl?`<div class="dcm-ex"><button class="btn small" type="button" data-ex="all">Exporter le découpage…</button></div>`:""}
     <div class="mfoot"><span></span><button class="btn small" type="button" data-close>Fermer</button></div>`;
   const tg=d.querySelector("#dcm-target");
   const saveT=()=>{if(!S.canWrite)return;const v=parseDur(tg.value);if(v===(Number(P()?.targetSec)||0))return;trk("projects/"+S.pid).update({targetSec:v},{label:"Durée cible"}).catch(writeErr);};
   tg.onchange=saveT;tg.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();saveT();tg.blur();}};
   const op=d.querySelector("#dcm-opt");op.onchange=()=>{DEC.showOpt=op.checked;store.set("dep.dec.opt",op.checked?"1":"0");render();};
-  d.querySelectorAll("[data-ex]").forEach(b=>b.onclick=()=>{saveT();closeDcPop();const k=b.dataset.ex;if(k==="csv")exportDecCSV();else runDecExport(k);});
+  d.querySelectorAll("[data-ex]").forEach(b=>b.onclick=()=>{saveT();closeDcPop();openExport("dec");});
   d.querySelector("[data-close]").onclick=()=>{saveT();closeDcPop();};
   anchor.setAttribute("aria-expanded","true");
   const obs=new MutationObserver(()=>{if(!document.body.contains(d)){saveT();const a=$("#dc-menu");if(a)a.setAttribute("aria-expanded","false");obs.disconnect();}});obs.observe(document.body,{childList:true});
@@ -3601,7 +3776,7 @@ function hCur(path){
   let v=null;const b=base()+"/";
   if(path==="projects/"+S.pid)v=P()||null;
   else if(path.startsWith(b)){const[col,id]=path.slice(b.length).split("/");
-    const arr=col==="shots"?S.shots:col==="scenes"?S.scenes:col==="backups"?S.backups:null;if(arr)v=arr.find(x=>x.id===id)||null;}
+    const arr=col==="shots"?S.shots:col==="scenes"?S.scenes:col==="backups"?S.backups:col==="elements"?S.elements:col==="days"?S.days:col==="locations"?S.locations:null;if(arr)v=arr.find(x=>x.id===id)||null;}
   if(!v&&H.shadow.has(path))return hClone(H.shadow.get(path));
   if(!v)return null;const{id,...rest}=v;return hClone(rest);
 }
@@ -3638,12 +3813,13 @@ async function hStep(dir){
 }
 const hUndo=()=>hStep(-1),hRedo=()=>hStep(1);
 function hButtons(){
-  const u=$("#dc-undo"),r=$("#dc-redo");const lu=H.undo[H.undo.length-1],lr=H.redo[H.redo.length-1];
-  if(u){u.disabled=!lu||H.busy||!!H.grp;u.title=lu?"Annuler : "+lu.label+" (⌘Z)":"Rien à annuler";}
-  if(r){r.disabled=!lr||H.busy||!!H.grp;r.title=lr?"Rétablir : "+lr.label+" (⇧⌘Z)":"Rien à rétablir";}
+  const lu=H.undo[H.undo.length-1],lr=H.redo[H.redo.length-1];
+  document.querySelectorAll("#dc-undo,.h-undo").forEach(u=>{u.disabled=!lu||H.busy||!!H.grp;u.title=lu?"Annuler : "+lu.label+" (⌘Z)":"Rien à annuler";});
+  document.querySelectorAll("#dc-redo,.h-redo").forEach(r=>{r.disabled=!lr||H.busy||!!H.grp;r.title=lr?"Rétablir : "+lr.label+" (⇧⌘Z)":"Rien à rétablir";});
 }
+document.addEventListener("click",e=>{const b=e.target.closest?.(".h-undo,.h-redo");if(!b||b.disabled)return;if(b.classList.contains("h-undo"))hUndo();else hRedo();});
 document.addEventListener("keydown",e=>{
-  if(S.tab!=="dec"||!S.pid||!S.canWrite||document.querySelector(".scrim"))return;
+  if(!["dec","scenes","plan"].includes(S.tab)||S.home||!S.pid||!S.canWrite||document.querySelector(".scrim"))return;
   const mod=e.metaKey||e.ctrlKey;if(!mod)return;const k=e.key.toLowerCase();
   if(k!=="z"&&k!=="y")return;
   const tg=e.target;if(tg.closest&&tg.closest("input,textarea,select,[contenteditable]"))return;
@@ -3730,6 +3906,7 @@ async function takeSnapshot(o){
   SNAP.busy=true;
   try{
     const pid=S.pid,bs=base();const id=Date.now().toString(36)+uid().slice(0,4);
+    await snapSaveImages(bs);
     const parts=[];for(let i=0;i<json.length;i+=SNAP.PART)parts.push(json.slice(i,i+SNAP.PART));
     for(let i=0;i<parts.length;i++)await S.db.doc(bs+"/snapparts/"+id+"_"+i).set({s:parts[i]});
     if(S.pid!==pid)return null;
@@ -3741,6 +3918,13 @@ async function takeSnapshot(o){
   }catch(e){if(o.force||o.strict)throw e;return null;}
   finally{SNAP.busy=false;render();}
 }
+/* les photos des plans (gardées dans le plan lui-même) sont rangées une fois, à part, pour pouvoir revenir à une version avec ses photos */
+async function snapSaveImages(bs){
+  SNAP.imgs=SNAP.imgs||new Set();
+  for(const x of S.shots){const v=String(x.img||"");if(!/^data:image\//.test(v)||v.length>240000)continue;const h=snapHash(v);if(SNAP.imgs.has(h))continue;
+    try{const r=await S.db.doc(bs+"/snapimgs/"+h).get();if(!r.exists)await S.db.doc(bs+"/snapimgs/"+h).set({d:v});SNAP.imgs.add(h);}catch{}}
+}
+async function snapLoadImage(h){try{const r=await S.db.doc(base()+"/snapimgs/"+h).get();return r.exists?r.data().d||null:null;}catch{return null;}}
 async function snapPrune(keepId){
   const autos=snapsSorted().filter(s=>!s.named&&s.id!==keepId);
   const extra=autos.slice(SNAP.KEEP-1);
@@ -3777,7 +3961,7 @@ async function restoreSnapshot(meta){
       for(const id of cur.keys())if(!want.has(id))ops.push({path:base()+"/"+col+"/"+id,val:null});
       for(const[id,w]of want){let{id:_,...doc}=w;const c=cur.get(id);
         if(col==="scenes"&&!("body" in doc))doc.body=bodyFromBlocks(doc.blocks||[]);
-        if(col==="shots"&&typeof doc.img==="string"&&doc.img.startsWith("@keep:"))doc.img=c&&c.img&&snapHash(String(c.img))===doc.img.slice(6)?c.img:(c?.img||null);
+        if(col==="shots"&&typeof doc.img==="string"&&doc.img.startsWith("@keep:")){const h=doc.img.slice(6);doc.img=c&&c.img&&snapHash(String(c.img))===h?c.img:((await snapLoadImage(h))||c?.img||null);}
         if(c){const{id:__,updatedAt,updatedBy,...cc}=c;const{updatedAt:a2,updatedBy:b2,...dd}=doc;if(JSON.stringify(snapNorm(cc))===JSON.stringify(snapNorm(dd)))continue;}
         ops.push({path:base()+"/"+col+"/"+id,val:doc});}
     }
@@ -3809,7 +3993,7 @@ function confirmSnapDelete(s){
 }
 async function openVersions(){
   const p=P();if(!p)return;
-  const m=modal(`<h3>Versions · ${esc(p.name||"Projet")}</h3>
+  const m=modal(`<h3>Historique des versions · ${esc(p.name||"Projet")}</h3>
     <p class="empty">Chaque modification est enregistrée automatiquement. Choisis une version pour que le projet revienne à cet état ; l'état actuel reste dans la liste, tu peux donc toujours y retourner.</p>
     <div class="vlist" id="vl"></div>
     <div class="mfoot">${S.canWrite?`<button class="btn" id="vv-now">Enregistrer maintenant</button><button class="btn" id="vv-new" style="margin-right:auto">Nouvelle version (v${nextVer(p)})…</button>`:""}<button class="btn primary" id="vv-c">Fermer</button></div>`);
@@ -3855,12 +4039,21 @@ async function openVersions(){
 }
 
 /* ---------- tabs + keyboard ---------- */
-function goTab(t){if(S.tab===t)return;flushEditor().then(()=>{S.tab=t;$("#desk").innerHTML="";render();});}
+function goTab(t){document.body.classList.remove("hdr-hide");if(S.tab===t&&!S.home)return;leaveHome();flushEditor().then(()=>{S.tab=t;$("#desk").innerHTML="";render();});}
 $("#tab-script").onclick=()=>goTab("script");
 $("#tab-dec").onclick=()=>goTab("dec");
 $("#tab-scenes").onclick=()=>goTab("scenes");
 $("#tab-plan").onclick=()=>goTab("plan");
 $("#b-menu").onclick=e=>mainMenu(e.currentTarget);
+$("#b-search").onclick=()=>openSearch();
+/* téléphone : l'en-tête se replie quand on fait défiler vers le bas, revient quand on remonte */
+(function(){const last=new WeakMap();
+  document.addEventListener("scroll",e=>{
+    if(!matchMedia("(max-width:760px)").matches){document.body.classList.remove("hdr-hide");return;}
+    const el=e.target===document?document.scrollingElement:e.target;if(!el||el.nodeType!==1)return;
+    if(el.closest&&el.closest(".scrim,.pop,.dc-pop,.sc-drop,.cop-panel,.projbar,.tabbar"))return;
+    const y=el.scrollTop;const p=last.has(el)?last.get(el):y;last.set(el,y);
+    if(y-p>10&&y>90)document.body.classList.add("hdr-hide");else if(p-y>10||y<30)document.body.classList.remove("hdr-hide");},true);})();
 window.addEventListener("beforeunload",()=>{if(ED.dirty.size)flushEditor();});
 document.addEventListener("keydown",e=>{
   if(S.tab!=="scenes"||!S.pid||popEl||document.querySelector(".scrim"))return;
