@@ -120,6 +120,14 @@ textarea{resize:vertical}
 .legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11px;color:var(--muted);padding:6px 12px;border-bottom:1px solid var(--line)}
 .legend span{display:inline-flex;align-items:center;gap:4px}
 .legend i{width:10px;height:10px;border-radius:2px;border:1px solid var(--line-strong)}
+.sc-pick{display:none;grid-template-columns:8px 40px minmax(0,1fr) auto 26px;gap:0 8px;align-items:center;width:100%;min-height:54px;text-align:left;border:0;background:var(--surface);padding:0 10px 0 0;color:var(--fg)}
+.sc-pick .band{align-self:stretch}
+.sc-pick .num{font-family:var(--f-display);font-weight:700;font-size:22px;text-align:right;font-variant-numeric:tabular-nums}
+.sc-pick .hd{font-weight:600;font-size:13px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-pick .side{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sc-pick .chev{width:26px;height:26px;padding:4px;border:1px solid var(--line-strong);border-radius:6px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.sc-pick:active{background:var(--sunk)}
+.sc-drop{display:contents}
 .strip{display:grid;grid-template-columns:8px 42px minmax(0,1fr) auto;gap:0 8px;align-items:center;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:7px 10px 7px 0}
 .strip:hover{background:var(--sunk)}
 .strip[aria-current=true]{background:var(--accent-soft)}
@@ -432,8 +440,11 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
   .desk>*,.plan>*,.editor>*{flex-shrink:0}
   .list,.scriptpane,.sheet{grid-column:auto;grid-row:auto}
   .list{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line)}
-  .strips{display:flex;overflow-x:auto}
-  .strip{min-width:210px;border-right:1px solid var(--line)}
+  .list{position:relative;overflow:visible;z-index:12}
+  .sc-pick{display:grid}
+  .sc-drop{display:none}
+  .list.open .sc-drop{display:block;position:absolute;left:8px;right:8px;top:calc(100% - 2px);z-index:30;max-height:min(65vh,540px);overflow:auto;overscroll-behavior:contain;background:var(--surface);border:1px solid var(--line-strong);border-radius:0 0 10px 10px;box-shadow:0 14px 36px rgb(0 0 0 / .45)}
+  .list.open .sc-pick .chev{transform:rotate(180deg)}
   .legend{display:none}
   .scriptpane{padding:14px 0}
   .scene-head,.hint{padding-inline:16px}
@@ -793,8 +804,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio */
-const APP_VERSION="2.1.0";const APP_DATE="31 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone */
+const APP_VERSION="2.2.0";const APP_DATE="31 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -1046,8 +1057,15 @@ function renderList(){
   const dayIdx=dayIndexMap();
   const scenes=S.scenes.filter(s=>!q||norm(s.num+" "+s.heading+" "+(s.synopsis||"")).includes(q));
   const ok=S.scenes.filter(s=>s.status==="ok").length,tot=S.scenes.reduce((a,s)=>a+(s.eighths||0),0);
-  const prevScroll=list.querySelector(".strips")?.scrollLeft||0;
-  list.innerHTML=`<div class="list-head"><input type="text" id="search" placeholder="Chercher une scène" value="${esc(S.search)}" aria-label="Chercher une scène"><span class="label" style="width:100%">${S.scenes.length} scènes · ${fmtE(tot)} p. · ${ok} vérifiée${ok>1?"s":""}</span></div>
+  const prevScroll=list.querySelector(".sc-drop")?.scrollTop||0;
+  const cs=scene(S.sid);const cst=cs?(cs.status||"todo"):"";
+  list.classList.toggle("open",!!S.listOpen);
+  list.innerHTML=`${cs?`<button type="button" class="sc-pick" id="sc-pick" aria-expanded="${S.listOpen?"true":"false"}" aria-controls="sc-drop" aria-label="Scène ${esc(cs.num)} : ${esc(cs.heading)}. Choisir une autre scène">
+     <span class="band" style="background:${bandColor(cs)}"></span><span class="num">${esc(cs.num)}</span>
+     <span class="hd">${esc(cs.heading)}</span>
+     <span class="side">${fmtE(cs.eighths)} · <span class="st ${cst}">${STATUS[cst]}</span></span>
+     <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`:""}
+   <div class="sc-drop" id="sc-drop"><div class="list-head"><input type="text" id="search" placeholder="Chercher une scène" value="${esc(S.search)}" aria-label="Chercher une scène"><span class="label" style="width:100%">${S.scenes.length} scènes · ${fmtE(tot)} p. · ${ok} vérifiée${ok>1?"s":""}</span></div>
    <div class="legend">${Object.values(BANDS).map(([c,l])=>`<span><i style="background:${c}"></i>${l}</span>`).join("")}</div>
    <div class="strips">${scenes.map(s=>{
      const pe=(peersBy[s.id]||[]).map(p=>`<b style="background:${esc(p.presence?.color||"var(--accent)")}" title="Quelqu'un regarde cette scène"></b>`).join("");
@@ -1059,11 +1077,21 @@ function renderList(){
       <span class="hd" title="${esc(s.heading)}">${esc(s.location||s.heading)}</span>
       <span class="side">${fmtE(s.eighths)}</span>
       <span class="meta">${busy?`<span class="spin" title="Analyse en cours"></span>`:`<span class="st ${st}">${STATUS[st]}</span>`}${isPlanned(s)?`<span>J${dayIdx[s.dayId]+1}</span>`:""}<span>${elCount[s.id]||0} élém.</span>${cmCount[s.id]?`<span>${cmCount[s.id]} comm.</span>`:""}${pe?`<span class="dots">${pe}</span>`:""}</span>
-     </button>`;}).join("")||`<p class="empty" style="padding:12px">Aucune scène ne correspond.</p>`}</div>`;
-  const strips=list.querySelector(".strips");if(strips)strips.scrollLeft=prevScroll;
+     </button>`;}).join("")||`<p class="empty" style="padding:12px">Aucune scène ne correspond.</p>`}</div></div>`;
+  const drop=list.querySelector(".sc-drop");if(drop)drop.scrollTop=prevScroll;
   const si=$("#search");si.oninput=e=>{S.search=e.target.value;renderListKeepFocus();};
-  list.querySelectorAll(".strip").forEach(b=>b.onclick=()=>selectScene(b.dataset.sid));
+  list.querySelectorAll(".strip").forEach(b=>b.onclick=()=>{S.listOpen=false;selectScene(b.dataset.sid);});
+  const pk=$("#sc-pick");if(pk)pk.onclick=()=>setListOpen(!S.listOpen);
 }
+/* téléphone : la liste des scènes devient un menu déroulant sous la scène en cours */
+function setListOpen(v){
+  S.listOpen=!!v;renderList();
+  if(!S.listOpen)return;
+  const drop=$("#sc-drop"),cur=drop&&drop.querySelector('.strip[aria-current="true"]');
+  if(drop&&cur)drop.scrollTop=Math.max(0,cur.offsetTop-drop.clientHeight/2+cur.offsetHeight/2);
+}
+document.addEventListener("click",e=>{if(S.listOpen&&e.target.isConnected&&!e.target.closest("#list"))setListOpen(false);});
+document.addEventListener("keydown",e=>{if(S.listOpen&&e.key==="Escape"){e.preventDefault();e.stopImmediatePropagation();setListOpen(false);$("#sc-pick")?.focus();}},true);
 function renderListKeepFocus(){const pos=$("#search").selectionStart;renderList();const si=$("#search");si.focus();si.setSelectionRange(pos,pos);}
 
 
