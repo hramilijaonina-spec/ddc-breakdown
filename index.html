@@ -307,7 +307,38 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 .pg{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .days{overflow:auto;min-height:0;padding-block:14px 40px;padding-left:max(16px,2vw);padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
 .day{border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden;flex-shrink:0}
-.day-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--sunk)}
+.day-h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:8px 10px;background:var(--sunk);cursor:pointer}
+.day.open .day-h{border-bottom:1px solid var(--line)}
+.day-h.over{box-shadow:inset 0 0 0 2px var(--accent)}
+.day.done{border-color:color-mix(in srgb,var(--ok) 45%,var(--line))}
+.day.done .day-h{background:color-mix(in srgb,var(--ok) 14%,var(--sunk))}
+.day.done .dnum{color:var(--ok)}
+.chev{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s;display:block}
+.d-tg,.pool-tg{border:0;background:transparent;color:var(--fg);padding:4px;border-radius:6px;display:inline-flex;align-items:center;gap:6px}
+.d-tg:hover{background:var(--surface)}
+.day.open .d-tg .chev,.pool-tg[aria-expanded=true] .chev{transform:rotate(90deg)}
+.dprog{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dbar{width:54px;height:6px;border-radius:3px;background:var(--bg);border:1px solid var(--line);overflow:hidden}.dbar i{display:block;height:100%;background:var(--ok)}
+.day-h .dmeta{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dwarn{white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+@media (min-width:561px){.day-h{flex-wrap:nowrap}.day-h .spacer{display:none}}
+.d-done{display:inline-flex;padding:4px;cursor:pointer}
+.d-done input{width:19px;height:19px;margin:0;accent-color:var(--ok);cursor:pointer}
+.d-done input:disabled{cursor:default;opacity:.45}
+.day-b{padding-bottom:2px}
+.day-add{padding:8px 10px 10px;border-top:1px solid var(--line)}
+.days-tools{display:flex;justify-content:flex-end;gap:4px;margin-bottom:-6px}
+.prm{border:1px solid var(--line);background:var(--surface);border-radius:4px;width:28px;height:28px;font-size:16px;line-height:1;color:var(--muted)}
+.prm:hover{border-color:var(--danger);color:var(--danger)}
+.pool-tg{cursor:default;padding:0}
+.addsc{display:flex;flex-direction:column;gap:10px;max-height:min(55vh,460px);overflow:auto;border:1px solid var(--line);border-radius:var(--r);padding:6px}
+.addsc-h{display:flex;align-items:center;gap:8px;padding:6px 6px 4px;font-size:13px;text-transform:uppercase}
+.addsc-h b{flex:1;min-width:0}
+.addsc-s{display:grid;grid-template-columns:20px 6px 34px minmax(0,1fr) auto;gap:8px;align-items:center;padding:6px 6px 6px 18px;border-top:1px solid var(--line);font-size:13px;cursor:pointer}
+.addsc-s .band{align-self:stretch;border-radius:2px}
+.addsc-s b{font-family:var(--f-display);font-size:16px;text-align:right}
+.addsc-s .hd{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;font-weight:600;font-size:12.5px}
+.addsc input{width:17px;height:17px;margin:0;accent-color:var(--accent)}
 .dnum{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1;min-width:38px}
 .ddate{padding:3px 6px;font-size:12.5px}
 .dmeta{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}.dmeta b{color:var(--fg)}
@@ -318,7 +349,7 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 .poolzone{flex:1}
 .dropzone.over{background:var(--accent-soft)}
 .pad{padding:12px}
-.pstrip{display:grid;grid-template-columns:8px 24px 34px minmax(0,1fr) auto auto;gap:0 8px;align-items:center;padding:6px 8px 6px 0;border-top:1px solid var(--line);background:var(--surface);cursor:grab}
+.pstrip{display:grid;grid-template-columns:8px 24px 34px minmax(0,1fr) auto auto auto;gap:0 8px;align-items:center;padding:6px 8px 6px 0;border-top:1px solid var(--line);background:var(--surface);cursor:grab}
 .pstrip[draggable=false]{cursor:default}
 .pstrip .band{align-self:stretch;margin-block:-6px}
 .pstrip .num{font-family:var(--f-display);font-weight:700;font-size:18px;text-align:right;font-variant-numeric:tabular-nums}
@@ -332,7 +363,9 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 .pmove:hover{border-color:var(--accent)}
 .lx-list{display:flex;flex-direction:column;gap:6px}
 .lx-item{display:flex;gap:6px;flex-wrap:wrap}.lx-item input{flex:1;min-width:140px}
-@media (max-width:1150px){.plan{display:flex;flex-direction:column;overflow:auto;min-height:0;flex:1}.plan>*{flex-shrink:0}.pool{border-right:0;border-bottom:1px solid var(--line);overflow:visible}.days{overflow:visible}.pool-head{position:static}}
+@media (max-width:1150px){.plan{display:flex;flex-direction:column;overflow:auto;min-height:0;flex:1}.plan>*{flex-shrink:0}.pool{border-right:0;border-bottom:1px solid var(--line);overflow:visible}.days{overflow:visible}.pool-head{position:static}
+  .pool-tg{cursor:pointer}.pool.shut .poolzone,.pool.shut .pool-head .tabs{display:none}}
+@media (max-width:560px){.day-h{gap:4px 8px;padding:8px 8px}.day-h .dmeta{flex:1 1 100%;order:9;max-width:none;padding-left:34px}.dwarn{order:10;margin-left:34px}.dbar{width:40px}}
 
 
 /* éditeur de scénario */
@@ -819,8 +852,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées */
-const APP_VERSION="2.3.0";const APP_DATE="31 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables */
+const APP_VERSION="2.4.0";const APP_DATE="31 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -2218,7 +2251,7 @@ function castAlerts(){
   return out.sort((a,b)=>a.name.localeCompare(b.name,"fr"));
 }
 
-function planStrip(s){
+function planStrip(s,did){
   const lieu=lieuOf(s);const cast=[...castOf(s.id).values()];
   return `<div class="pstrip${s.filmed?" done":""}" draggable="${S.canWrite?"true":"false"}" data-sid="${esc(s.id)}">
     <span class="band" style="background:${bandColor(s)}"></span>
@@ -2229,11 +2262,65 @@ function planStrip(s){
       ${cast.length?`<span class="sub cast">${esc(cast.join(", "))}</span>`:""}</span>
     <span class="pg">${fmtE(s.eighths)}</span>
     ${S.canWrite?`<button class="pmove" data-sid="${esc(s.id)}" aria-label="Déplacer la scène ${esc(s.num)}" title="Déplacer">⇄</button>`:""}
+    ${S.canWrite&&did?`<button class="prm" data-sid="${esc(s.id)}" aria-label="Retirer la scène ${esc(s.num)} de la journée" title="Retirer de la journée">×</button>`:""}
   </div>`;
 }
 
+/* journées dépliées : mémorisées par projet sur cet appareil */
+const PLANOPEN={pid:null,set:null};
+function planOpenSet(){
+  if(PLANOPEN.pid===S.pid&&PLANOPEN.set)return PLANOPEN.set;
+  let saved=null;try{saved=JSON.parse(store.get("dep.plan.open."+S.pid)||"null");}catch{}
+  if(!Array.isArray(saved)&&!S.days.length)return new Set();
+  PLANOPEN.pid=S.pid;
+  if(Array.isArray(saved)&&!(saved.length&&S.days.length&&!saved.some(id=>S.days.some(d=>d.id===id))))PLANOPEN.set=new Set(saved);
+  else{const days=daysSorted();const today=new Date().toISOString().slice(0,10);
+    const d=days.find(x=>x.date===today)||days.find(x=>{const sc=scenesOfDay(x.id);return !sc.length||sc.some(s=>!s.filmed);});
+    PLANOPEN.set=new Set(d?[d.id]:[]);}
+  return PLANOPEN.set;
+}
+function planOpenSave(){try{store.set("dep.plan.open."+S.pid,JSON.stringify([...PLANOPEN.set]));}catch{}}
+function toggleDay(did,v){const set=planOpenSet();if(v===undefined?!set.has(did):v)set.add(did);else set.delete(did);planOpenSave();render();}
+/* case d'une journée : toutes ses scènes tournées (ou plus aucune) */
+async function setDayFilmed(did,v){
+  const sc=scenesOfDay(did).filter(s=>!!s.filmed!==v);if(!sc.length)return;
+  const i=daysSorted().findIndex(d=>d.id===did);
+  try{await hGroup("J"+(i+1)+(v?" tournée":" à tourner"),()=>chunked(sc,5,s=>trk(base()+"/scenes/"+s.id).update({filmed:v},{label:"Scène "+s.num})));}
+  catch(e){writeErr(e);}
+}
+function dayMenu(did,anchor){
+  const days=daysSorted();const i=days.findIndex(d=>d.id===did);if(i<0)return;
+  openPop(anchor.getBoundingClientRect(),"Journée "+(i+1),[
+    ...(i>0?[{label:"Avancer la journée (↑)",run:()=>swapDay(did,-1)}]:[]),
+    ...(i<days.length-1?[{label:"Reculer la journée (↓)",run:()=>swapDay(did,1)}]:[]),
+    {label:"Ajouter des scènes…",run:()=>openAddScenes(did)},
+    {label:"Supprimer la journée",danger:true,run:()=>deleteDay(did)}]);
+}
+function openAddScenes(did){
+  const i=daysSorted().findIndex(d=>d.id===did);const pool=S.scenes.filter(s=>!isPlanned(s));
+  const groups=planGroups(pool);
+  const m=modal(`<h3>Ajouter des scènes à J${i+1}</h3>
+    ${pool.length?`<p class="empty">Scènes pas encore placées. Coche celles à tourner ce jour-là. Pour prendre une scène d'une autre journée, utilise ⇄ sur la scène.</p>
+    <div class="addsc">${groups.map((g,gi)=>`<div class="addsc-g"><label class="addsc-h"><input type="checkbox" data-g="${gi}"><b>${esc(g.lieu?g.lieu.name:g.decor)}</b><span class="pg">${g.scenes.length} sc. · ${fmtE(g.scenes.reduce((a,s)=>a+(s.eighths||0),0))}</span></label>
+      ${g.scenes.map(s=>`<label class="addsc-s"><input type="checkbox" data-sid="${esc(s.id)}" data-gi="${gi}"><span class="band" style="background:${bandColor(s)}"></span><b>${esc(s.num)}</b><span class="hd">${esc(s.location||s.heading)}</span><span class="pg">${fmtE(s.eighths)}</span></label>`).join("")}</div>`).join("")}</div>`
+    :`<p class="empty">Toutes les scènes sont déjà placées. Pour déplacer une scène d'une autre journée, utilise ⇄ sur la scène.</p>`}
+    <div class="mfoot"><button class="btn" id="as-c">Annuler</button>${pool.length?`<button class="btn primary" id="as-ok" disabled>Ajouter</button>`:""}</div>`);
+  const ok=m.querySelector("#as-ok");
+  const sel=()=>[...m.querySelectorAll("input[data-sid]:checked")].map(c=>c.dataset.sid);
+  const upd=()=>{const n=sel().length;if(ok){ok.disabled=!n;ok.textContent=n?"Ajouter "+n+" scène"+(n>1?"s":""):"Ajouter";}
+    m.querySelectorAll("input[data-g]").forEach(g=>{const all=[...m.querySelectorAll(`input[data-gi="${g.dataset.g}"]`)];const k=all.filter(c=>c.checked).length;g.checked=k===all.length;g.indeterminate=k>0&&k<all.length;});};
+  m.querySelectorAll("input[data-sid]").forEach(c=>c.onchange=upd);
+  m.querySelectorAll("input[data-g]").forEach(g=>g.onchange=()=>{m.querySelectorAll(`input[data-gi="${g.dataset.g}"]`).forEach(c=>c.checked=g.checked);upd();});
+  m.querySelector("#as-c").onclick=()=>m.remove();
+  if(ok)ok.onclick=async()=>{const ids=sel();if(!ids.length)return;ok.disabled=true;m.remove();
+    const order=S.scenes.map(s=>s.id);ids.sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+    await moveScenes(ids,did,null);planOpenSet().add(did);planOpenSave();toast(ids.length+" scène"+(ids.length>1?"s":"")+" ajoutée"+(ids.length>1?"s":"")+" à J"+(i+1)+".");};
+}
 function renderPlan(){
   const box=$("#plan");if(!box||!S.pid)return;
+  const keep={b:box.scrollTop,d:box.querySelector(".days")?.scrollTop||0,p:box.querySelector(".pool")?.scrollTop||0};
+  const openSet=planOpenSet();
+  const narrow=matchMedia("(max-width:1150px)").matches;
   const days=daysSorted();const pool=S.scenes.filter(s=>!isPlanned(s));
   const tot=S.scenes.reduce((a,s)=>a+(s.eighths||0),0),planned=S.scenes.filter(isPlanned).reduce((a,s)=>a+(s.eighths||0),0);
   const alerts=castAlerts();const groups=planGroups(pool);
@@ -2255,9 +2342,9 @@ function renderPlan(){
       </div>
       ${alerts.length?`<details class="alerts"><summary>${alerts.length} rôle${alerts.length>1?"s":""} sur des jours non consécutifs</summary><ul>${alerts.map(a=>`<li><b>${esc(a.name)}</b> : ${a.days.map(i=>"J"+(i+1)).join(", ")}</li>`).join("")}</ul><p class="empty">Regrouper ses scènes réduit le nombre de jours où ce comédien est convoqué.</p></details>`:""}
     </div>
-    <div class="pool" data-day="">
+    <div class="pool${narrow&&!S.poolOpen?" shut":""}" data-day="">
       <div class="pool-head">
-        <span class="label">Scènes à placer</span>
+        <button type="button" class="pool-tg" id="pool-tg" aria-expanded="${narrow&&!S.poolOpen?"false":"true"}"><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span class="label">Scènes à placer · ${pool.length}</span></button>
         <div class="tabs small" role="group" aria-label="Regrouper par">
           <button id="g-lieu" aria-pressed="${S.planGroup!=="decor"}">Par lieu</button><button id="g-decor" aria-pressed="${S.planGroup==="decor"}">Par décor</button>
         </div>
@@ -2270,41 +2357,57 @@ function renderPlan(){
             ${g.lieu?(g.lieu.address?`<span class="sub">${esc(g.lieu.address)}</span>`:"")+(decors.length>1?`<span class="sub">${esc(decors.join(" · "))}</span>`:""):(S.planGroup!=="decor"?`<span class="sub">Lieu de tournage à définir</span>`:"")}</div>
             <span class="pg">${g.scenes.length} sc. · ${fmtE(e8)}</span>
             ${S.canWrite?`<button class="btn small grp-send" data-key="${esc(g.key)}">Placer</button>`:""}</div>
-          ${g.scenes.map(planStrip).join("")}</div>`;}).join(""):`<p class="empty pad">${S.scenes.length?"Toutes les scènes sont placées.":"Aucune scène dans ce projet."}</p>`}
+          ${g.scenes.map(s=>planStrip(s)).join("")}</div>`;}).join(""):`<p class="empty pad">${S.scenes.length?"Toutes les scènes sont placées.":"Aucune scène dans ce projet."}</p>`}
       </div>
     </div>
     <div class="days">
+      ${days.length?`<div class="days-tools"><button type="button" class="btn ghost small" id="d-openall">Tout déplier</button><button type="button" class="btn ghost small" id="d-closeall">Tout replier</button></div>`:""}
       ${days.length?days.map((d,i)=>{const sc=scenesOfDay(d.id);const e8=sc.reduce((a,s)=>a+(s.eighths||0),0);
         const cast=new Map();sc.forEach(s=>castOf(s.id).forEach((v,k)=>cast.set(k,v)));
         const lieux=[...new Set(sc.map(s=>lieuOf(s)?.name||s.location||s.heading))];
         const w=dayWarnings(sc);const pct=Math.min(100,Math.round(e8/Math.max(1,targetE8())*100));
-        return `<section class="day" aria-label="Journée ${i+1}">
-          <header class="day-h">
+        const nf=sc.filter(s=>s.filmed).length,all=sc.length>0&&nf===sc.length,open=openSet.has(d.id);
+        return `<section class="day${open?" open":""}${all?" done":""}" aria-label="Journée ${i+1}">
+          <header class="day-h" data-did="${esc(d.id)}">
+            <button type="button" class="d-tg" data-did="${esc(d.id)}" aria-expanded="${open}" aria-controls="db-${esc(d.id)}" aria-label="${open?"Replier":"Déplier"} la journée ${i+1}"><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
             <span class="dnum">J${i+1}</span>
             <input type="date" id="dd-${esc(d.id)}" data-did="${esc(d.id)}" class="ddate" value="${esc(d.date||"")}" aria-label="Date de la journée ${i+1}" ${S.canWrite?"":"disabled"}>
-            <span class="dmeta"><b>${fmtE(e8)} p.</b> · ${sc.length} scène${sc.length>1?"s":""}</span>
-            <span class="meter" title="${pct} % de l'objectif"><i style="width:${pct}%;background:${e8>targetE8()*1.25?"var(--warn)":"var(--accent)"}"></i></span>
+            <span class="dprog" title="${nf} scène${nf>1?"s":""} tournée${nf>1?"s":""} sur ${sc.length}"><b>Scènes ${nf}/${sc.length}</b><span class="dbar"><i style="width:${sc.length?Math.round(nf/sc.length*100):0}%"></i></span></span>
+            <span class="dmeta"><b>${fmtE(e8)} p.</b>${lieux.length?" · "+esc(lieux.join(" · ")):""}</span>
+            ${w.length?`<span class="st ai dwarn" title="${esc(w.join(" · "))}">⚠ ${w.length>1?w.length+" alertes":esc(w[0])}</span>`:""}
             <span class="spacer"></span>
-            ${S.canWrite?`<button class="btn ghost small d-up" data-did="${esc(d.id)}" ${i===0?"disabled":""} aria-label="Avancer la journée">↑</button><button class="btn ghost small d-down" data-did="${esc(d.id)}" ${i===days.length-1?"disabled":""} aria-label="Reculer la journée">↓</button><button class="btn ghost small danger d-del" data-did="${esc(d.id)}">Supprimer</button>`:""}
+            <label class="d-done" title="${all?"Journée tournée":sc.length?"Marquer toute la journée comme tournée":"Aucune scène"}"><input type="checkbox" class="d-donecb" data-did="${esc(d.id)}" data-part="${nf>0&&!all?1:0}" ${all?"checked":""} ${S.canWrite&&sc.length?"":"disabled"} aria-label="Journée ${i+1} tournée"></label>
+            ${S.canWrite?`<button type="button" class="btn ghost small d-more" data-did="${esc(d.id)}" aria-label="Options de la journée ${i+1}">⋯</button>`:""}
           </header>
-          ${lieux.length?`<div class="dline"><span class="label">Lieux</span> ${esc(lieux.join(" · "))}</div>`:""}
-          ${cast.size?`<div class="dline"><span class="label">Rôles</span> ${esc([...cast.values()].join(", "))}</div>`:""}
-          ${w.length?`<div class="dline">${w.map(x=>`<span class="st ai">${esc(x)}</span>`).join(" ")}</div>`:""}
-          <div class="dropzone" data-day="${esc(d.id)}">${sc.map(planStrip).join("")||`<p class="empty pad">Glisse des scènes ici${S.canWrite?" ou utilise ⇄":""}.</p>`}</div>
+          <div class="day-b" id="db-${esc(d.id)}"${open?"":" hidden"}>
+            <div class="dline"><span class="label">Pages</span> <span class="meter" title="${pct} % de l'objectif"><i style="width:${pct}%;background:${e8>targetE8()*1.25?"var(--warn)":"var(--accent)"}"></i></span> ${fmtE(e8)} p. / ${fmtE(targetE8())} p. visées</div>
+            ${cast.size?`<div class="dline"><span class="label">Rôles</span> ${esc([...cast.values()].join(", "))}</div>`:""}
+            ${w.length?`<div class="dline">${w.map(x=>`<span class="st ai">${esc(x)}</span>`).join(" ")}</div>`:""}
+            <div class="dropzone" data-day="${esc(d.id)}">${sc.map(s=>planStrip(s,d.id)).join("")||`<p class="empty pad">Aucune scène. ${S.canWrite?"Ajoute des scènes ou glisse-les ici.":""}</p>`}</div>
+            ${S.canWrite?`<div class="day-add"><button type="button" class="btn small d-add" data-did="${esc(d.id)}">+ Ajouter des scènes</button></div>`:""}
+          </div>
         </section>`;}).join(""):`<div class="welcome-card" style="padding:20px 0"><p>Aucune journée de tournage. ${S.canWrite?"Clique sur <b>Proposer un plan</b> pour un premier découpage par lieu, ou ajoute une journée et glisses-y les scènes.":""}</p></div>`}
     </div>`;
+  box.querySelectorAll(".d-donecb").forEach(c=>{c.indeterminate=c.dataset.part==="1";});
+  box.scrollTop=keep.b;const dz=box.querySelector(".days");if(dz)dz.scrollTop=keep.d;const pl=box.querySelector(".pool");if(pl)pl.scrollTop=keep.p;
   bindPlan(box);
 }
 
 function bindPlan(box){
   const t=$("#target");if(t)t.onchange=()=>{const v=Math.max(0.5,Math.min(20,Number(t.value)||4));S.db.doc("projects/"+S.pid).update({pagesPerDay:v}).catch(writeErr);};
   const on=(id,fn)=>{const b=document.getElementById(id);if(b)b.onclick=fn;};
-  on("pl-reports",()=>goTab("reports"));on("pl-lieux",openLieux);on("pl-day",()=>addDay());on("pl-auto",openAutoPlan);
+  on("pl-reports",()=>goTab("reports"));on("pl-lieux",openLieux);on("pl-day",async()=>{const id=await addDay();if(id){planOpenSet().add(id);planOpenSave();render();}});on("pl-auto",openAutoPlan);
   on("g-lieu",()=>{S.planGroup="lieu";render();});on("g-decor",()=>{S.planGroup="decor";render();});
   box.querySelectorAll(".ddate").forEach(i=>i.onchange=()=>S.db.doc(base()+"/days/"+i.dataset.did).update({date:i.value||""}).catch(writeErr));
-  box.querySelectorAll(".d-up").forEach(b=>b.onclick=()=>swapDay(b.dataset.did,-1));
-  box.querySelectorAll(".d-down").forEach(b=>b.onclick=()=>swapDay(b.dataset.did,1));
-  box.querySelectorAll(".d-del").forEach(b=>b.onclick=()=>deleteDay(b.dataset.did));
+  box.querySelectorAll(".d-tg").forEach(b=>b.onclick=e=>{e.stopPropagation();toggleDay(b.dataset.did);});
+  box.querySelectorAll(".day-h").forEach(h=>h.onclick=e=>{if(e.target.closest("button,input,label,select,a"))return;toggleDay(h.dataset.did);});
+  box.querySelectorAll(".d-more").forEach(b=>b.onclick=e=>{e.stopPropagation();dayMenu(b.dataset.did,b);});
+  box.querySelectorAll(".d-add").forEach(b=>b.onclick=()=>openAddScenes(b.dataset.did));
+  box.querySelectorAll(".d-donecb").forEach(c=>c.onchange=()=>setDayFilmed(c.dataset.did,c.checked));
+  box.querySelectorAll(".prm").forEach(b=>b.onclick=e=>{e.stopPropagation();moveScenes([b.dataset.sid],null);});
+  on("d-openall",()=>{daysSorted().forEach(d=>planOpenSet().add(d.id));planOpenSave();render();});
+  on("d-closeall",()=>{planOpenSet().clear();planOpenSave();render();});
+  on("pool-tg",()=>{if(!matchMedia("(max-width:1150px)").matches)return;S.poolOpen=!S.poolOpen;render();});
   box.querySelectorAll(".pmove").forEach(b=>b.onclick=ev=>{ev.stopPropagation();moveMenu([b.dataset.sid],b);});
   box.querySelectorAll(".grp-send").forEach(b=>b.onclick=()=>{const g=planGroups(S.scenes.filter(s=>!isPlanned(s))).find(x=>x.key===b.dataset.key);if(g)moveMenu(g.scenes.map(s=>s.id),b);});
   box.querySelectorAll(".pstrip").forEach(st=>st.ondblclick=e=>{if(e.target.closest(".p-done"))return;selectScene(st.dataset.sid);});
@@ -2315,6 +2418,11 @@ function bindPlan(box){
   box.querySelectorAll(".pstrip").forEach(st=>{
     st.ondragstart=e=>{S.dragging=st.dataset.sid;st.classList.add("dragging");try{e.dataTransfer.setData("text/plain",st.dataset.sid);e.dataTransfer.effectAllowed="move";}catch{}};
     st.ondragend=()=>{S.dragging=null;box.querySelectorAll(".over,.before").forEach(x=>x.classList.remove("over","before"));if(S.pendingRender){S.pendingRender=false;render();}else st.classList.remove("dragging");};
+  });
+  box.querySelectorAll(".day-h").forEach(h=>{
+    h.ondragover=e=>{if(!S.dragging)return;e.preventDefault();h.classList.add("over");};
+    h.ondragleave=e=>{if(!h.contains(e.relatedTarget))h.classList.remove("over");};
+    h.ondrop=e=>{e.preventDefault();h.classList.remove("over");const sid=S.dragging;if(!sid)return;S.dragging=null;moveScenes([sid],h.dataset.did,null);};
   });
   box.querySelectorAll(".dropzone").forEach(z=>{
     z.ondragover=e=>{if(!S.dragging)return;e.preventDefault();box.querySelectorAll(".over,.before").forEach(x=>x.classList.remove("over","before"));z.classList.add("over");

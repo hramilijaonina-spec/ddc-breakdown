@@ -14,6 +14,7 @@ Depuis la version 2.0, l'app reprend toutes les fonctions de UP Slatebook, avec 
 - Sur téléphone, dans le Dépouillement : la scène en cours tient sur une case ; la flèche ▾ déroule la liste verticale de toutes les scènes (recherche, défilement), un appui ouvre la scène.
 - **Plan de travail** : lieux de tournage, journées en glisser-déposer, plan proposé automatiquement, alertes, rapports (fiches de dépouillement, HTML imprimable, CSV).
 - Suivi du tournage : case à cocher sur chaque plan du découpage (plan fait) et sur chaque scène du plan de travail (scène tournée) ; la ligne passe en vert clair, le compteur « scènes tournées » est dans le plan de travail.
+- Plan de travail en journées repliables (J1, J2…) : date, scènes tournées (ex. 3/5), pages, lieux, alertes ; une journée dépliée montre ses scènes, « + Ajouter des scènes » et × pour en retirer ; case de la journée liée aux cases des scènes (tout coché = journée cochée, et inversement) ; « Tout déplier / Tout replier ».
 - **Annuler / rétablir** (⌘Z, ⇧⌘Z) dans le découpage.
 - **Versions** : badge v1, v2… ; « Nouvelle version » avec une note ; sauvegarde automatique après chaque série de modifications ; retour à une version en un clic (l'état d'avant reste dans la liste) ; suppression d'une version.
 - **Clap numérique** pour le tournage sur téléphone.
