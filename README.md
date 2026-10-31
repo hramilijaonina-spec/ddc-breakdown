@@ -4,14 +4,17 @@ Dépouillement de scénario et plan de travail collaboratifs pour l'équipe DDC.
 
 **App :** https://hramilijaonina-spec.github.io/ddc-breakdown/
 
-- Import PDF, Final Draft (.fdx), .sbx, Fountain ou texte ; découpage en scènes (INT/EXT, jour/nuit, huitièmes de page) ; retrait automatique des en-têtes et pieds de page répétés.
-- Éditeur de scénario : mise en page standard (en-tête, action, personnage, didascalie, dialogue, transition, plan), Entrée/Tab, raccourcis, autocomplétion des personnages et décors, verrou par scène pendant l'écriture, export Final Draft et Fountain, impression PDF.
-- Dépouillement par IA (Claude, via clé API Anthropic) dans 13 catégories, correction à la main, commentaires par scène.
-- Plan de travail : lieux de tournage, journées en glisser-déposer, plan proposé automatiquement, alertes (journée chargée, déplacements, rôles éclatés).
-- Exports : fiches de dépouillement et plan de travail (HTML imprimable, CSV).
-- Temps réel pour toute l'équipe ; connexion avec Google ou par lien e-mail (toute adresse, sans mot de passe).
-- Hors ligne : l'app s'ouvre sans réseau, les modifications sont gardées sur l'appareil et envoyées au retour de la connexion.
-- Sauvegarde : menu ••• du projet → « Sauvegarder le projet (fichier) » ; restauration dans un nouveau projet.
+Depuis la version 2.0, DDC Breakdown reprend toutes les fonctions de UP Slatebook, avec ses propres données (`ddc/…`), le thème gris sombre et jaune de DDC et l'assistant **Dydz**.
+
+- **Scénario** : import PDF, Final Draft (.fdx), .sbx, Fountain ou texte ; découpage en scènes (INT/EXT, jour/nuit, huitièmes de page) ; un scénario à plusieurs épisodes devient un projet par épisode. Éditeur à la mise en page standard, export Final Draft et Fountain, impression PDF.
+- **Découpage** : tableau plan par plan (séquence, plan, description, audio, caméra, vignette, notes), cellules modifiables avec menus (valeur de plan, mouvement, angle), photo ou image par plan, plans optionnels à 0 s (grisés, masquables), découpage par l'IA, mise à jour du scénario d'après le découpage, aperçu et export PDF, PowerPoint ou CSV en paysage.
+- **Dydz** : assistant flottant (administrateur et éditeurs) qui redécoupe une scène, fait tenir l'épisode dans une durée ou répond aux questions ; il montre ses propositions avant de les appliquer, et elles s'annulent.
+- **Dépouillement** par IA dans 13 catégories, correction à la main, commentaires par scène ; clic sur un élément de la fiche → défilement jusqu'à ses passages dans la scène (barre de recherche 1 / N, ↑ ↓, Entrée, Échap).
+- **Plan de travail** : lieux de tournage, journées en glisser-déposer, plan proposé automatiquement, alertes, rapports (fiches de dépouillement, HTML imprimable, CSV).
+- **Annuler / rétablir** (⌘Z, ⇧⌘Z) dans le découpage.
+- **Versions** : badge v1, v2… ; « Nouvelle version » avec une note ; sauvegarde automatique après chaque série de modifications ; retour à une version en un clic (l'état d'avant reste dans la liste) ; suppression d'une version.
+- **Clap numérique** pour le tournage sur téléphone.
+- Temps réel pour toute l'équipe ; connexion avec Google ou par lien e-mail ; hors ligne ; sauvegarde du projet en fichier.
 
 ## Installation (une seule fois)
 
@@ -41,4 +44,6 @@ L'administrateur enregistre une clé API Anthropic pour toute l'équipe : menu d
 | `adapter.js` | branchement Firebase (données, comptes, présence), API Anthropic, écrans de connexion et d'équipe |
 | `sw.js` | service worker : ouverture de l'app sans réseau |
 | `config.js` | configuration Firebase, administrateur, modèle |
+| `vendor/` | outils d'export PDF et PowerPoint (fonctionnent hors ligne) |
+| `tools/build_from_up.py` | reconstruit DDC Breakdown à partir de UP Slatebook (nom, couleurs, Dydz) |
 | `database.rules.json` | règles de sécurité de la Realtime Database |

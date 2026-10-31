@@ -255,7 +255,7 @@ function build(u,isAdmin,role){
     let r;
     try{r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",signal:opts.signal,
       headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:CFG.model||"claude-sonnet-5-5",max_tokens:4096,messages:[{role:"user",content:String(prompt)}]})});}
+      body:JSON.stringify({model:CFG.model||"claude-sonnet-5-5",max_tokens:16000,messages:[{role:"user",content:String(prompt)}]})});}
     catch(e){if(e&&e.name==="AbortError")throw{code:"cancelled"};throw{code:navigator.onLine?"upstream_error":"offline",message:String(e)};}
     if(r.status===401||r.status===403)throw{code:"bad_key",message:"clé refusée"};
     if(r.status===429)throw{code:"rate_limited"};
@@ -341,7 +341,7 @@ function mountAccount(u,isAdmin,rtdb,role){
     const top=document.getElementById("top");if(!top||document.getElementById("ddc-acct"))return;
     const b=document.createElement("button");b.id="ddc-acct";b.className="ddc-acct";b.setAttribute("aria-label","Mon compte");
     b.innerHTML=`<img alt="" src="${escH(u.photoURL||initials(u.displayName,u.uid))}" referrerpolicy="no-referrer">`;
-    const act=document.getElementById("actions");if(act)top.insertBefore(b,act);else top.append(b);
+    const act=document.getElementById("b-menu")||document.getElementById("actions");if(act)top.insertBefore(b,act);else top.append(b);
     let pending=0;
     if(isAdmin&&rtdb){const badge=document.createElement("span");badge.className="ddc-badge";badge.hidden=true;b.append(badge);
       rtdb.ref(ROOT+"/requests").on("value",s=>{const v=s.val()||{};const n=Object.keys(v).length;const prevN=pending;pending=n;

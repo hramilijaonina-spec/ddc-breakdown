@@ -1,15 +1,16 @@
 /* DDC Breakdown — service worker : l'app s'ouvre même sans réseau. */
 const APP = "ddc";                       /* préfixe propre à cette app (plusieurs apps sur le même site) */
-const VERSION = APP + "-v1.12.1";
+const VERSION = APP + "-v2.0.0";
 const SHELL = ["./", "index.html", "adapter.js", "config.js", "manifest.webmanifest",
-  "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png"];
+  "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png",
+  "vendor/jspdf.umd.min.js", "vendor/jspdf.plugin.autotable.min.js", "vendor/pptxgen.bundle.js"];
 const CDN = [
   "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js",
   "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js",
   "https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
-  "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Courier+Prime:wght@400;700&family=Instrument+Sans:wght@400;500;600&display=swap"
+  "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Permanent+Marker&family=Share+Tech+Mono&family=Courier+Prime:wght@400;700&family=Instrument+Sans:wght@400;500;600&display=swap"
 ];
 const STATIC_HOSTS = ["www.gstatic.com", "cdnjs.cloudflare.com", "fonts.googleapis.com", "fonts.gstatic.com"];
 
