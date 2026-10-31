@@ -5,7 +5,7 @@
 import re, sys
 
 SRC, OUT, MODE = sys.argv[1], sys.argv[2], (sys.argv[3] if len(sys.argv) > 3 else "gh")
-DDC_VERSION, DDC_DATE = "2.8.1", "31 oct. 2026"
+DDC_VERSION, DDC_DATE = "2.8.2", "31 oct. 2026"
 s = open(SRC, encoding="utf-8").read()
 
 def R(a, b, n=1):
@@ -22,7 +22,7 @@ s, k = re.subn(r'/\* UP Slatebook — copie de DDC Breakdown[^\n]*\*/\nconst APP
     "1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · "
     "2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, "
     "annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · "
-    "2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables · 2.5 menu du plan de travail · 2.6 « Proposer un plan » garde ce qui est tourné · 2.6.1 numéros de scène à l export · 2.7 menu Accueil et Projet, page d accueil, boutons sobres, PDF du scénario · 2.8 revue : téléphone, recherche, écran Exporter, annuler partout, durée, avancement, photos dans l historique · 2.8.1 navigation entre scènes du découpage sur téléphone */\n"
+    "2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables · 2.5 menu du plan de travail · 2.6 « Proposer un plan » garde ce qui est tourné · 2.6.1 numéros de scène à l export · 2.7 menu Accueil et Projet, page d accueil, boutons sobres, PDF du scénario · 2.8 revue : téléphone, recherche, écran Exporter, annuler partout, durée, avancement, photos dans l historique · 2.8.1 navigation entre scènes du découpage sur téléphone · 2.8.2 découpage en tableau aussi sur téléphone */\n"
     'const APP_VERSION="' + DDC_VERSION + '";const APP_DATE="' + DDC_DATE + '";', s)
 assert k == 1
 
