@@ -341,7 +341,7 @@ function mountAccount(u,isAdmin,rtdb,role){
     const top=document.getElementById("top");if(!top||document.getElementById("ddc-acct"))return;
     const b=document.createElement("button");b.id="ddc-acct";b.className="ddc-acct";b.setAttribute("aria-label","Mon compte");
     b.innerHTML=`<img alt="" src="${escH(u.photoURL||initials(u.displayName,u.uid))}" referrerpolicy="no-referrer">`;
-    const act=document.getElementById("b-menu")||document.getElementById("actions");if(act)top.insertBefore(b,act);else top.append(b);
+    const act=document.getElementById("b-clap")||document.getElementById("b-menu")||document.getElementById("actions");if(act)top.insertBefore(b,act);else top.append(b);
     let pending=0;
     if(isAdmin&&rtdb){const badge=document.createElement("span");badge.className="ddc-badge";badge.hidden=true;b.append(badge);
       rtdb.ref(ROOT+"/requests").on("value",s=>{const v=s.val()||{};const n=Object.keys(v).length;const prevN=pending;pending=n;

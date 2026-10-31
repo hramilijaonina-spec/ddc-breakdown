@@ -388,15 +388,13 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 [data-t=h]{--c:#e0a84a}[data-t=a]{--c:#6d9bf0}[data-t=c]{--c:#f07070}[data-t=p]{--c:#ab8cf0}[data-t=d]{--c:#4cc684}[data-t=t]{--c:#f2934a}[data-t=s]{--c:#3cc4b8}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) [data-t=h]{--c:#e0a84a}:root:not([data-theme="light"]) [data-t=a]{--c:#6d9bf0}:root:not([data-theme="light"]) [data-t=c]{--c:#f07070}:root:not([data-theme="light"]) [data-t=p]{--c:#ab8cf0}:root:not([data-theme="light"]) [data-t=d]{--c:#4cc684}:root:not([data-theme="light"]) [data-t=t]{--c:#f2934a}:root:not([data-theme="light"]) [data-t=s]{--c:#3cc4b8}}
 :root[data-theme="dark"] [data-t=h]{--c:#e0a84a}:root[data-theme="dark"] [data-t=a]{--c:#6d9bf0}:root[data-theme="dark"] [data-t=c]{--c:#f07070}:root[data-theme="dark"] [data-t=p]{--c:#ab8cf0}:root[data-theme="dark"] [data-t=d]{--c:#4cc684}:root[data-theme="dark"] [data-t=t]{--c:#f2934a}:root[data-theme="dark"] [data-t=s]{--c:#3cc4b8}
-.ed-tb{display:inline-flex;align-items:center;gap:6px;border:1px solid color-mix(in srgb,var(--c) 45%,var(--line));background:color-mix(in srgb,var(--c) 10%,var(--surface));border-radius:var(--r);padding:4px 10px;font-size:12.5px;font-weight:600;color:var(--fg);transition:background .12s,color .12s,border-color .12s}
-.ed-tb .ed-ic{color:var(--c)}
-.ed-tb:hover{border-color:var(--c);background:color-mix(in srgb,var(--c) 20%,var(--surface))}
-.ed-tb[aria-pressed=true]{background:var(--c);border-color:var(--c);color:#fff;box-shadow:0 1px 3px color-mix(in srgb,var(--c) 45%,transparent)}
-.ed-tb[aria-pressed=true] .ed-ic{color:#0d1517}
-.ed-tb[aria-pressed=true]{color:#0d1517}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ed-tb[aria-pressed=true],:root:not([data-theme="light"]) .ed-tb[aria-pressed=true] .ed-ic{color:#0d1517}}
-:root[data-theme="dark"] .ed-tb[aria-pressed=true],:root[data-theme="dark"] .ed-tb[aria-pressed=true] .ed-ic{color:#0d1517}
+.ed-tb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:transparent;border-radius:var(--r);padding:5px 10px 5px 8px;font-size:12.5px;font-weight:500;color:var(--muted);transition:background .12s,color .12s,border-color .12s}
+.ed-tb svg{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ed-tb:hover{color:var(--fg);border-color:var(--line-strong);background:var(--sunk)}
+.ed-tb[aria-pressed=true]{color:var(--fg);border-color:var(--accent);background:var(--accent-soft)}
+.ed-tb[aria-pressed=true] svg{color:var(--accent)}
 .ed-tb:disabled{opacity:.5}
+@media (max-width:900px){.ed-tb{padding:6px 7px}.ed-tb .l{display:none}}
 .ed-ic{display:inline-block;width:14px;height:10px;position:relative;flex:0 0 auto}
 .ed-ic::before{content:"";position:absolute;top:2px;height:2px;border-radius:1px;background:currentColor}
 .ed-ic::after{content:"";position:absolute;top:6px;height:2px;border-radius:1px;background:currentColor;opacity:.55}
@@ -455,6 +453,38 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 
 .brand.ddc .logo{background:var(--accent);color:var(--accent-fg);letter-spacing:.06em}
 .brand.ddc{color:var(--fg)}
+/* menu principal */
+.mm{min-width:240px;padding:6px;gap:2px}
+.mm button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;text-align:left;padding:8px 10px;border-radius:6px;color:var(--fg);font-size:13.5px}
+.mm button:hover,.mm button:focus-visible{background:var(--sunk)}
+.mm svg{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mm-top{font-family:var(--f-display);font-weight:700;font-size:16px!important;letter-spacing:.04em;text-transform:uppercase}
+.mm-top span{flex:1;min-width:0;display:flex;flex-direction:column}
+.mm-top small{font-family:var(--f-ui);font-weight:500;font-size:11.5px;letter-spacing:0;text-transform:none;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.mm-top.on{color:var(--accent)}
+.mm-grp .chev{width:16px;height:16px}
+.mm-grp[aria-expanded=true] .chev{transform:rotate(90deg)}
+.mm-sub{display:flex;flex-direction:column;gap:1px;margin:0 0 4px 22px;padding-left:8px;border-left:1px solid var(--line)}
+.mm-sub button{padding:7px 10px;font-size:13px}
+/* accueil */
+.home{grid-column:1/-1;overflow:auto;padding:28px max(16px,env(safe-area-inset-right,0px)) 60px max(16px,env(safe-area-inset-left,0px))}
+.home-in{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.home-h{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.home-h h1{font-family:var(--f-display);font-size:40px;line-height:1;margin:2px 0 0;text-transform:uppercase}
+.home-acts{display:flex;gap:8px;flex-wrap:wrap}
+.home h2{margin:10px 0 0}
+.home-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.hp{display:flex;align-items:center;gap:10px;padding:0 12px 0 0;border-bottom:1px solid var(--line)}
+.hp:last-child{border-bottom:0}
+.hp.cur{box-shadow:inset 3px 0 0 var(--accent)}
+.hp-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;border:0;background:transparent;text-align:left;padding:12px 14px;color:var(--fg)}
+.hp-main:hover{background:var(--sunk)}
+.hp-main b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hp-main small{color:var(--muted);font-size:12.5px}
+.hp-eps{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.hp-eps .ep{border:1px solid var(--line-strong);background:var(--surface);border-radius:6px;padding:3px 8px;font-size:12px;color:var(--fg)}
+.hp-eps .ep:hover{border-color:var(--accent)}
+@media (max-width:560px){.hp{flex-wrap:wrap;padding:0 0 10px}.hp-eps{padding-left:14px;justify-content:flex-start}.hp>.pver{margin-left:14px}}
 /* empty state */
 .welcome{grid-column:1/-1;display:flex;align-items:flex-start;justify-content:center;padding:6vh max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px));overflow:auto}
 .welcome-card{max-width:640px;display:flex;flex-direction:column;gap:16px}
@@ -785,11 +815,11 @@ table.dct{min-width:1180px;width:100%;border-collapse:collapse;font-size:13.5px}
 
 <header class="top" id="top">
   <div class="brand ddc"><span class="logo" id="logo" aria-label="Dydz">Dydz</span>Studio<span class="ver" id="app-ver" title="Version de l'app">v1.3</span></div>
+  <button class="menubtn" id="b-menu" type="button" aria-label="Menu" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <div class="spacer"></div>
   <div class="progress" id="progress" hidden></div>
   <div class="peers" id="peers" aria-label="Personnes connectées"></div>
   <button class="menubtn" id="b-clap" type="button" aria-label="Clap numérique" title="Clap numérique"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 10 3.4 6.8a1 1 0 0 1 .8-1.2l13.6-2.5a1 1 0 0 1 1.2.8L19.6 7z"/><path d="M8.6 5 10.3 8.4M13.5 4.1l1.7 3.4"/></svg></button>
-  <button class="menubtn" id="b-menu" type="button" aria-label="Menu" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 </header>
 <div class="projbar" id="proj" hidden></div>
 <nav class="tabbar" role="tablist" id="tabs" aria-label="Sections" hidden>
@@ -869,8 +899,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables · 2.5 menu du plan de travail · 2.6 « Proposer un plan » garde ce qui est tourné · 2.6.1 numéros de scène à l export */
-const APP_VERSION="2.6.1";const APP_DATE="31 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables · 2.5 menu du plan de travail · 2.6 « Proposer un plan » garde ce qui est tourné · 2.6.1 numéros de scène à l export · 2.7 menu Accueil et Projet, page d accueil, boutons sobres, PDF du scénario */
+const APP_VERSION="2.7.0";const APP_DATE="31 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -998,6 +1028,7 @@ async function boot(){
 function showBanner(t){const b=$("#banner");b.textContent=t;b.hidden=false;}
 
 function openProject(pid){
+  S.home=false;store.set("dep.seen."+pid,String(Date.now()));
   S.unsubP.forEach(u=>u());S.unsubP=[];
   S.pid=pid;S.scenes=[];S.elements=[];S.comments=[];S.shots=[];S.backups=[];S.snaps=[];clearTimeout(SNAP.timer);SNAP.timer=null;SNAP.lastHash=null;S.days=[];S.locations=[];S.sid=null;store.set("dep.pid",pid);DEC.view="edit";H.undo=[];H.redo=[];H.shadow.clear();
   const pp=S.projects.find(p=>p.id===pid);if(pp)store.set("dep.ep."+seriesKey(pp),pid);
@@ -1035,7 +1066,7 @@ function seriesGroups(){
 }
 function renderTop(){
   const proj=$("#proj");const cur=P();
-  if(S.projects.length){
+  if(S.projects.length&&!S.home&&S.pid){
     const groups=seriesGroups();const gk=cur?seriesKey(cur):null;const g=groups.find(x=>x.key===gk);
     proj.hidden=false;
     proj.innerHTML=`<span class="label">Projet en cours</span>
@@ -1048,7 +1079,7 @@ function renderTop(){
     const pm=$("#projmenu");if(pm)pm.onclick=e=>projectMenu(e.currentTarget);
     const pv=$("#projver");if(pv)pv.onclick=openVersions;
   }else{proj.hidden=true;proj.innerHTML="";}
-  const tabs=$("#tabs");tabs.hidden=!S.pid;
+  const tabs=$("#tabs");tabs.hidden=!S.pid||!!S.home;
   const vis=S.tab==="reports"?"plan":S.tab;tabs.dataset.active=vis;
   ["script","dec","scenes","plan"].forEach(t=>$("#tab-"+t).setAttribute("aria-selected",String(vis===t)));
   const pg=$("#progress");
@@ -1058,16 +1089,63 @@ function renderTop(){
   }else pg.hidden=true;
   renderPeers();renderCopilot();
 }
+const MI={home:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7M6 9.5V20h12V9.5"/></svg>`,
+  proj:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5h6l2 2h9v10.5h-17z"/></svg>`,
+  chev:`<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>`};
+let mmProjOpen=true;
 function mainMenu(anchor){
-  const items=[];
-  if(S.canWrite)items.push({label:"Nouveau projet",run:()=>openImport()});
-  if(S.pid&&S.canWrite&&!S.aiOff){const todo=S.scenes.filter(s=>!s.status||s.status==="todo").length;
-    items.push({label:"Analyser tout avec l'IA"+(todo?" · "+todo+" scène"+(todo>1?"s":""):""),run:()=>{if(S.busy){toast("Une analyse est déjà en cours.");return;}if(!todo){toast("Toutes les scènes sont déjà analysées.");return;}analyzeAll();}});}
-  if(S.pid&&S.dl)items.push({label:"Exporter…",run:()=>exportMenu(anchor)});
-  if(!items.length){toast("Aucune action disponible pour ton rôle.");return;}
+  if(popEl&&popEl.classList.contains("mm")){closePop();return;}
+  closePop();
+  const d=document.createElement("div");d.className="pop mm";d.setAttribute("role","menu");d.setAttribute("aria-label","Menu");
+  const todo=S.scenes.filter(s=>!s.status||s.status==="todo").length;
+  const sub=[];
+  if(S.canWrite)sub.push(["new","Nouveau projet"]);
+  if(S.pid&&S.canWrite&&!S.aiOff)sub.push(["ai","Analyser tout avec l'IA"+(todo?" · "+todo+" scène"+(todo>1?"s":""):"")]);
+  if(S.pid&&S.dl)sub.push(["export","Exporter…"]);
+  if(S.pid)sub.push(["versions","Versions et sauvegardes"]);
+  if(S.pid&&S.canWrite)sub.push(["options","Options du projet…"]);
+  const draw=()=>{d.innerHTML=`<button type="button" role="menuitem" class="mm-top${S.home||!S.pid?" on":""}" data-a="home">${MI.home}<span>Accueil</span></button>
+    <button type="button" class="mm-top mm-grp" aria-expanded="${mmProjOpen}" data-a="toggle">${MI.proj}<span>Projet${S.pid&&!S.home&&P()?`<small>${esc(P().name||"")}</small>`:""}</span>${MI.chev}</button>
+    <div class="mm-sub"${mmProjOpen?"":" hidden"}>${sub.map(([k,l])=>`<button type="button" role="menuitem" data-a="${k}">${esc(l)}</button>`).join("")||`<p class="empty" style="padding:4px 8px;margin:0">Aucune action pour ton rôle.</p>`}</div>`;
+    d.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{const k=b.dataset.a;
+      if(k==="toggle"){mmProjOpen=!mmProjOpen;draw();return;}
+      closePop();
+      if(k==="home")goHome();
+      else if(k==="new")openImport();
+      else if(k==="ai"){if(S.busy){toast("Une analyse est déjà en cours.");return;}if(!todo){toast("Toutes les scènes sont déjà analysées.");return;}leaveHome();analyzeAll();}
+      else if(k==="export")exportMenu(anchor);
+      else if(k==="versions")openVersions();
+      else if(k==="options")projectMenu(anchor);});};
+  draw();document.body.append(d);popEl=d;
+  const r=anchor.getBoundingClientRect();d.style.left=Math.min(Math.max(8,r.left),innerWidth-d.offsetWidth-8)+"px";d.style.top=(r.bottom+6)+"px";
   anchor.setAttribute("aria-expanded","true");
-  openPop(anchor.getBoundingClientRect(),"Menu",items);
-  const pop=popEl;const obs=new MutationObserver(()=>{if(!document.body.contains(pop)){anchor.setAttribute("aria-expanded","false");obs.disconnect();}});obs.observe(document.body,{childList:true});
+  const obs=new MutationObserver(()=>{if(!document.body.contains(d)){anchor.setAttribute("aria-expanded","false");obs.disconnect();}});obs.observe(document.body,{childList:true});
+  d.querySelector("button")?.focus();
+}
+/* ---------- accueil : derniers projets ---------- */
+function goHome(){flushEditor().then(()=>{S.home=true;$("#desk").innerHTML="";render();});}
+function leaveHome(){if(S.home){S.home=false;$("#desk").innerHTML="";}}
+const lastOpened=pid=>Number(store.get("dep.seen."+pid))||0;
+function homeHTML(){
+  const groups=seriesGroups().map(g=>({...g,seen:Math.max(...g.items.map(p=>lastOpened(p.id)),0),created:Math.max(...g.items.map(p=>p.createdAt||0),0)}))
+    .sort((a,b)=>(b.seen-a.seen)||(b.created-a.created));
+  const when=t=>t?new Date(t).toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"numeric"}):"";
+  return `<div class="home"><div class="home-in">
+    <div class="home-h"><div><span class="label">Dydz Studio</span><h1>Accueil</h1></div>
+      ${S.canWrite?`<div class="home-acts"><button class="btn primary" id="h-new">+ Nouveau projet</button><button class="btn ghost" id="h-restore">Restaurer une sauvegarde</button></div>`:""}</div>
+    <h2 class="label">Derniers projets</h2>
+    <div class="home-list">${groups.map(g=>{const cur=g.items.some(p=>p.id===S.pid);const multi=g.items.length>1;const one=g.items[0];
+      const pick=g.items.find(p=>p.id===store.get("dep.ep."+g.key))||g.items[0];
+      return `<div class="hp${cur?" cur":""}">
+        <button type="button" class="hp-main" data-pid="${esc(pick.id)}"><b>${esc(g.name||"Sans titre")}</b>
+          <small>${multi?g.items.length+" épisodes · ":""}${g.seen?"ouvert "+savedAgo(g.seen):"créé le "+esc(when(g.created))}${cur?" · en cours":""}</small></button>
+        ${multi?`<span class="hp-eps">${g.items.map(p=>`<button type="button" class="ep" data-pid="${esc(p.id)}" title="${esc(p.name||"")}">Ép. ${esc(p.episode||"?")}</button>`).join("")}</span>`:`<span class="pver">${esc(verTag(one))}</span>`}
+      </div>`;}).join("")||`<p class="empty">Aucun projet pour l'instant.</p>`}</div>
+  </div></div>`;
+}
+function bindHome(){
+  const n=$("#h-new");if(n)n.onclick=()=>openImport();const r=$("#h-restore");if(r)r.onclick=openRestore;
+  document.querySelectorAll(".home [data-pid]").forEach(b=>b.onclick=()=>{S.home=false;$("#desk").innerHTML="";if(b.dataset.pid===S.pid)render();else openProject(b.dataset.pid);});
 }
 async function renderPeers(){
   const el=$("#peers");if(!S.room||!S.user){el.innerHTML="";return;}
@@ -1083,7 +1161,8 @@ async function renderPeers(){
 function renderDesk(){
   const desk=$("#desk");
   if(!S.projectsLoaded){return;}
-  if(!S.pid){desk.innerHTML=welcomeHTML();bindWelcome();return;}
+  if(!S.pid&&!S.projects.length){desk.innerHTML=welcomeHTML();bindWelcome();return;}
+  if(S.home||!S.pid){desk.innerHTML=homeHTML();bindHome();return;}
   if(S.tab==="script"){if(!$("#editor"))desk.innerHTML=`<section class="editor" id="editor"></section>`;renderEditor();return;}
   if(S.tab==="plan"){if(S.dragging){S.pendingRender=true;return;}if(!$("#plan"))desk.innerHTML=`<section class="plan" id="plan"></section>`;keepFocus(renderPlan);return;}
   if(S.tab==="reports"){desk.innerHTML=`<section class="reports" id="reports"></section>`;renderReports();return;}
@@ -1321,7 +1400,7 @@ function addComment(sid,text){S.db.collection(base()+"/comments").add({sceneId:s
 /* ---------- popovers ---------- */
 let popEl=null;
 function closePop(){if(popEl){popEl.remove();popEl=null;}}
-document.addEventListener("pointerdown",e=>{if(popEl&&!popEl.contains(e.target))closePop();},true);
+document.addEventListener("pointerdown",e=>{if(popEl&&!popEl.contains(e.target)&&!(popEl.classList.contains("mm")&&e.target.closest?.("#b-menu")))closePop();},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop();});
 function openPop(anchorRect,title,items){
   closePop();const d=document.createElement("div");d.className="pop";d.setAttribute("role","menu");
@@ -1912,6 +1991,14 @@ function exportSheets(){
 
 const MOD=/Mac|iPhone|iPad/.test(navigator.platform||"")?"⌘":"Ctrl+";
 /* ---------- éditeur de scénario ---------- */
+const BT_ICON={
+  h:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="12" rx="1.5"/><path d="M3 8l2.5-4h3.5L6.5 8M10 8l2.5-4H16L13.5 8M17 8l2.5-4H21"/></svg>`,
+  a:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h16M4 18h10"/></svg>`,
+  c:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4"/></svg>`,
+  p:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4c-3.2 3.6-3.2 12.4 0 16M15 4c3.2 3.6 3.2 12.4 0 16"/></svg>`,
+  d:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v10.5H10l-5 4v-4H4z"/></svg>`,
+  t:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M14 7l5 5-5 5"/></svg>`,
+  s:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="13" height="10" rx="1.5"/><path d="M15.5 10.5l6-3v9l-6-3"/></svg>`};
 const BT={
   h:{label:"En-tête de scène",ph:"INT. LIEU - JOUR",key:"1"},
   a:{label:"Action",ph:"Ce que l'on voit à l'écran",key:"2"},
@@ -1990,7 +2077,7 @@ function renderEditor(){
   if(!root.dataset.ready){root.dataset.ready="1";
     ED.sigs.clear();ED.lastBlock=null;   /* nouvel éditeur (retour sur l'onglet) : tout redessiner */
     root.innerHTML=`<div class="ed-bar">
-        <div class="ed-types" role="toolbar" aria-label="Type de bloc">${["h","a","c","p","d","t","s"].map(k=>`<button type="button" class="ed-tb" data-t="${k}" aria-pressed="false" title="${BT[k].label} · ${MOD}${BT[k].key}" ${S.canWrite?"":"disabled"}><span class="ed-ic ic-${k}" aria-hidden="true"></span>${k==="h"?"Scène":BT[k].label}</button>`).join("")}</div>
+        <div class="ed-types" role="toolbar" aria-label="Type de bloc">${["h","a","c","p","d","t","s"].map(k=>`<button type="button" class="ed-tb" data-t="${k}" aria-pressed="false" title="${BT[k].label} · ${MOD}${BT[k].key}" ${S.canWrite?"":"disabled"}>${BT_ICON[k]}<span class="l">${k==="h"?"Scène":BT[k].label}</span></button>`).join("")}</div>
         <span class="ed-hint">ou Tab · Entrée : bloc suivant · Maj+Entrée : retour à la ligne</span>
         <span class="spacer"></span>
         <span class="ed-stats" id="ed-stats"></span>
@@ -2205,7 +2292,7 @@ function renumberScenes(){
 /* exports du scénario */
 function scriptExportMenu(anchor){
   const items=[{label:"Final Draft (.fdx)",run:exportFDX},{label:"Fountain (.fountain)",run:exportFountain}];
-  if(window.DDC_CONFIG)items.push({label:"Imprimer ou enregistrer en PDF",run:()=>{flushEditor().then(()=>window.print());}});
+  if(S.dl)items.unshift({label:"PDF (.pdf)",run:exportScriptPDF});
   openPop(anchor.getBoundingClientRect(),"Exporter le scénario",items);
 }
 async function flushEditor(){for(const sid of [...ED.dirty])await commitScene(sid);}
@@ -2218,6 +2305,43 @@ async function exportFountain(){
       if(b.t==="c"||b.t==="p")continue;}
     out.push("");}
   save(fileBase(p)+".fountain",out.join("\n").replace(/\n{3,}/g,"\n\n"));
+}
+/* scénario en PDF, mise en page standard : Courier 12, numéros de scène des deux côtés, pagination, nom de l'app en pied de page */
+async function exportScriptPDF(){
+  await flushEditor();const p=P();
+  try{await loadLib("jspdf");}catch{toast("Impossible de charger l'outil PDF. Vérifie la connexion internet.",5000);return;}
+  const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:"pt",format:"a4"});
+  const W=595.28,H=841.89,L=100,R=W-62,TOP=72,BOT=H-66,LH=12,CW=7.2;
+  const clean=s=>String(s||"").replace(/[\u2018\u2019\u02BC]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/\u2026/g,"...").replace(/[\u2013\u2014]/g,"-").replace(/\u0153/g,"oe").replace(/\u0152/g,"OE").replace(/[\u00A0\u202F\u2009]/g," ").replace(/[^\x00-\xFF]/g,"?");
+  const wrap=(s,n)=>{const out=[];for(const para of clean(s).split("\n")){let line="";for(const w of para.split(/\s+/).filter(Boolean)){if(!line)line=w;else if((line+" "+w).length<=n)line+=" "+w;else{out.push(line);line=w;}while(line.length>n){out.push(line.slice(0,n));line=line.slice(n);}}out.push(line);}return out;};
+  const FMT={h:{x:0,n:60,up:1,b:1,gap:2},a:{x:0,n:60,gap:1},c:{x:22,n:38,up:1,gap:1},p:{x:16,n:25,gap:0},d:{x:10,n:35,gap:0},t:{x:0,n:60,up:1,gap:1,right:1},s:{x:0,n:60,up:1,gap:1}};
+  let page=0,y=TOP;
+  const footer=()=>{doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(140);doc.text("Dydz Studio",W/2,H-34,{align:"center"});doc.setTextColor(0);};
+  const newPage=()=>{if(page)doc.addPage();page++;y=TOP;footer();const sp=page-1;if(sp>1){doc.setFont("courier","normal");doc.setFontSize(12);doc.text(sp+".",R,40,{align:"right"});}};
+  /* page de titre */
+  doc.setFont("courier","bold");doc.setFontSize(14);
+  const title=wrap((p?.name||"Sans titre").toUpperCase(),48);title.forEach((l,i)=>doc.text(l,W/2,H*0.38+i*18,{align:"center"}));
+  doc.setFont("courier","normal");doc.setFontSize(12);
+  doc.text(clean(verTag(p)+" · "+new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"})),W/2,H*0.38+title.length*18+24,{align:"center"});
+  footer();page=1;
+  let first=true;
+  for(const s of S.scenes){
+    const blocks=[{t:"h",x:s.heading,num:s.num},...sceneBlocks(s).filter(b=>String(b.x||"").trim())];
+    blocks.forEach((b,bi)=>{const f=FMT[b.t]||FMT.a;let lines=wrap(f.up?String(b.x).toUpperCase():b.x,f.n);
+      if(b.t==="p"&&!/^\(/.test(lines[0]||""))lines=wrap("("+String(b.x).trim()+")",f.n);
+      let gap=first?0:f.gap;
+      /* garder l'en-tête avec au moins deux lignes de la suite, et le personnage avec sa réplique */
+      const need=lines.length+(b.t==="h"?3:b.t==="c"?2:0);
+      if(page===1||y+(gap+Math.min(need,lines.length+2))*LH>BOT){newPage();gap=0;}
+      y+=gap*LH;first=false;
+      doc.setFont("courier",f.b?"bold":"normal");doc.setFontSize(12);
+      lines.forEach((l,li)=>{if(y>BOT){newPage();}
+        if(f.right)doc.text(l,R,y,{align:"right"});else doc.text(l,L+f.x*CW,y);
+        if(b.t==="h"&&li===0){doc.text(String(b.num),L-40,y);doc.text(String(b.num),R+30,y,{align:"right"});}
+        y+=LH;});
+    });
+  }
+  await save(fileBase(p)+".pdf",doc.output("blob"));
 }
 async function exportFDX(){
   await flushEditor();const p=P();const x=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
