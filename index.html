@@ -164,6 +164,13 @@ textarea{resize:vertical}
 .page{max-width:720px;margin:0 auto;background:var(--page);border:1px solid var(--line);box-shadow:0 1px 3px rgb(0 0 0 / .06);padding:36px clamp(16px,6%,60px) 48px;font-family:var(--f-script);font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere}
 /* dépouillement : même mise en page que l'éditeur */
 .page.sp{white-space:normal;line-height:1.35}
+/* dépouillement : le scénario sur fond clair, pour le distinguer des menus et de la fiche */
+.page.sp{background:#e6e7e8;color:#1b1d20;border-color:#c8cacd;box-shadow:0 2px 10px rgb(0 0 0 / .35)}
+.page.sp .empty{color:#5d6268}
+.page.sp mark.hl{background:color-mix(in srgb,var(--c) 30%,transparent);color:inherit}
+.page.sp mark.hl.found{background:color-mix(in srgb,var(--c) 50%,transparent)}
+.page.sp mark.hl.found-cur{background:var(--c);color:#fff;box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 35%,transparent)}
+.page.sp ::selection{background:#9cc7ff;color:#111}
 .page.sp .sb-h{margin-top:0;margin-bottom:.2em}
 .page.sp .sb{min-height:0}
 .page.sp .sb-c mark.hl{text-transform:uppercase}
@@ -804,8 +811,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone */
-const APP_VERSION="2.2.0";const APP_DATE="31 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement */
+const APP_VERSION="2.2.1";const APP_DATE="31 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
