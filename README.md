@@ -7,11 +7,13 @@ Scénario, découpage, dépouillement et plan de travail collaboratifs pour l'é
 Depuis la version 2.0, l'app reprend toutes les fonctions de UP Slatebook, avec ses propres données (`ddc/…`), le thème gris sombre et jaune de DDC et l'assistant **Dydz**.
 
 - **Scénario** : import PDF, Final Draft (.fdx), .sbx, Fountain ou texte ; découpage en scènes (INT/EXT, jour/nuit, huitièmes de page) ; un scénario à plusieurs épisodes devient un projet par épisode. Éditeur à la mise en page standard, export Final Draft et Fountain, impression PDF.
+- Scénarios « en prose » (Word, Google Docs, PDF) : « Lieu - Moment » et « Nom (indication) : réplique » sont reconnus à l'import et mis automatiquement au format scénario.
 - **Découpage** : tableau plan par plan (séquence, plan, description, audio, caméra, vignette, notes), cellules modifiables avec menus (valeur de plan, mouvement, angle), photo ou image par plan, plans optionnels à 0 s (grisés, masquables), découpage par l'IA, mise à jour du scénario d'après le découpage, aperçu et export PDF, PowerPoint ou CSV en paysage.
 - **Dydz** : assistant flottant (administrateur et éditeurs) qui redécoupe une scène, fait tenir l'épisode dans une durée ou répond aux questions ; il montre ses propositions avant de les appliquer, et elles s'annulent.
 - **Dépouillement** par IA dans 13 catégories, correction à la main, commentaires par scène ; clic sur un élément de la fiche → défilement jusqu'à ses passages dans la scène (barre de recherche 1 / N, ↑ ↓, Entrée, Échap).
 - Sur téléphone, dans le Dépouillement : la scène en cours tient sur une case ; la flèche ▾ déroule la liste verticale de toutes les scènes (recherche, défilement), un appui ouvre la scène.
 - **Plan de travail** : lieux de tournage, journées en glisser-déposer, plan proposé automatiquement, alertes, rapports (fiches de dépouillement, HTML imprimable, CSV).
+- Suivi du tournage : case à cocher sur chaque plan du découpage (plan fait) et sur chaque scène du plan de travail (scène tournée) ; la ligne passe en vert clair, le compteur « scènes tournées » est dans le plan de travail.
 - **Annuler / rétablir** (⌘Z, ⇧⌘Z) dans le découpage.
 - **Versions** : badge v1, v2… ; « Nouvelle version » avec une note ; sauvegarde automatique après chaque série de modifications ; retour à une version en un clic (l'état d'avant reste dans la liste) ; suppression d'une version.
 - **Clap numérique** pour le tournage sur téléphone.

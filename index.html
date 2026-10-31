@@ -318,7 +318,7 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
 .poolzone{flex:1}
 .dropzone.over{background:var(--accent-soft)}
 .pad{padding:12px}
-.pstrip{display:grid;grid-template-columns:8px 40px minmax(0,1fr) auto auto;gap:0 8px;align-items:center;padding:6px 8px 6px 0;border-top:1px solid var(--line);background:var(--surface);cursor:grab}
+.pstrip{display:grid;grid-template-columns:8px 24px 34px minmax(0,1fr) auto auto;gap:0 8px;align-items:center;padding:6px 8px 6px 0;border-top:1px solid var(--line);background:var(--surface);cursor:grab}
 .pstrip[draggable=false]{cursor:default}
 .pstrip .band{align-self:stretch;margin-block:-6px}
 .pstrip .num{font-family:var(--f-display);font-weight:700;font-size:18px;text-align:right;font-variant-numeric:tabular-nums}
@@ -537,7 +537,15 @@ table.dct{min-width:1180px;width:100%;border-collapse:collapse;font-size:13.5px}
 .dct-seq .h{display:block;margin-top:6px;font-family:var(--f-script);font-weight:700;font-size:12.5px;text-transform:uppercase}
 .dct-seq small{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
 .dct-seq .btn{margin-top:8px}
-.dct-plan{width:70px}.dct-plan b{font-family:var(--f-display);font-size:20px;line-height:1}.dct-plan small{color:var(--muted);font-size:12px}
+.dct-plan{width:84px;position:relative}
+.dc-done{position:absolute;bottom:7px;right:6px;z-index:1;display:inline-flex;padding:2px;cursor:pointer}
+.dc-done input,.p-done input{width:17px;height:17px;margin:0;accent-color:var(--ok);cursor:pointer}
+.dc-done input:disabled,.p-done input:disabled{cursor:default}
+.dct tr.done td:not(.dct-seq){background:color-mix(in srgb,var(--ok) 13%,transparent)}
+.dct tr.done .dct-plan b{color:var(--ok)}
+.p-done{display:inline-flex;justify-content:center;cursor:pointer}
+.pstrip.done{background:color-mix(in srgb,var(--ok) 13%,var(--surface))}
+.pstrip.done .num{color:var(--ok)}.dct-plan b{font-family:var(--f-display);font-size:20px;line-height:1}.dct-plan small{color:var(--muted);font-size:12px}
 .dct-desc{width:27%}.dct-audio{width:23%}.dct-notes{width:16%}.dct-notes textarea{color:var(--muted)!important;font-size:13px!important}
 .dct-cam{width:175px}.dct-cam b{font-weight:600}.dct-cam span{color:var(--muted);font-size:12.5px}.dct-cam .dc-fx{margin-top:4px;color:var(--accent)}
 .dct-thumb{width:160px;padding:8px!important}.dct-thumb .dc-frame{width:140px}
@@ -811,8 +819,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement */
-const APP_VERSION="2.2.1";const APP_DATE="31 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées */
+const APP_VERSION="2.3.0";const APP_DATE="31 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -1401,19 +1409,24 @@ function openImport(prefill,prefName){
     prev.innerHTML=`<div class="row"><span class="label">${scenes.length} scène${scenes.length>1?"s":""} détectée${scenes.length>1?"s":""} · ${fmtE(tot)} pages${note?" · "+esc(note):""}</span><div class="preview">${scenes.slice(0,200).map(s=>`<div><b>${esc(s.num)}</b><span>${esc(s.heading)}</span></div>`).join("")}</div></div>`;};
   const ig=m.querySelector("#im-ignore"),igNote=m.querySelector("#im-ignore-note");let fdx=null;
   const ignored=()=>ig.value.split("\n").map(x=>x.trim()).filter(Boolean);
-  const fromText=t=>{fdx=null;const r=parseScript(stripPhrases(t,ignored()));refresh(r.scenes,r.note);};
+  const fromText=t=>{fdx=null;const pr=proseToScreenplay(stripPhrases(t,ignored()));const r=parseScript(pr.text);
+    refresh(r.scenes,pr.changed||conv?"mis en forme automatiquement au format scénario":r.note);};
+  let conv=false;
+  /* scénario en prose (Word, Google Docs, PDF) : le texte affiché est converti au format scénario */
+  const toScreenplay=t=>{const pr=proseToScreenplay(t);if(pr.changed){conv=true;ta.value=pr.text;toast("Scénario mis au format : "+(pr.headings?pr.headings+" scène"+(pr.headings>1?"s":"")+", ":"")+pr.dialogues+" répliques reconnues.",4500);}return pr.changed?pr.text:t;};
+  ta.addEventListener("paste",()=>setTimeout(()=>{fromText(toScreenplay(ta.value));},0));
   let tmr;ta.oninput=()=>{clearTimeout(tmr);tmr=setTimeout(()=>fromText(ta.value),250);};
   ig.oninput=()=>{clearTimeout(tmr);tmr=setTimeout(()=>fdx?refresh(fdx.map(sc=>withIgnored(sc,ignored())),"Final Draft"):fromText(ta.value),250);};
   if(prefill){ta.value=prefill;fromText(prefill);}
   const handleFile=async f=>{if(!f)return;if(!nm.value)nm.value=f.name.replace(/\.[^.]+$/,"");
     prev.innerHTML=`<p class="empty"><span class="spin"></span> Lecture de ${esc(f.name)}…</p>`;
     try{const ext=f.name.split(".").pop().toLowerCase();
-      if(ext==="pdf"){const r=await pdfToText(f);ta.value=r.text;
+      if(ext==="pdf"){const r=await pdfToText(f);ta.value=r.text;r.text=toScreenplay(r.text);
         if(r.removed.length){ig.value=[...new Set([...ignored(),...r.removed])].join("\n");igNote.textContent="Retirés automatiquement : textes répétés en haut ou en bas des pages.";}
         fromText(r.text);}
       else if(ext==="fdx"){const r=parseFDX(await f.text());ta.value=r.text;fdx=r.scenes;refresh(r.scenes.map(sc=>withIgnored(sc,ignored())),"Final Draft");}
       else if(ext==="sbx"||/^\s*<div class="divtype\d/.test(await f.slice(0,200).text())){const r=parseSBX(await f.text());if(!r.scenes.length)throw new Error("sbx");ta.value=r.text;fdx=r.scenes;refresh(r.scenes.map(sc=>withIgnored(sc,ignored())),"fichier .sbx");}
-      else{const t=await f.text();ta.value=t;fromText(t);}
+      else{const t=await f.text();ta.value=t;fromText(toScreenplay(t));}
     }catch(e){prev.innerHTML=`<p class="empty" style="color:var(--danger)">Impossible de lire ce fichier. S'il s'agit d'un PDF scanné (image), exporte-le en texte depuis ton logiciel d'écriture ou colle le texte ci-dessus.</p>`;}};
   m.querySelector("#im-pick").onclick=()=>fi.click();
   fi.onchange=()=>handleFile(fi.files[0]);
@@ -1473,7 +1486,7 @@ function epTracker(){const st={n:null,titles:{},wait:false};return{st,
 /* ---------- parsing ---------- */
 const HEAD=/^\s*(?:(\d+[A-Z]{0,2})[\s.:)\-–]+)?\.?((?:INT\.?\s*\/\s*EXT|EXT\.?\s*\/\s*INT|I\/E|INT|EXT|INTÉRIEUR|EXTÉRIEUR|INTERIEUR|EXTERIEUR)(?:\.|\s|\/|$).*)$/i;
 const NIGHT=/\b(NUIT|NIGHT|SOIR|SOIRÉE|SOIREE|EVENING|CRÉPUSCULE|CREPUSCULE|DUSK)\b/i;
-const DAY=/\b(JOUR|DAY|MATIN|MORNING|MIDI|APRÈS-MIDI|APRES-MIDI|AFTERNOON|AUBE|DAWN|AURORE)\b/i;
+const DAY=/\b(JOURN[ÉE]E|JOUR|DAY|MATIN|MORNING|MIDI|APRÈS-MIDI|APRES-MIDI|AFTERNOON|AUBE|DAWN|AURORE)\b/i;
 function parseHeading(raw){
   let h=raw.replace(/\s+\d+[A-Z]{0,2}\s*$/,"").replace(/\s+/g," ").trim();
   const ie=/^(INT\.?\s*\/\s*EXT|EXT\.?\s*\/\s*INT|I\/E)/i.test(h)?"INT/EXT":/^EXT/i.test(h)?"EXT":"INT";
@@ -1506,6 +1519,74 @@ function parseScript(text){
     const dayNight=s.dayNight||lastDN;lastDN=dayNight;const{lines,...rest}=s;
     return{...rest,dayNight,body:body.slice(0,60000),eighths:linesToEighths(body)};});
   return{scenes};
+}
+/* ---------- scénarios « en prose » (Word, Google Docs) : Lieu - Moment, « Nom : réplique » → format scénario ---------- */
+const PROSE_LABELS=new Set(["chanson","musique","son","sons","bruitage","bruitages","sfx","vfx","note","notes","nb","carton","cartons","texte","texte a l'ecran","insert","super","titre","packshot","legende","sous-titre","sous-titres","lieu","lieux","decor","duree","cible","objectif","message","synopsis","logline","pitch","ambiance","personnages","casting","format","version","date","client","marque","produit","signature","jingle","slogan","baseline","accroche","mentions","mention","cta","call to action","title","credit","author","authors","source","draft date","contact","copyright","revision","auteur","auteurs","realisateur","realisation","production","episode","saison"]);
+const PROSE_STOP=new Set(["il","elle","ils","elles","on","je","tu","nous","vous","puis","et","mais","alors","quand","pendant","ensuite","soudain","enfin","dans","sur","au","aux","a","en","pour","avec","apres","avant","devant","derriere","plan","gros","tres","courte","longue","fondu","cut","coupe","retour","fin","ce","cet","cette","ces","c'est","voici","voila"]);
+const PROSE_ART=new Set(["le","la","les","l'","un","une","sa","son","ses","mon","ma","mes","ton","ta","notre","leur","leurs","des","du","la"]);
+const PROSE_OFF=/^(hors[\s-]?champ|off|voix[\s-]?off|v\.?\s?o\.?|o\.?\s?s\.?|o\.?\s?c\.?|au t[ée]l[ée]phone|t[ée]l[ée]phone|cont'?d|suite)$/i;
+const PROSE_TIME=/^(en\s+)?(journ[ée]e|jour|nuit|matin(?:[ée]e)?|soir(?:[ée]e)?|midi|apr[èe]s[\s-]midi|fin d'apr[èe]s[\s-]midi|aube|aurore|cr[ée]puscule|d[ée]but de soir[ée]e|tomb[ée]e de la nuit|plus tard|continu|m[êe]me moment|day|night|morning|evening|afternoon|dawn|dusk|later)$/i;
+const PROSE_EXT=/\b(devant|dehors|ext[ée]rieur|rue|ruelle|route|chemin|place|march[ée]|parking|cour|jardin|plage|terrasse|trottoir|carrefour|arr[êe]t|stade|terrain|champ|for[êe]t|parc|pont|toit|balcon|quartier|village|rizi[èe]re|port|quai|parvis|esplanade|kiosque)\b/i;
+const PROSE_INT=/\b(chez|maison|bureau|salon|chambre|cuisine|int[ée]rieur|dans (?:le|la|l'|les|un|une)|boutique|magasin|restaurant|salle|couloir|h[ôo]pital|[ée]glise|[ée]cole|classe|voiture|taxi|bus|appartement|agence|banque|caf[ée]|hotel|h[ôo]tel)\b/i;
+const proseKey=s=>norm(s).replace(/[’]/g,"'");
+function proseDialogue(line){
+  const m=line.match(/^\s*([\p{Lu}][\p{L}'’.\-]*(?:\s+[\p{L}'’.\-]+){0,3})\s*(?:\(([^)]{1,80})\))?\s*:\s*(\S.*)$/u);
+  if(!m)return null;
+  const name=m[1].trim(),words=name.split(/\s+/),w0=proseKey(words[0]);
+  if(PROSE_LABELS.has(proseKey(name))||PROSE_STOP.has(w0)||/\d/.test(name))return null;
+  if(words.length>1&&!PROSE_ART.has(w0)&&!words.every(w=>/^\p{Lu}/u.test(w)))return null;
+  if(words.length>3)return null;
+  return{name,paren:(m[2]||"").trim(),text:m[3].trim()};
+}
+function proseHeading(par){
+  if(par.length>100||/[.!?…:;,]$/.test(par)||proseDialogue(par)||HEAD.test(par))return null;
+  let num="",t=par.replace(/^(?:(?:s[ée]quence|sequence|sc[èe]ne|scene|s[ée]q\.?)\s*)?(\d{1,3}[A-Z]?)\s*[.:)\-–—]\s*/i,(a,n)=>{num=n;return"";}).trim();
+  const parts=t.split(/\s+[-–—]\s+|\s*,\s*(?=[^,]*$)/);if(parts.length<2)return null;
+  const time=parts[parts.length-1].trim();if(!PROSE_TIME.test(time))return null;
+  const place=t.slice(0,t.length-time.length).replace(/\s*[-–—,]\s*$/,"").trim();if(!place||place.length<2)return null;
+  const ie=PROSE_EXT.test(place)?"EXT. ":PROSE_INT.test(place)?"INT. ":"";
+  return{num,line:(ie?"":".")+(num?num+" ":"")+ie+place.toUpperCase()+" - "+time.toUpperCase()};
+}
+/* renvoie {text,changed,headings,dialogues} ; ne touche pas un scénario déjà au bon format */
+function proseToScreenplay(src){
+  const text=String(src||"").replace(/\r\n?/g,"\n");
+  const lines=text.split("\n");
+  const dlg=lines.filter(l=>proseDialogue(l)).length;
+  const hasHead=lines.some(l=>l.length<110&&HEAD.test(l));
+  const std=lines.filter((l,i)=>isCue(l.trim())&&!(lines[i-1]||"").trim()&&(lines[i+1]||"").trim()&&!proseDialogue(l)).length;
+  if(dlg<3||std>dlg)return{text,changed:false};
+  /* paragraphes : lignes séparées par une ligne vide, retours à la ligne du PDF recollés */
+  const pars=[];let cur=[];
+  const cueish=l=>l.length<=60&&isCue(l);
+  for(const raw of lines){const l=raw.trim();
+    if(/^\d+\s*\/\s*\d+$/.test(l)||/^(page\s*)?\d+\s*(sur|of)\s*\d+$/i.test(l))continue;
+    if(!l){if(cur.length){pars.push(cur);cur=[];}continue;}
+    if(cur.length){const prev=cur[cur.length-1],inCue=cueish(cur[0])&&!proseDialogue(cur[0])&&!/^(FIN|THE END)\.?$/i.test(cur[0])&&!isTransition(cur[0]);
+      const brk=proseDialogue(l)||HEAD.test(l)||(!hasHead&&(proseHeading(l)||proseHeading(prev)))
+        ||(!inCue&&(cueish(l)||cueish(prev)||/^\(.*\)$/.test(l)||/[.!?…»"”)]$/.test(prev)&&/^[\p{Lu}«"“\d]/u.test(l)));
+      if(brk){pars.push(cur);cur=[];}}
+    cur.push(l);}
+  if(cur.length)pars.push(cur);
+  const out=[];let heads=0,dl=0;
+  for(const p of pars){
+    const first=p[0];
+    if(HEAD.test(first)||/^\./.test(first)&&p.length===1){out.push("",p.join("\n"));continue;}
+    if(isCue(first)&&!proseDialogue(first)&&p.length>1&&!/^(FIN|THE END)\.?$/i.test(first)){out.push("",p.join("\n"));continue;}
+    const joined=p.join(" ").replace(/\s+/g," ").trim();
+    if(!hasHead){const h=proseHeading(joined);if(h){out.push("",h.line);heads++;continue;}}
+    const d=proseDialogue(joined);
+    if(d){dl++;
+      const bits=d.paren?d.paren.split(/\s*[,;]\s*/).filter(Boolean):[];
+      const ext=bits.filter(b=>PROSE_OFF.test(b)).map(b=>b.toUpperCase());const rest=bits.filter(b=>!PROSE_OFF.test(b));
+      out.push("",d.name.toUpperCase()+(ext.length?" ("+ext.join(", ")+")":""));
+      if(rest.length)out.push("("+rest.join(", ")+")");
+      out.push(d.text);continue;}
+    if(/^(fin|the end)\.?$/i.test(joined)){out.push("","FIN");continue;}
+    out.push("",joined);
+  }
+  let res=out.join("\n").replace(/^\n+/,"")+"\n";
+  /* le titre avant la première scène reste en tête, sans être pris pour une scène */
+  return{text:res,changed:true,headings:heads,dialogues:dl};
 }
 async function pdfToText(file){
   if(!window.pdfjsLib)throw new Error("pdfjs");
@@ -1797,7 +1878,7 @@ const LINES_PER_PAGE=55;
 const WIDTH={h:60,a:60,c:38,p:25,d:35,t:60,s:60};
 
 const isCue=l=>l.length<=45&&l===l.toUpperCase()&&/\p{Lu}/u.test(l)&&!/[.!?;:,]$/.test(l.replace(/\s*\([^)]*\)\s*$/,""))||/\((V\.O\.|O\.S\.|O\.C\.|CONT'D|SUITE|OFF|VOIX OFF)\)\s*$/i.test(l);
-const isTransition=l=>l===l.toUpperCase()&&/\p{Lu}/u.test(l)&&(/^(CUT|FONDU|FADE|DISSOLVE|SMASH|MATCH|INTERCUT|ENCHA[IÎ]N|RETOUR|BACK TO)\b/i.test(l)||/(TO|À|A)\s*:$/.test(l));
+const isTransition=l=>l===l.toUpperCase()&&/\p{Lu}/u.test(l)&&(/^(CUT|FONDU|FADE|DISSOLVE|SMASH|MATCH|INTERCUT|ENCHA[IÎ]N|RETOUR|BACK TO|FIN|THE END)\b/i.test(l)||/(TO|À|A)\s*:$/.test(l));
 
 /* blocs <-> texte */
 function blocksFromBody(body){
@@ -2139,8 +2220,9 @@ function castAlerts(){
 
 function planStrip(s){
   const lieu=lieuOf(s);const cast=[...castOf(s.id).values()];
-  return `<div class="pstrip" draggable="${S.canWrite?"true":"false"}" data-sid="${esc(s.id)}">
+  return `<div class="pstrip${s.filmed?" done":""}" draggable="${S.canWrite?"true":"false"}" data-sid="${esc(s.id)}">
     <span class="band" style="background:${bandColor(s)}"></span>
+    <label class="p-done" title="${s.filmed?"Scène tournée":"Marquer la scène comme tournée"}"><input type="checkbox" class="p-donecb" data-sid="${esc(s.id)}" ${s.filmed?"checked":""} ${S.canWrite?"":"disabled"} aria-label="Scène ${esc(s.num)} tournée"></label>
     <span class="num">${esc(s.num)}</span>
     <span class="pmain"><span class="hd" title="${esc(s.heading)}">${esc(s.location||s.heading)}</span>
       <span class="sub">${esc([s.intExt,s.time].filter(Boolean).join(" · "))}${lieu?` · <b>${esc(lieu.name)}</b>`:""}</span>
@@ -2161,6 +2243,7 @@ function renderPlan(){
         <div class="stat"><b>${days.length}</b><span>journée${days.length>1?"s":""}</span></div>
         <div class="stat"><b>${fmtE(planned)}<small> / ${fmtE(tot)}</small></b><span>pages planifiées</span></div>
         <div class="stat"><b>${pool.length}</b><span>scène${pool.length>1?"s":""} à placer</span></div>
+        <div class="stat"><b>${S.scenes.filter(s=>s.filmed).length}<small> / ${S.scenes.length}</small></b><span>scènes tournées</span></div>
         <div class="stat"><b>${S.locations.length}</b><span>lieu${S.locations.length>1?"x":""} de tournage</span></div>
       </div>
       <div class="actions">
@@ -2224,7 +2307,10 @@ function bindPlan(box){
   box.querySelectorAll(".d-del").forEach(b=>b.onclick=()=>deleteDay(b.dataset.did));
   box.querySelectorAll(".pmove").forEach(b=>b.onclick=ev=>{ev.stopPropagation();moveMenu([b.dataset.sid],b);});
   box.querySelectorAll(".grp-send").forEach(b=>b.onclick=()=>{const g=planGroups(S.scenes.filter(s=>!isPlanned(s))).find(x=>x.key===b.dataset.key);if(g)moveMenu(g.scenes.map(s=>s.id),b);});
-  box.querySelectorAll(".pstrip").forEach(st=>st.ondblclick=()=>selectScene(st.dataset.sid));
+  box.querySelectorAll(".pstrip").forEach(st=>st.ondblclick=e=>{if(e.target.closest(".p-done"))return;selectScene(st.dataset.sid);});
+  box.querySelectorAll(".p-donecb").forEach(c=>{c.onclick=e=>e.stopPropagation();c.onchange=()=>{const s=scene(c.dataset.sid);if(!s)return;const v=c.checked;
+    c.closest(".pstrip").classList.toggle("done",v);
+    trk(base()+"/scenes/"+s.id).update({filmed:v},{label:v?"Scène "+s.num+" tournée":"Scène "+s.num+" à tourner"}).catch(writeErr);};});
   if(!S.canWrite)return;
   box.querySelectorAll(".pstrip").forEach(st=>{
     st.ondragstart=e=>{S.dragging=st.dataset.sid;st.classList.add("dragging");try{e.dataTransfer.setData("text/plain",st.dataset.sid);e.dataTransfer.effectAllowed="move";}catch{}};
@@ -2472,9 +2558,9 @@ function shotRowHTML(x,i,seq){
   const id=esc(x.id);const w=S.canWrite;const n=esc(shotNum(x));const fx=x.effect&&x.effect!=="—";
   const cell=(cls,label,inner)=>w?`<button type="button" class="cellbtn ${cls}" aria-label="${label}">${inner}</button>`:`<div class="cellbtn">${inner}</div>`;
   const ta=(f,key,ph,label,cls)=>`<textarea id="dc-${key}-${id}" data-f="${f}" class="dc-grow${cls?" "+cls:""}" rows="2" placeholder="${w?ph:""}" aria-label="${label} du plan ${n}" ${w?"":"readonly"}>${esc(x[f]||"")}</textarea>`;
-  const opt=isOpt(x);const cls=[i===0?"first":"",opt?"opt":""].filter(Boolean).join(" ");
+  const opt=isOpt(x);const cls=[i===0?"first":"",opt?"opt":"",x.done?"done":""].filter(Boolean).join(" ");
   return `<tr data-id="${id}" id="dc-${id}"${cls?` class="${cls}"`:""}>${seq}
-    <td class="dct-plan">${cell("dc-plan","Plan "+n+(opt?" (optionnel)":"")+" : durée et actions",`<b>${n}</b>${opt?`<small class="opt-tag">Optionnel</small>`:`<small>${esc(String(x.dur??"").replace(".",","))} s</small>`}`)}</td>
+    <td class="dct-plan"><label class="dc-done" title="${x.done?"Plan fait":"Marquer le plan comme fait"}"><input type="checkbox" class="dc-donecb" ${x.done?"checked":""} ${w?"":"disabled"} aria-label="Plan ${n} fait"></label>${cell("dc-plan","Plan "+n+(opt?" (optionnel)":"")+" : durée et actions",`<b>${n}</b>${opt?`<small class="opt-tag">Optionnel</small>`:`<small>${esc(String(x.dur??"").replace(".",","))} s</small>`}`)}</td>
     <td class="ed dct-desc">${ta("action","a","Ce qu'on voit dans le cadre…","Description")}</td>
     <td class="ed dct-audio"><div class="dc-hl"><div class="dc-hl-bg" aria-hidden="true">${hlQuotes(x.sound)}</div>${ta("sound","s","Répliques, voix off, ambiance…","Audio","dc-hl-ta")}</div></td>
     <td class="dct-cam">${cell("dc-cam","Caméra du plan "+n+" : type de plan, mouvement, angle",`<b>${esc(SHOT_T[x.type]||x.type||"")}</b><span>${esc(x.move||"")}</span><span>${esc(x.angle||"")}</span>${fx?`<span class="dc-fx">${esc(x.effect)}</span>`:""}`)}</td>
@@ -2495,6 +2581,9 @@ function bindDec(box){
     el.oninput=()=>{dcGrow(el);if(el.classList.contains("dc-hl-ta"))el.previousElementSibling.innerHTML=hlQuotes(el.value);decLater(id,f,el.value);};el.onchange=()=>decNow(id,f,el.value);});
   box.querySelectorAll(".dc-cam").forEach(b=>b.onclick=()=>{const x=shotOf(b);if(x)openCamPop(x,b);});
   box.querySelectorAll(".dc-plan").forEach(b=>b.onclick=()=>{const x=shotOf(b);if(x)openPlanPop(x,b);});
+  box.querySelectorAll(".dc-donecb").forEach(c=>c.onchange=()=>{const x=shotOf(c);if(!x)return;const v=c.checked;
+    c.closest("tr").classList.toggle("done",v);
+    shotDoc(x.id).update({done:v},{label:v?"Plan "+shotNum(x)+" fait":"Plan "+shotNum(x)+" à refaire"}).catch(writeErr);});
 }
 /* menus contextuels des cellules */
 let dcPopEl=null;
