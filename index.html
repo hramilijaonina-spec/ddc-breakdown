@@ -445,7 +445,12 @@ tr.catrow td{background:var(--sunk);font-weight:600;font-size:12.5px}
   html,body,.desk,.editor,.ed-body,.ed-scroll{display:block!important;height:auto!important;overflow:visible!important;background:#fff!important}
   .ed-page{border:0;box-shadow:none;max-width:none;padding:0;color:#000;background:#fff;font-size:12pt}
   .sb-h[data-page]::before{display:none}.sb:focus{background:none;box-shadow:none}.sb:empty{display:none}
-  @page{size:A4;margin:25mm 25mm 25mm 38mm}
+  @page{size:A4;margin:25mm 12mm 25mm 22mm}
+  .ed-page{padding:0 13mm 0 16mm!important}
+  /* numéros de scène à gauche et à droite de l'en-tête, comme un scénario de tournage */
+  .ed-page .sb-h{position:relative}
+  .ed-page .sb-h::after{content:attr(data-num)!important;position:absolute!important;left:-5.5ch!important;right:auto!important;top:0!important;font-size:inherit!important;font-weight:700!important;color:#000!important}
+  .ed-page .sb-h[data-num]::before{content:attr(data-num)!important;display:block!important;position:absolute!important;right:-5ch!important;left:auto!important;top:0!important;font-family:inherit!important;font-size:inherit!important;font-weight:700!important;color:#000!important}
 }
 
 .brand.ddc .logo{background:var(--accent);color:var(--accent-fg);letter-spacing:.06em}
@@ -864,8 +869,8 @@ const CATS=[
  {id:"equipment",label:"Matériel spécial",color:"#5d6b7a"},
 ];
 const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
-/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables · 2.5 menu du plan de travail · 2.6 « Proposer un plan » garde ce qui est tourné */
-const APP_VERSION="2.6.0";const APP_DATE="31 oct. 2026";
+/* Version : 1.0 dépouillement · 1.1 plan de travail · 1.2 hors ligne et sauvegarde · 1.3 import .sbx · 1.4 éditeur de scénario · 1.5 boutons de mise en forme · 1.6 couleurs des boutons · 1.7 suppression de projet réservée à l'administrateur · 1.8 mise en page scénario dans le dépouillement · 1.9 connexion par lien e-mail · 1.10 demandes d'accès · 1.11 rôles lecteur, commentateur, éditeur · 1.12 barre d'onglets · 2.0 reprise de UP Slatebook : menu, onglets intercalaires, découpage technique, épisodes séparés, Dydz, export PDF et PowerPoint, annuler et rétablir, versions et sauvegarde automatique, clap numérique, recherche des éléments, thème gris sombre et jaune · 2.1 DDC Breakdown devient Dydz Studio · 2.2 liste des scènes en menu déroulant sur téléphone · 2.2.1 scénario sur fond clair dans le dépouillement · 2.3 import des scénarios en prose, plans faits et scènes tournées · 2.4 plan de travail en journées repliables · 2.5 menu du plan de travail · 2.6 « Proposer un plan » garde ce qui est tourné · 2.6.1 numéros de scène à l export */
+const APP_VERSION="2.6.1";const APP_DATE="31 oct. 2026";
 const STATUS={todo:"À analyser",ai:"À vérifier",ok:"Vérifiée"};
 const BANDS={"INT-J":["var(--strip-intj)","Int. jour"],"EXT-J":["var(--strip-extj)","Ext. jour"],"INT-N":["var(--strip-intn)","Int. nuit"],"EXT-N":["var(--strip-extn)","Ext. nuit"]};
 
@@ -2221,7 +2226,7 @@ async function exportFDX(){
   for(const s of S.scenes){paras.push(`<Paragraph Number="${x(s.num)}" Type="Scene Heading"><Text>${x(s.heading)}</Text></Paragraph>`);
     for(const b of sceneBlocks(s)){const t=String(b.x||"").trim();if(!t)continue;
       const lines=t.split("\n");paras.push(`<Paragraph Type="${T[b.t]||"Action"}">${lines.map((l,i)=>`<Text>${x(l)}${i<lines.length-1?"\n":""}</Text>`).join("")}</Paragraph>`);}}
-  const xml=`<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<FinalDraft DocumentType="Script" Template="No" Version="5">\n<Content>\n${paras.join("\n")}\n</Content>\n<TitlePage><Content><Paragraph Alignment="Center" Type="Action"><Text>${x(p?.name||"")}</Text></Paragraph></Content></TitlePage>\n</FinalDraft>\n`;
+  const xml=`<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<FinalDraft DocumentType="Script" Template="No" Version="5">\n<SceneNumberOptions LeftLocation="0.75" RightLocation="7.38" ShowNumbersOnLeft="Yes" ShowNumbersOnRight="Yes"/>\n<Content>\n${paras.join("\n")}\n</Content>\n<TitlePage><Content><Paragraph Alignment="Center" Type="Action"><Text>${x(p?.name||"")}</Text></Paragraph></Content></TitlePage>\n</FinalDraft>\n`;
   save(fileBase(p)+".fdx",xml);
 }
 
